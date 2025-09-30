@@ -1,9 +1,100 @@
-for the children & children age I want that the children age to be a multi-select dropdown which will be directly related to the number of children field this children age field will work like this 
-suppose if the children field someone input 5 then the children age field will become a multiselect in which inside the dropdown we will have a label like
-child 1 age ---> then an input field infront of it where we can write his age
-child 2 age ---> then an input field infront of it where we can write his age
-child 3 age ---> then an input field infront of it where we can write his age
+Flow of the lead Management of Crm 
 
-and once when we are done inputting the ages of all the children through that multi select dropdown the select trigger will show the ages of all the children respectively 
+We will be needing a tabs based switching system that will work by synching the url & the sidebar tab's active status, the flow will be like this which i'm giving you below
 
-nikita
+In the leads Management Part we will show the following routes in the side bar Under the category of Leads 
+
+Leads 
+-> All Leads (This will be a table that will show data of all the leads, i.e., Fresh Leads, Converted Leads, Postponed Leads)
+-> Fresh Leads (This will be a table of only the fresh leads, whenever the user will create a new lead whose Lead Status field is 'fresh' [Note: 'fresh' will be the default value of the Lead Status field] in the Create New lead form that lead will be added to the Fresh Lead Table)
+-> Converted Leads (This table will show the data of those leads whose Lead Status will be set to 'converted' & this will only happen when we have given quotation of that particular lead, means after giving quotation to a lead it's lead status will be auto-matically converted into 'converted')
+-> Postponed Leads (Those leads whose Lead Status is converted to postponed that will go inside PostPoned Leads table)
+
+
+** All leads page **
+Route -> /leads/all
+This page will show all the leads regardless of their status, this page will have the following features listed -> 
+
+A. this page will have options to filter data of the table by the following criteria 
+    Filter by 
+    => Lead Source
+    => Agent Assigned 
+    => Created Agent
+    => Destination
+
+B. Also we will have sorting based on following criteria ->
+    Sort by Date ( Created At, Updated At)
+    Sort by Priority (Low, Medium, High, Urgent)
+    Sort by Travel Date 
+
+C. Create New Lead button (already exists)
+D. Cards that will show total leads based on their Lead Status (Fresh, Converted, Postponed)
+E. Action button dropdown options 
+    => Give Quotation
+    => Edit Lead
+    => View Details
+    => Delete Lead    
+
+
+** Fresh Leads page **
+Route -> /leads/fresh
+When the user will create a new lead this will be the route on which the user will be redirected to after clicking the Create Lead Button. This table will show all the leads that will have the Lead Status = 'fresh'
+
+this page will have the following features listed ->
+
+A. The table will show the following fields 
+    -> S.no.
+    -> Name
+    -> Lead Id
+    -> Destination
+    -> Travel Date
+    -> Source 
+    -> Lead_Status
+    -> Actions 
+        -> View Lead
+        -> Edit Lead
+        -> Create Quotation
+
+B. The Actions Column description
+    -> The View Lead button in the Actions column will redirect to leads/view/{lead_id} that will fetch all the details related to that particular lead & will display it on that route
+
+    -> The Create Quotation button will take in the {lead_id} & redirect the user to leads/create/quotation/{lead_id}, when we will be redirected to this page the first work of this page will be to fetch the lead details of that particular lead fetched from the api via the lead_id & store that data in a state & populate the forms of upcoming steps with relevant data.
+
+** Converted Leads Page **
+Route -> /leads/converted
+All those leads whose Lead_status is changed to converted (which will happen when a quotation will be alloted to that specific lead) will be shown in this page inside the table 
+
+A. The table will show the following fields ->
+    -> S.no.
+    -> Name
+    -> Lead Id
+    -> Destination
+    -> Travel Date
+    -> Source 
+    -> Lead_status
+    -> Actions 
+        -> View Lead
+        -> Edit Quotation
+        -> Download Quotation PDF 
+
+B For Specific filters we will see them later 
+
+
+** Postponed Leads Page **
+Route -> /leads/postponed 
+All those leads whose Lead_status is changed to postponed (which will happen either in two following ways a., if during quotation creation the Lead_status is changed to postponed, or while during the editing fresh lead the Lead_status = 'postponed')
+
+this page will have the following features listed ->
+
+A. The table will show the following fields  -> S.no.
+    -> Name
+    -> Lead Id
+    -> Destination
+    -> Travel Date
+    -> Source 
+    -> Lead_status
+    -> Follow_up 
+      -> follow_up_date - follow_up_time
+    -> Actions 
+        -> View Lead
+        -> Edit Lead (this form will have a add a follow-up field as well which will be a date & time option)

@@ -18,7 +18,7 @@ const protectedRoutes = {
       children: [
         {
           index: true,
-          element: <Navigate to="/leads" />,
+          element: <Navigate to="/leads/all" />,
         },
         {
           path: "dashboards",
@@ -40,8 +40,32 @@ const protectedRoutes = {
           children: [
             {
               index: true,
+              element: <Navigate to="/leads/all" />,
+            },
+            {
+              path: "all",
               lazy: async () => ({
-                Component: (await import("app/pages/Leads/Index")).default,
+                Component: (await import("app/pages/Leads/AllLeads")).default,
+              }),
+            },
+            {
+              path: "fresh",
+              lazy: async () => ({
+                Component: (await import("app/pages/Leads/FreshLeads")).default,
+              }),
+            },
+            {
+              path: "converted",
+              lazy: async () => ({
+                Component: (await import("app/pages/Leads/ConvertedLeads"))
+                  .default,
+              }),
+            },
+            {
+              path: "postponed",
+              lazy: async () => ({
+                Component: (await import("app/pages/Leads/PostponedLeads"))
+                  .default,
               }),
             },
             {
@@ -69,10 +93,17 @@ const protectedRoutes = {
           children: [
             {
               index: true,
-              element: <Navigate to="/leads" />,
+              element: <Navigate to="/leads/all" />,
             },
             {
               path: "create",
+              lazy: async () => ({
+                Component: (await import("app/pages/Quotations/Create"))
+                  .default,
+              }),
+            },
+            {
+              path: "create/:leadId",
               lazy: async () => ({
                 Component: (await import("app/pages/Quotations/Create"))
                   .default,
