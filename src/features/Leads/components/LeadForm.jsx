@@ -1,6 +1,6 @@
 // Import Dependencies
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
@@ -23,7 +23,12 @@ const leadSchema = yup.object({
     .number()
     .min(0, "Budget must be positive")
     .required("Budget is required"),
-  travel_dates: yup.string().required("Travel dates are required"),
+  travel_dates: yup
+    .array()
+    .of(yup.date().required())
+    .min(2, "Please select both start and end dates")
+    .required("Travel dates are required"),
+
   group_size: yup
     .number()
     .min(1, "Group size must be at least 1")
@@ -46,6 +51,7 @@ const leadSources = [
 export function LeadForm({ lead = null, onSubmit, isLoading = false }) {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
     reset,
@@ -57,7 +63,7 @@ export function LeadForm({ lead = null, onSubmit, isLoading = false }) {
       customer_email: "",
       destination: "",
       budget: "",
-      travel_dates: "",
+      travel_dates: [], // 👈 must be array
       group_size: 1,
       lead_source: "",
       notes: "",
@@ -73,7 +79,7 @@ export function LeadForm({ lead = null, onSubmit, isLoading = false }) {
         customer_email: lead.customer_email || "",
         destination: lead.destination || "",
         budget: lead.budget || "",
-        travel_dates: lead.travel_dates || "",
+        travel_dates: lead.travel_dates || [],
         group_size: lead.group_size || 1,
         lead_source: lead.lead_source || "",
         notes: lead.notes || "",
@@ -138,19 +144,29 @@ export function LeadForm({ lead = null, onSubmit, isLoading = false }) {
               {...register("budget")}
               error={errors.budget?.message}
             />
+
+            {/* Travel Dates with Controller */}
             <div className="md:col-span-1">
-              <DatePicker
-                label="Travel Dates *"
-                placeholder="Select travel dates"
-                options={{
-                  mode: "range",
-                  dateFormat: "Y-m-d",
-                }}
-                hasCalenderIcon={true}
-                {...register("travel_dates")}
-                error={errors.travel_dates?.message}
+              <Controller
+                name="travel_dates"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    label="Travel Dates *"
+                    placeholder="Select travel dates"
+                    options={{
+                      mode: "range",
+                      dateFormat: "Y-m-d",
+                    }}
+                    hasCalenderIcon={true}
+                    value={field.value}
+                    onChange={(dates) => field.onChange(dates)}
+                    error={errors.travel_dates?.message}
+                  />
+                )}
               />
             </div>
+
             <Input
               label="Group Size *"
               placeholder="Number of travelers"

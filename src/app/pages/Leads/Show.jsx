@@ -22,7 +22,7 @@ import { Breadcrumbs } from "components/shared/Breadcrumbs";
 
 const breadcrumbItems = [
   { label: "Dashboard", href: "/" },
-  { label: "Leads", href: "/leads" },
+  { label: "Leads", href: "/leads/all" },
   { label: "Lead Details" },
 ];
 
@@ -166,7 +166,7 @@ export default function ShowLead() {
             <div className="flex items-center gap-4">
               <Button
                 component={Link}
-                to="/leads"
+                to="/leads/all"
                 variant="soft"
                 color="neutral"
                 isIcon

@@ -8,8 +8,10 @@
       "title": "Travel CRM",
       "leads": {
         "title": "Lead Management",
-        "index": "All Leads",
-        "create": "Create Lead"
+        "all": "All Leads",
+        "fresh": "Fresh Leads",
+        "converted": "Converted Leads",
+        "postponed": "Postponed Leads"
       },
 
       "quotations": {

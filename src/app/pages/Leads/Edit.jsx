@@ -13,7 +13,7 @@ import { LeadForm } from "features/Leads/components/LeadForm";
 
 const breadcrumbItems = [
   { label: "Dashboard", href: "/" },
-  { label: "Leads", href: "/leads" },
+  { label: "Leads", href: "/leads/all" },
   { label: "Edit Lead" },
 ];
 
@@ -61,7 +61,7 @@ export default function EditLead() {
       console.log("Updating lead with data:", data);
 
       // Redirect to leads list after successful update
-      navigate("/leads");
+      navigate("/leads/all");
     } catch (error) {
       console.error("Error updating lead:", error);
     } finally {
@@ -89,7 +89,7 @@ export default function EditLead() {
           <div className="flex items-center gap-4">
             <Button
               component={Link}
-              to="/leads"
+              to="/leads/all"
               variant="soft"
               color="neutral"
               isIcon

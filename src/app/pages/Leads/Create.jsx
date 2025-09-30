@@ -13,7 +13,7 @@ import { LeadForm } from "features/Leads/components/LeadForm";
 
 const breadcrumbItems = [
   { label: "Dashboard", href: "/" },
-  { label: "Leads", href: "/leads" },
+  { label: "Leads", href: "/leads/all" },
   { label: "Create Lead" },
 ];
 
@@ -35,8 +35,8 @@ export default function CreateLead() {
 
       console.log("Creating lead with data:", data);
 
-      // Redirect to leads list after successful creation
-      navigate("/leads");
+      // Redirect to fresh leads after successful creation (since new leads have 'fresh' status by default)
+      navigate("/leads/fresh");
     } catch (error) {
       console.error("Error creating lead:", error);
     } finally {
@@ -52,7 +52,7 @@ export default function CreateLead() {
           <div className="flex items-center gap-4">
             <Button
               component={Link}
-              to="/leads"
+              to="/leads/fresh"
               variant="outlined"
               isIcon
               className="shrink-0"
