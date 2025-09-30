@@ -1,0 +1,8 @@
+    This Create Quotation Page will be categorized into 6 Steps way with each step will be a different form and with each form there will be a Next/Previous button and on the final Step there will be that create Quotation Button which will send all the data captured within each step to the backend Api 
+
+  -> Now I'm giving you a detailed description of each step of all the steps while creating quotations 
+    -> Step 1 (Basic Details)
+        -> Days
+        -> Nights
+        Cost Breakdown 
+        -> 

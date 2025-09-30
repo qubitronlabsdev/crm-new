@@ -54,7 +54,6 @@ export default function CreateLead() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       console.log("Creating lead with data:", data);
-
       // Transform form data to lead format and add to storage
       const leadData = transformFormDataToLead(data);
       const updatedLeads = addLeadToStorage(leadData);
@@ -67,7 +66,7 @@ export default function CreateLead() {
       localStorage.removeItem("leadFormDraft");
 
       // Redirect to leads list after successful creation
-      navigate("/leads");
+      navigate("/leads/fresh");
     } catch (error) {
       console.error("Error creating lead:", error);
     } finally {

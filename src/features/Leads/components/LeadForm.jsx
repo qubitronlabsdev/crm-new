@@ -1,6 +1,6 @@
 // Import Dependencies
 import { useEffect, useState, useCallback } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
@@ -39,10 +39,20 @@ const leadSchema = yup.object({
   destination: yup.string().required("Destination is required"),
   estimated_value: yup
     .number()
-    .min(0, "Estimated value must be positive")
-    .required("Estimated value is required"),
-  expected_close_date: yup.string(),
+    .min(0, "Budget must be positive")
+    .required("Budget is required"),
+  travel_dates: yup
+    .array()
+    .of(yup.date().required())
+    .min(2, "Please select both start and end dates")
+    .required("Travel dates are required"),
+
+  group_size: yup
+    .number()
+    .min(1, "Group size must be at least 1")
+    .required("Group size is required"),
   travel_preferences: yup.string(),
+
   notes: yup.string(),
 });
 
@@ -94,6 +104,7 @@ export function LeadForm({
 }) {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
     reset,
@@ -107,7 +118,7 @@ export function LeadForm({
       phone: "",
       agent_assignment: "",
       travel_date: "",
-      travel_time: "",
+      travel_time: [],
       status: "fresh",
       priority: "medium",
       lead_source: "",
@@ -119,7 +130,7 @@ export function LeadForm({
       destination: "",
       estimated_value: "",
       expected_close_date: "",
-      travel_preferences: "",
+      travel_preferences: [], // 👈 must be array
       notes: "",
     },
   });
@@ -132,7 +143,7 @@ export function LeadForm({
         email: lead.email || "",
         phone: lead.phone || "",
         agent_assignment: lead.agent_assignment || "",
-        travel_date: lead.travel_date || "",
+        travel_dates: lead.travel_dates || [],
         travel_time: lead.travel_time || "",
         status: lead.status || "fresh",
         priority: lead.priority || "medium",
@@ -145,7 +156,7 @@ export function LeadForm({
         destination: lead.destination || "",
         estimated_value: lead.estimated_value || "",
         expected_close_date: lead.expected_close_date || "",
-        travel_preferences: lead.travel_preferences || "",
+        travel_preferences: lead.travel_preferences || [],
         notes: lead.notes || "",
       });
     }
@@ -356,13 +367,34 @@ export function LeadForm({
               type="number"
               min="0"
               step="0.01"
-              {...register("estimated_value", { valueAsNumber: true })}
+             {...register("estimated_value", { valueAsNumber: true })}
               error={errors.estimated_value?.message}
               className="w-full"
             />
-          </div>
 
+            {/* Travel Dates with Controller */}
+            <div className="md:col-span-1">
+              <Controller
+                name="travel_dates"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    label="Travel Dates *"
+                    placeholder="Select travel dates"
+                    options={{
+                      mode: "range",
+                      dateFormat: "Y-m-d",
+                    }}
+                    hasCalenderIcon={true}
+                    value={field.value}
+                    onChange={(dates) => field.onChange(dates)}
+                    error={errors.travel_dates?.message}
+                  />
+                )}
+              />
+            </div>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+           
             <Input
               label="Adults *"
               placeholder="Number of adults"
