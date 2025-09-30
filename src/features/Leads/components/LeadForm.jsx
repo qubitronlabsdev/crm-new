@@ -367,7 +367,7 @@ export function LeadForm({
               type="number"
               min="0"
               step="0.01"
-             {...register("estimated_value", { valueAsNumber: true })}
+              {...register("estimated_value", { valueAsNumber: true })}
               error={errors.estimated_value?.message}
               className="w-full"
             />
@@ -393,122 +393,121 @@ export function LeadForm({
                 )}
               />
             </div>
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-           
-            <Input
-              label="Adults *"
-              placeholder="Number of adults"
-              type="number"
-              min="1"
-              {...register("adults", { valueAsNumber: true })}
-              error={errors.adults?.message}
-              className="w-full"
-            />
-            <Input
-              label="Children *"
-              placeholder="Number of children"
-              type="number"
-              min="0"
-              {...register("children", { valueAsNumber: true })}
-              error={errors.children?.message}
-              className="w-full"
-            />
-            {/* Custom Multi-Select Children Age Field */}
-            <div className="w-full">
-              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Children Ages
-              </label>
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+              <Input
+                label="Adults *"
+                placeholder="Number of adults"
+                type="number"
+                min="1"
+                {...register("adults", { valueAsNumber: true })}
+                error={errors.adults?.message}
+                className="w-full"
+              />
+              <Input
+                label="Children *"
+                placeholder="Number of children"
+                type="number"
+                min="0"
+                {...register("children", { valueAsNumber: true })}
+                error={errors.children?.message}
+                className="w-full"
+              />
+              {/* Custom Multi-Select Children Age Field */}
+              <div className="w-full">
+                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Children Ages
+                </label>
 
-              <div className="relative">
-                {/* Trigger Button */}
-                <button
-                  type="button"
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  disabled={childrenCount === 0}
-                  className={`w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-left shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 ${childrenCount === 0 ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:border-gray-400"} flex min-h-[42px] items-center justify-between`}
-                >
-                  <span
-                    className={`block truncate ${getDisplayText() === "No children" || getDisplayText() === "Select children ages..." ? "text-gray-500" : "text-gray-900 dark:text-white"}`}
+                <div className="relative">
+                  {/* Trigger Button */}
+                  <button
+                    type="button"
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    disabled={childrenCount === 0}
+                    className={`w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-left shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 ${childrenCount === 0 ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:border-gray-400"} flex min-h-[42px] items-center justify-between`}
                   >
-                    {getDisplayText()}
-                  </span>
-                  <ChevronDownIcon
-                    className={`h-5 w-5 text-gray-400 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
-                  />
-                </button>
+                    <span
+                      className={`block truncate ${getDisplayText() === "No children" || getDisplayText() === "Select children ages..." ? "text-gray-500" : "text-gray-900 dark:text-white"}`}
+                    >
+                      {getDisplayText()}
+                    </span>
+                    <ChevronDownIcon
+                      className={`h-5 w-5 text-gray-400 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
 
-                {/* Dropdown Content */}
-                {isDropdownOpen && childrenCount > 0 && (
-                  <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-300 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800">
-                    <div className="space-y-3 p-3">
-                      {childrenAges.map((child, index) => (
-                        <div
-                          key={child.id}
-                          className="flex items-center justify-between"
-                        >
-                          <label className="min-w-[80px] text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Child {index + 1} age:
-                          </label>
-                          <input
-                            type="number"
-                            min="0"
-                            max="17"
-                            placeholder="Age"
-                            value={child.age}
-                            onChange={(e) =>
-                              updateChildAge(index, e.target.value)
-                            }
-                            className="ml-2 w-20 rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                          />
+                  {/* Dropdown Content */}
+                  {isDropdownOpen && childrenCount > 0 && (
+                    <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-300 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800">
+                      <div className="space-y-3 p-3">
+                        {childrenAges.map((child, index) => (
+                          <div
+                            key={child.id}
+                            className="flex items-center justify-between"
+                          >
+                            <label className="min-w-[80px] text-sm font-medium text-gray-700 dark:text-gray-300">
+                              Child {index + 1} age:
+                            </label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="17"
+                              placeholder="Age"
+                              value={child.age}
+                              onChange={(e) =>
+                                updateChildAge(index, e.target.value)
+                              }
+                              className="ml-2 w-20 rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                            />
+                          </div>
+                        ))}
+
+                        <div className="border-t border-gray-200 pt-2 dark:border-gray-600">
+                          <button
+                            type="button"
+                            onClick={() => setIsDropdownOpen(false)}
+                            className="w-full rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                          >
+                            Done
+                          </button>
                         </div>
-                      ))}
-
-                      <div className="border-t border-gray-200 pt-2 dark:border-gray-600">
-                        <button
-                          type="button"
-                          onClick={() => setIsDropdownOpen(false)}
-                          className="w-full rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        >
-                          Done
-                        </button>
                       </div>
                     </div>
-                  </div>
+                  )}
+                </div>
+
+                {/* Hidden input for form registration */}
+                <input type="hidden" {...register("children_age")} />
+
+                {errors.children_age && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.children_age.message}
+                  </p>
                 )}
-              </div>
 
-              {/* Hidden input for form registration */}
-              <input type="hidden" {...register("children_age")} />
-
-              {errors.children_age && (
-                <p className="mt-1 text-sm text-red-600">
-                  {errors.children_age.message}
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  {childrenCount === 0
+                    ? "Enter number of children above to specify ages"
+                    : "e.g. 5, 8, 12"}
                 </p>
-              )}
-
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                {childrenCount === 0
-                  ? "Enter number of children above to specify ages"
-                  : "e.g. 5, 8, 12"}
-              </p>
+              </div>
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <Input
-              label="Departure City *"
-              placeholder="Enter departure city"
-              {...register("departure_city")}
-              error={errors.departure_city?.message}
-              className="w-full"
-            />
-            <Input
-              label="Destination *"
-              placeholder="Enter destination"
-              {...register("destination")}
-              error={errors.destination?.message}
-              className="w-full"
-            />
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <Input
+                label="Departure City *"
+                placeholder="Enter departure city"
+                {...register("departure_city")}
+                error={errors.departure_city?.message}
+                className="w-full"
+              />
+              <Input
+                label="Destination *"
+                placeholder="Enter destination"
+                {...register("destination")}
+                error={errors.destination?.message}
+                className="w-full"
+              />
+            </div>
           </div>
         </div>
 
