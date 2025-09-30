@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "dashboards": {
+      "dashboards": "仪表板",
+      "home": "首页"
+    },
+    "crm": {
+      "title": "旅游客户管理",
+      "leads": {
+        "title": "潜在客户管理",
+        "index": "所有潜在客户",
+        "create": "创建潜在客户"
+      },
+      "quotations": {
+        "title": "报价单",
+        "index": "所有报价单",
+        "create": "创建报价单"
+      },
+      "bookings": {
+        "title": "预订和运营",
+        "index": "所有预订",
+        "create": "创建预订"
+      }
+    },
+    "settings": {
+      "settings": "设置",
+      "general": "常规",
+      "appearance": "外观"
+    }
+  }
+}

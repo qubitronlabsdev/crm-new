@@ -1,0 +1,32 @@
+{
+  "nav": {
+    "dashboards": {
+      "dashboards": "Dashboards",
+      "home": "Home"
+    },
+    "crm": {
+      "title": "Travel CRM",
+      "leads": {
+        "title": "Lead Management",
+        "index": "All Leads",
+        "create": "Create Lead"
+      },
+
+      "quotations": {
+        "title": "Quotations",
+        "index": "All Quotations",
+        "create": "Create Quotation"
+      },
+      "bookings": {
+        "title": "Bookings & Operations",
+        "index": "All Bookings",
+        "create": "Create Booking"
+      }
+    },
+    "settings": {
+      "settings": "Settings",
+      "general": "General",
+      "appearance": "Appearance"
+    }
+  }
+}

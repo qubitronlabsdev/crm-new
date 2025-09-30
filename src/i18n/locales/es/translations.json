@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "dashboards": {
+      "dashboards": "Paneles",
+      "home": "Inicio"
+    },
+    "crm": {
+      "title": "CRM de Viajes",
+      "leads": {
+        "title": "Gestión de Prospectos",
+        "index": "Todos los Prospectos",
+        "create": "Crear Prospecto"
+      },
+      "quotations": {
+        "title": "Cotizaciones",
+        "index": "Todas las Cotizaciones",
+        "create": "Crear Cotización"
+      },
+      "bookings": {
+        "title": "Reservas y Operaciones",
+        "index": "Todas las Reservas",
+        "create": "Crear Reserva"
+      }
+    },
+    "settings": {
+      "settings": "Configuración",
+      "general": "General",
+      "appearance": "Apariencia"
+    }
+  }
+}
