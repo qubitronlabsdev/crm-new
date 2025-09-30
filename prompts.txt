@@ -5,3 +5,5 @@ child 2 age ---> then an input field infront of it where we can write his age
 child 3 age ---> then an input field infront of it where we can write his age
 
 and once when we are done inputting the ages of all the children through that multi select dropdown the select trigger will show the ages of all the children respectively 
+
+nikita
