@@ -55,7 +55,7 @@ export function DataTable({
   return (
     <div className={clsx("space-y-4", className)}>
       <div className="overflow-x-auto">
-        <Table hoverable zebra className="w-full">
+        <Table hoverable className="w-full">
           <THead>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>

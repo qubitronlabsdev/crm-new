@@ -8,6 +8,7 @@ import { Button } from "components/ui";
 import { Page } from "components/shared/Page";
 import { Breadcrumbs } from "components/shared/Breadcrumbs";
 import { LeadForm } from "features/Leads/components/LeadForm";
+import { getLeadById, transformLeadToFormData } from "utils/leadsUtils";
 
 // ----------------------------------------------------------------------
 
@@ -17,23 +18,6 @@ const breadcrumbItems = [
   { label: "Edit Lead" },
 ];
 
-// Mock data - in real app this would come from Inertia.js props
-const mockLead = {
-  id: 1,
-  customer_name: "John Smith",
-  customer_phone: "+1 (555) 123-4567",
-  customer_email: "john.smith@email.com",
-  destination: "Paris, France",
-  budget: 5000,
-  travel_dates: "2024-06-15 to 2024-06-25",
-  group_size: 2,
-  lead_source: "website",
-  notes: "Interested in a romantic getaway for anniversary",
-  status: "new",
-  assigned_agent: "Sarah Wilson",
-  created_at: "2024-01-15",
-};
-
 // ----------------------------------------------------------------------
 
 export default function EditLead() {
@@ -41,11 +25,38 @@ export default function EditLead() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [lead, setLead] = useState(null);
+  const [draftData, setDraftData] = useState(null);
 
   useEffect(() => {
-    // In real app, lead data would come from Inertia.js props
-    // Here we simulate loading the lead data
-    setLead(mockLead);
+    // Load lead data based on ID
+    if (id) {
+      console.log("Loading lead with ID:", id);
+      // Load existing lead data from localStorage
+      const leadData = getLeadById(id);
+      console.log("Found lead data:", leadData);
+      if (leadData) {
+        // Transform lead data to form format and set it
+        const formData = transformLeadToFormData(leadData);
+        console.log("Transformed form data:", formData);
+        setLead(formData);
+      } else {
+        console.error(`Lead with ID ${id} not found`);
+        // Optionally redirect to leads list or show error
+        // navigate('/leads');
+      }
+    } else {
+      // If no ID (new lead), try to load draft data
+      const savedDraft = localStorage.getItem("leadFormDraft");
+      if (savedDraft) {
+        try {
+          const parsedDraft = JSON.parse(savedDraft);
+          setDraftData(parsedDraft);
+        } catch (error) {
+          console.error("Error parsing draft data:", error);
+          localStorage.removeItem("leadFormDraft");
+        }
+      }
+    }
   }, [id]);
 
   const handleSubmit = async (data) => {
@@ -60,6 +71,9 @@ export default function EditLead() {
 
       console.log("Updating lead with data:", data);
 
+      // Clear draft data after successful update
+      localStorage.removeItem("leadFormDraft");
+
       // Redirect to leads list after successful update
       navigate("/leads");
     } catch (error) {
@@ -69,7 +83,7 @@ export default function EditLead() {
     }
   };
 
-  if (!lead) {
+  if (!lead && !draftData) {
     return (
       <Page title="Edit Lead - Travel CRM">
         <div className="transition-content w-full px-(--margin-x) pt-5 lg:pt-6">
@@ -81,6 +95,9 @@ export default function EditLead() {
     );
   }
 
+  // Use lead data if available, otherwise use draft data
+  const formData = lead || draftData;
+
   return (
     <Page title="Edit Lead - Travel CRM">
       <div className="transition-content w-full px-(--margin-x) pt-5 lg:pt-6">
@@ -90,8 +107,9 @@ export default function EditLead() {
             <Button
               component={Link}
               to="/leads"
-              variant="soft"
+              variant="outlined"
               color="neutral"
+              className="shrink-0 p-1"
               isIcon
             >
               <ArrowLeftIcon className="h-5 w-5" />
@@ -99,16 +117,22 @@ export default function EditLead() {
             <div className="min-w-0">
               <Breadcrumbs items={breadcrumbItems} />
               <h1 className="dark:text-dark-50 mt-2 text-2xl font-bold tracking-wide text-gray-800">
-                Edit Lead #{lead.id}
+                {lead ? `Edit Lead #${lead.id}` : "Continue Lead Creation"}
               </h1>
               <p className="dark:text-dark-200 text-gray-600">
-                Update lead information for {lead.customer_name}
+                {lead
+                  ? `Update lead information for ${lead.customer_name}`
+                  : "Continue with your draft lead information"}
               </p>
             </div>
           </div>
 
           {/* Lead Form */}
-          <LeadForm lead={lead} onSubmit={handleSubmit} isLoading={isLoading} />
+          <LeadForm
+            lead={formData}
+            onSubmit={handleSubmit}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </Page>

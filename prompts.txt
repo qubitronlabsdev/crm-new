@@ -1,0 +1,7 @@
+for the children & children age I want that the children age to be a multi-select dropdown which will be directly related to the number of children field this children age field will work like this 
+suppose if the children field someone input 5 then the children age field will become a multiselect in which inside the dropdown we will have a label like
+child 1 age ---> then an input field infront of it where we can write his age
+child 2 age ---> then an input field infront of it where we can write his age
+child 3 age ---> then an input field infront of it where we can write his age
+
+and once when we are done inputting the ages of all the children through that multi select dropdown the select trigger will show the ages of all the children respectively 

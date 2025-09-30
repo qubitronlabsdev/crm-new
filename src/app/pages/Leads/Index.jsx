@@ -1,89 +1,116 @@
 // Import Dependencies
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { PlusIcon, EyeIcon, PencilIcon } from "@heroicons/react/24/outline";
 
 // Local Imports
-import { Badge, Button, Card } from "components/ui";
+import { Button, Card } from "components/ui";
 import { Page } from "components/shared/Page";
 import { Breadcrumbs } from "components/shared/Breadcrumbs";
 import { DataTable } from "components/shared/DataTable";
+import { getLeadsFromStorage } from "utils/leadsUtils";
 
 // ----------------------------------------------------------------------
 
 const breadcrumbItems = [{ label: "Dashboard", href: "/" }, { label: "Leads" }];
 
-const getStatusColor = (status) => {
+const getStatusStyle = (status) => {
   switch (status?.toLowerCase()) {
-    case "new":
-      return "info";
+    case "fresh":
+      return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300";
+    case "contacted":
+      return "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300";
     case "qualified":
-      return "success";
+      return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300";
+    case "proposal_sent":
+      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300";
+    case "negotiation":
+      return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300";
+    case "closed_won":
+      return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300";
+    case "closed_lost":
+      return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300";
+    // Legacy status mapping
+    case "new":
+      return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300";
     case "in_progress":
-      return "warning";
+      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300";
     case "postponed":
-      return "secondary";
+      return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300";
     case "lost":
-      return "error";
+      return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300";
     default:
-      return "neutral";
+      return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300";
   }
-};
-
-// Mock data - in real app this would come from props (Inertia.js)
-const mockLeads = {
-  data: [
-    {
-      id: 1,
-      customer_name: "John Smith",
-      destination: "Paris, France",
-      status: "new",
-      budget: 5000,
-      travel_dates: "2024-06-15 to 2024-06-25",
-      assigned_agent: "Sarah Wilson",
-      created_at: "2024-01-15",
-    },
-    {
-      id: 2,
-      customer_name: "Emily Johnson",
-      destination: "Tokyo, Japan",
-      status: "qualified",
-      budget: 8000,
-      travel_dates: "2024-07-10 to 2024-07-20",
-      assigned_agent: "Mike Chen",
-      created_at: "2024-01-14",
-    },
-    {
-      id: 3,
-      customer_name: "Robert Davis",
-      destination: "London, UK",
-      status: "in_progress",
-      budget: 3500,
-      travel_dates: "2024-05-20 to 2024-05-30",
-      assigned_agent: "Jessica Brown",
-      created_at: "2024-01-13",
-    },
-  ],
-  links: {
-    first: "/?page=1",
-    last: "/?page=1",
-    prev: null,
-    next: null,
-  },
-  meta: {
-    current_page: 1,
-    from: 1,
-    last_page: 1,
-    per_page: 15,
-    to: 3,
-    total: 3,
-  },
 };
 
 // ----------------------------------------------------------------------
 
 export default function LeadsIndex() {
-  const [leads] = useState(mockLeads);
+  const [leads, setLeads] = useState({
+    data: [],
+    links: {
+      first: "/?page=1",
+      last: "/?page=1",
+      prev: null,
+      next: null,
+    },
+    meta: {
+      current_page: 1,
+      from: 0,
+      last_page: 1,
+      per_page: 15,
+      to: 0,
+      total: 0,
+    },
+  });
+
+  // Load leads from localStorage on component mount
+  useEffect(() => {
+    const loadLeads = () => {
+      const savedLeads = getLeadsFromStorage();
+      if (savedLeads) {
+        setLeads(savedLeads);
+      }
+      // No else clause - start with empty data if no leads exist
+    };
+
+    // Load leads initially
+    loadLeads();
+
+    // Refresh leads when window gains focus (user returns from create page)
+    const handleFocus = () => {
+      loadLeads();
+    };
+
+    window.addEventListener("focus", handleFocus);
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, []);
+
+  // Calculate dynamic statistics
+  const getLeadStats = () => {
+    const data = leads.data || [];
+    const total = data.length;
+    const qualified = data.filter(
+      (lead) => lead.status?.toLowerCase() === "qualified",
+    ).length;
+    const inProgress = data.filter(
+      (lead) => lead.status?.toLowerCase() === "in_progress",
+    ).length;
+    const newLeads = data.filter(
+      (lead) =>
+        lead.status?.toLowerCase() === "new" ||
+        lead.status?.toLowerCase() === "fresh",
+    ).length;
+
+    return { total, qualified, inProgress, newLeads };
+  };
+
+  const stats = getLeadStats();
 
   const columns = [
     {
@@ -114,26 +141,41 @@ export default function LeadsIndex() {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => (
-        <Badge
-          color={getStatusColor(row.original.status)}
-          className="capitalize"
+        <span
+          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${getStatusStyle(row.original.status)}`}
         >
           {row.original.status.replace("_", " ")}
-        </Badge>
+        </span>
       ),
     },
     {
       accessorKey: "budget",
       header: "Budget",
-      cell: ({ row }) => (
-        <span className="font-medium">
-          ${row.original.budget.toLocaleString()}
-        </span>
-      ),
+      cell: ({ row }) => {
+        const budget = Number(row.original.budget) || 0;
+        return <span className="font-medium">₹{budget.toLocaleString()}</span>;
+      },
     },
     {
       accessorKey: "assigned_agent",
       header: "Assigned Agent",
+      cell: ({ row }) => {
+        const agent = row.original.assigned_agent;
+        // Convert agent codes to readable names
+        const agentNames = {
+          john_doe: "John Doe",
+          jane_smith: "Jane Smith",
+          mike_johnson: "Mike Johnson",
+          sarah_wilson: "Sarah Wilson",
+          david_brown: "David Brown",
+          unassigned: "Unassigned",
+        };
+        return (
+          <span className="text-gray-700 dark:text-gray-300">
+            {agentNames[agent] || agent}
+          </span>
+        );
+      },
     },
     {
       accessorKey: "created_at",
@@ -156,6 +198,7 @@ export default function LeadsIndex() {
             variant="soft"
             color="info"
             isIcon
+            className="shrink-0 p-1"
           >
             <EyeIcon className="h-4 w-4" />
           </Button>
@@ -166,6 +209,7 @@ export default function LeadsIndex() {
             variant="soft"
             color="warning"
             isIcon
+            className="shrink-0 p-1"
           >
             <PencilIcon className="h-4 w-4" />
           </Button>
@@ -204,7 +248,7 @@ export default function LeadsIndex() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
             <Card className="p-6">
               <div className="dark:text-dark-50 text-2xl font-bold text-gray-800">
-                {leads.meta.total}
+                {stats.total}
               </div>
               <div className="dark:text-dark-200 text-sm text-gray-600">
                 Total Leads
@@ -212,7 +256,7 @@ export default function LeadsIndex() {
             </Card>
             <Card className="p-6">
               <div className="text-success-600 dark:text-success-400 text-2xl font-bold">
-                1
+                {stats.qualified}
               </div>
               <div className="dark:text-dark-200 text-sm text-gray-600">
                 Qualified
@@ -220,7 +264,7 @@ export default function LeadsIndex() {
             </Card>
             <Card className="p-6">
               <div className="text-warning-600 dark:text-warning-400 text-2xl font-bold">
-                1
+                {stats.inProgress}
               </div>
               <div className="dark:text-dark-200 text-sm text-gray-600">
                 In Progress
@@ -228,7 +272,7 @@ export default function LeadsIndex() {
             </Card>
             <Card className="p-6">
               <div className="text-info-600 dark:text-info-400 text-2xl font-bold">
-                1
+                {stats.newLeads}
               </div>
               <div className="dark:text-dark-200 text-sm text-gray-600">
                 New Leads
