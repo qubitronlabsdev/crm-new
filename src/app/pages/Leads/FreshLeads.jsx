@@ -13,14 +13,14 @@ import { Badge, Button, Card } from "components/ui";
 import { Page } from "components/shared/Page";
 import { Breadcrumbs } from "components/shared/Breadcrumbs";
 import { DataTable } from "components/shared/DataTable";
-import { LeadTabs } from "components/shared/LeadTabs";
+import { LeadTabs } from "features/Leads/components/LeadTabs";
 
 // ----------------------------------------------------------------------
 
 const breadcrumbItems = [
-  { label: "Dashboard", href: "/" },
-  { label: "Leads", href: "/leads/all" },
-  { label: "Fresh Leads" },
+  { title: "Dashboard", path: "/" },
+  { title: "Leads", path: "/leads/all" },
+  { title: "Fresh Leads" },
 ];
 
 // Mock data - only fresh leads
@@ -146,7 +146,7 @@ export default function FreshLeads() {
           </Button>
           <Button
             component={Link}
-            to={`/leads/${row.original.id}/edit`}
+            to={`/leads/edit/${row.original.id}`}
             size="sm"
             variant="soft"
             color="warning"

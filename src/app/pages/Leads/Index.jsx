@@ -1,3 +1,5 @@
+// TODO: Maybe we need to delete this file
+
 // Import Dependencies
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
@@ -12,7 +14,7 @@ import { getLeadsFromStorage } from "utils/leadsUtils";
 
 // ----------------------------------------------------------------------
 
-const breadcrumbItems = [{ label: "Dashboard", href: "/" }, { label: "Leads" }];
+const breadcrumbItems = [{ title: "Dashboard", path: "/" }, { title: "Leads" }];
 
 const getStatusStyle = (status) => {
   switch (status?.toLowerCase()) {

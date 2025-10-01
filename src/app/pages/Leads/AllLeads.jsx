@@ -1,5 +1,5 @@
 // Import Dependencies
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import {
   PlusIcon,
@@ -7,6 +7,8 @@ import {
   PencilIcon,
   DocumentTextIcon,
   TrashIcon,
+  FunnelIcon,
+  ArrowsUpDownIcon,
 } from "@heroicons/react/24/outline";
 
 // Local Imports
@@ -14,14 +16,17 @@ import { Badge, Button, Card } from "components/ui";
 import { Page } from "components/shared/Page";
 import { Breadcrumbs } from "components/shared/Breadcrumbs";
 import { DataTable } from "components/shared/DataTable";
-import { LeadTabs } from "components/shared/LeadTabs";
+import { LeadTabs } from "features/Leads/components/LeadTabs";
+import { LeadFilterDialog } from "features/Leads/components/LeadFilterDialog";
+import { LeadSortDialog } from "features/Leads/components/LeadSortDialog";
+import { leadsApi } from "utils/leadsApi";
 
 // ----------------------------------------------------------------------
 
 const breadcrumbItems = [
-  { label: "Dashboard", href: "/" },
-  { label: "Leads", href: "/leads/all" },
-  { label: "All Leads" },
+  { title: "Dashboard", path: "/" },
+  { title: "Leads", path: "/leads/all" },
+  { title: "All Leads" },
 ];
 
 const getStatusColor = (status) => {
@@ -37,80 +42,74 @@ const getStatusColor = (status) => {
   }
 };
 
-// Mock data - in real app this would come from API
-const mockLeads = {
-  data: [
-    {
-      id: 1,
-      customer_name: "John Smith",
-      destination: "Paris, France",
-      lead_status: "fresh",
-      travel_date: "2024-06-15",
-      source: "Website",
-      agent_assigned: "Sarah Wilson",
-      created_agent: "Admin",
-      priority: "medium",
-      created_at: "2024-01-15",
-      updated_at: "2024-01-15",
-    },
-    {
-      id: 2,
-      customer_name: "Emily Johnson",
-      destination: "Tokyo, Japan",
-      lead_status: "converted",
-      travel_date: "2024-07-10",
-      source: "Email",
-      agent_assigned: "Mike Chen",
-      created_agent: "Admin",
-      priority: "high",
-      created_at: "2024-01-14",
-      updated_at: "2024-01-16",
-    },
-    {
-      id: 3,
-      customer_name: "Robert Davis",
-      destination: "London, UK",
-      lead_status: "postponed",
-      travel_date: "2024-05-20",
-      source: "Phone",
-      agent_assigned: "Jessica Brown",
-      created_agent: "Admin",
-      priority: "low",
-      created_at: "2024-01-13",
-      updated_at: "2024-01-14",
-    },
-  ],
-  links: {
-    first: "/?page=1",
-    last: "/?page=1",
-    prev: null,
-    next: null,
-  },
-  meta: {
-    current_page: 1,
-    from: 1,
-    last_page: 1,
-    per_page: 15,
-    to: 3,
-    total: 3,
-  },
-};
-
 // ----------------------------------------------------------------------
 
 export default function AllLeads() {
-  const [leads] = useState(mockLeads);
+  const [leads, setLeads] = useState({ data: [], meta: {}, links: {} });
 
-  // Calculate stats
-  // const freshCount = leads.data.filter(
-  //   (lead) => lead.lead_status === "fresh",
-  // ).length;
-  // const convertedCount = leads.data.filter(
-  //   (lead) => lead.lead_status === "converted",
-  // ).length;
-  // const postponedCount = leads.data.filter(
-  //   (lead) => lead.lead_status === "postponed",
-  // ).length;
+  const [loading, setLoading] = useState(true);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    lead_source: "",
+    agent_assigned: "",
+    destination: "",
+  });
+  const [sort, setSort] = useState({
+    field: "created_at",
+    order: "desc",
+  });
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  // Fetch leads data
+  const fetchLeads = async () => {
+    try {
+      setLoading(true);
+      const [leadsResponse] = await Promise.all([
+        leadsApi.getLeads({
+          page: pagination.pageIndex + 1,
+          per_page: pagination.pageSize,
+          filters,
+          sort,
+        }),
+        leadsApi.getLeadStats(),
+      ]);
+      setLeads(leadsResponse);
+    } catch (error) {
+      console.error("Error fetching leads:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLeads();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters, sort, pagination]);
+
+  const handleFiltersChange = (newFilters) => {
+    setFilters(newFilters);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 })); // Reset to first page
+  };
+
+  const handleSortChange = (newSort) => {
+    setSort(newSort);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 })); // Reset to first page
+  };
+
+  const handleDeleteLead = async (leadId) => {
+    if (confirm("Are you sure you want to delete this lead?")) {
+      try {
+        await leadsApi.deleteLead(leadId);
+        fetchLeads(); // Refresh the list
+      } catch (error) {
+        console.error("Error deleting lead:", error);
+      }
+    }
+  };
 
   const columns = [
     {
@@ -143,6 +142,24 @@ export default function AllLeads() {
       cell: ({ row }) => (
         <span className="text-sm">
           {new Date(row.original.travel_date).toLocaleDateString()}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "created_at",
+      header: "Created At",
+      cell: ({ row }) => (
+        <span className="dark:text-dark-200 text-sm text-gray-500">
+          {new Date(row.original.created_at).toLocaleDateString()}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "updated_at",
+      header: "Updated At",
+      cell: ({ row }) => (
+        <span className="dark:text-dark-200 text-sm text-gray-500">
+          {new Date(row.original.updated_at).toLocaleDateString()}
         </span>
       ),
     },
@@ -204,7 +221,7 @@ export default function AllLeads() {
           </Button>
           <Button
             component={Link}
-            to={`/leads/${row.original.id}/edit`}
+            to={`/leads/edit/${row.original.id}`}
             size="sm"
             variant="soft"
             color="warning"
@@ -230,12 +247,7 @@ export default function AllLeads() {
             color="error"
             isIcon
             title="Delete Lead"
-            onClick={() => {
-              if (confirm("Are you sure you want to delete this lead?")) {
-                // Handle delete
-                console.log("Delete lead:", row.original.id);
-              }
-            }}
+            onClick={() => handleDeleteLead(row.original.id)}
           >
             <TrashIcon className="h-4 w-4" />
           </Button>
@@ -273,114 +285,66 @@ export default function AllLeads() {
           {/* Lead Navigation Tabs */}
           <LeadTabs />
 
-          {/* Statistics Cards */}
-          {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-            <Card className="p-6">
-              <div className="dark:text-dark-50 text-2xl font-bold text-gray-800">
-                {leads.meta.total}
-              </div>
-              <div className="dark:text-dark-200 text-sm text-gray-600">
-                Total Leads
-              </div>
-            </Card>
-            <Card className="p-6">
-              <div className="text-info-600 dark:text-info-400 text-2xl font-bold">
-                {freshCount}
-              </div>
-              <div className="dark:text-dark-200 text-sm text-gray-600">
-                Fresh Leads
-              </div>
-            </Card>
-            <Card className="p-6">
-              <div className="text-success-600 dark:text-success-400 text-2xl font-bold">
-                {convertedCount}
-              </div>
-              <div className="dark:text-dark-200 text-sm text-gray-600">
-                Converted Leads
-              </div>
-            </Card>
-            <Card className="p-6">
-              <div className="text-warning-600 dark:text-warning-400 text-2xl font-bold">
-                {postponedCount}
-              </div>
-              <div className="dark:text-dark-200 text-sm text-gray-600">
-                Postponed Leads
-              </div>
-            </Card>
-          </div> */}
-
-          {/* Filter and Sort Options */}
-          <Card className="p-6">
-            <div className="flex flex-wrap gap-4">
-              <div className="flex flex-col">
-                <label className="dark:text-dark-200 mb-1 text-sm font-medium text-gray-700">
-                  Filter by Lead Source
-                </label>
-                <select className="dark:border-dark-500 dark:bg-dark-700 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm">
-                  <option value="">All Sources</option>
-                  <option value="website">Website</option>
-                  <option value="email">Email</option>
-                  <option value="phone">Phone</option>
-                  <option value="referral">Referral</option>
-                </select>
-              </div>
-
-              <div className="flex flex-col">
-                <label className="dark:text-dark-200 mb-1 text-sm font-medium text-gray-700">
-                  Filter by Agent Assigned
-                </label>
-                <select className="dark:border-dark-500 dark:bg-dark-700 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm">
-                  <option value="">All Agents</option>
-                  <option value="sarah">Sarah Wilson</option>
-                  <option value="mike">Mike Chen</option>
-                  <option value="jessica">Jessica Brown</option>
-                </select>
-              </div>
-
-              <div className="flex flex-col">
-                <label className="dark:text-dark-200 mb-1 text-sm font-medium text-gray-700">
-                  Filter by Destination
-                </label>
-                <select className="dark:border-dark-500 dark:bg-dark-700 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm">
-                  <option value="">All Destinations</option>
-                  <option value="paris">Paris, France</option>
-                  <option value="tokyo">Tokyo, Japan</option>
-                  <option value="london">London, UK</option>
-                </select>
-              </div>
-
-              <div className="flex flex-col">
-                <label className="dark:text-dark-200 mb-1 text-sm font-medium text-gray-700">
-                  Sort by
-                </label>
-                <select className="dark:border-dark-500 dark:bg-dark-700 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm">
-                  <option value="created_at">Created Date</option>
-                  <option value="updated_at">Updated Date</option>
-                  <option value="priority">Priority</option>
-                  <option value="travel_date">Travel Date</option>
-                </select>
-              </div>
-            </div>
-          </Card>
-
           {/* Leads Table */}
           <Card className="overflow-hidden">
             <div className="dark:border-dark-500 border-b border-gray-200 px-6 py-4">
-              <h2 className="dark:text-dark-50 text-lg font-semibold text-gray-800">
-                All Leads ({leads.meta.total})
-              </h2>
+              <div className="flex w-full items-center justify-between">
+                <h2 className="dark:text-dark-50 text-lg font-semibold text-gray-800">
+                  All Leads ({leads.meta.total || 0})
+                </h2>
+                <div className="flex gap-3">
+                  <Button
+                    variant="outlined"
+                    color="neutral"
+                    onClick={() => setIsFilterOpen(true)}
+                    className="flex items-center gap-2"
+                  >
+                    <FunnelIcon className="h-4 w-4" />
+                    Filter
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="neutral"
+                    onClick={() => setIsSortOpen(true)}
+                    className="flex items-center gap-2"
+                  >
+                    <ArrowsUpDownIcon className="h-4 w-4" />
+                    Sort
+                  </Button>
+                </div>
+              </div>
             </div>
             <DataTable
               data={leads.data}
               columns={columns}
+              loading={loading}
+              filters={filters}
+              sorting={sort}
               pagination={{
-                pageIndex: leads.meta.current_page - 1,
-                pageSize: 10,
-                pageCount: leads.meta.last_page,
+                pageIndex: pagination.pageIndex,
+                pageSize: pagination.pageSize,
+                pageCount: leads.meta.last_page || 0,
               }}
+              onPaginationChange={setPagination}
             />
           </Card>
         </div>
+
+        {/* Filter Dialog */}
+        <LeadFilterDialog
+          isOpen={isFilterOpen}
+          onClose={() => setIsFilterOpen(false)}
+          filters={filters}
+          onFiltersChange={handleFiltersChange}
+        />
+
+        {/* Sort Dialog */}
+        <LeadSortDialog
+          isOpen={isSortOpen}
+          onClose={() => setIsSortOpen(false)}
+          sort={sort}
+          onSortChange={handleSortChange}
+        />
       </div>
     </Page>
   );

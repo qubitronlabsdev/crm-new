@@ -75,7 +75,7 @@ const protectedRoutes = {
               }),
             },
             {
-              path: ":id/edit",
+              path: "edit/:id",
               lazy: async () => ({
                 Component: (await import("app/pages/Leads/Edit")).default,
               }),
@@ -110,7 +110,7 @@ const protectedRoutes = {
               }),
             },
             {
-              path: ":id/edit",
+              path: "edit/:id",
               lazy: async () => ({
                 Component: (await import("app/pages/Quotations/Edit")).default,
               }),

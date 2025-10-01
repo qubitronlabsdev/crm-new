@@ -49,10 +49,17 @@ export function ItineraryBuilder() {
   };
 
   const handleSubmitItem = async (data) => {
-    if (editingItem) {
-      updateItem(selectedDay, editingItem.id, data);
-    } else {
-      addItem(selectedDay, data);
+    try {
+      if (editingItem) {
+        updateItem(selectedDay, editingItem.id, data);
+      } else {
+        addItem(selectedDay, data);
+      }
+      setIsItemFormOpen(false);
+      setSelectedDay(null);
+      setEditingItem(null);
+    } catch (error) {
+      console.error("Error handling item submission:", error);
     }
   };
 
@@ -211,7 +218,7 @@ export function ItineraryBuilder() {
                   Net Cost:
                 </span>
                 <span className="font-medium text-gray-900 dark:text-white">
-                  ${getTotalNetCost().toLocaleString()}
+                  ${(getTotalNetCost() || 0).toLocaleString()}
                 </span>
               </div>
 
@@ -223,8 +230,8 @@ export function ItineraryBuilder() {
                   type="number"
                   min="0"
                   max="100"
-                  value={markup}
-                  onChange={(e) => setMarkup(Number(e.target.value))}
+                  value={markup || 0}
+                  onChange={(e) => setMarkup(Number(e.target.value) || 0)}
                   className="w-16 text-center"
                 />
                 <span className="text-sm text-gray-600 dark:text-gray-400">
@@ -237,7 +244,11 @@ export function ItineraryBuilder() {
                   Markup Amount:
                 </span>
                 <span className="font-medium text-gray-900 dark:text-white">
-                  ${((getTotalNetCost() * markup) / 100).toLocaleString()}
+                  $
+                  {(
+                    ((getTotalNetCost() || 0) * (markup || 0)) /
+                    100
+                  ).toLocaleString()}
                 </span>
               </div>
 
@@ -248,7 +259,7 @@ export function ItineraryBuilder() {
                   Total Price:
                 </span>
                 <span className="text-primary-600 dark:text-primary-400">
-                  ${getTotalWithMarkup().toLocaleString()}
+                  ${(getTotalWithMarkup() || 0).toLocaleString()}
                 </span>
               </div>
 

@@ -1,5 +1,5 @@
 // Import Dependencies
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -33,6 +33,10 @@ const itemSchema = yup.object({
   description: yup.string(),
   cost: yup
     .number()
+    .transform((value, originalValue) => {
+      // Handle string to number conversion
+      return originalValue === "" ? 0 : Number(originalValue);
+    })
     .min(0, "Cost must be positive")
     .required("Cost is required"),
   time: yup.string(),
@@ -53,24 +57,63 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
   } = useForm({
     resolver: yupResolver(itemSchema),
     defaultValues: {
-      type: item?.type || "",
-      title: item?.title || "",
-      description: item?.description || "",
-      cost: item?.cost || "",
-      time: item?.time || "",
-      location: item?.location || "",
-      notes: item?.notes || "",
+      type: "",
+      title: "",
+      description: "",
+      cost: 0,
+      time: "",
+      location: "",
+      notes: "",
     },
   });
+
+  // Reset form when item changes or modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const formValues = item
+        ? {
+            type: item.type || "",
+            title: item.title || "",
+            description: item.description || "",
+            cost: item.cost || 0,
+            time: item.time || "",
+            location: item.location || "",
+            notes: item.notes || "",
+          }
+        : {
+            type: "",
+            title: "",
+            description: "",
+            cost: 0,
+            time: "",
+            location: "",
+            notes: "",
+          };
+
+      reset(formValues);
+    }
+  }, [isOpen, item, reset]);
 
   const handleFormSubmit = async (data) => {
     setIsLoading(true);
     try {
-      await onSubmit(data);
+      // Validate and sanitize data before submission
+      const sanitizedData = {
+        type: data.type || "other",
+        title: data.title || "",
+        description: data.description || "",
+        cost: Number(data.cost) || 0,
+        time: data.time || "",
+        location: data.location || "",
+        notes: data.notes || "",
+      };
+
+      await onSubmit(sanitizedData);
       reset();
       onClose();
     } catch (error) {
       console.error("Error submitting item:", error);
+      // You might want to show a toast notification here
     } finally {
       setIsLoading(false);
     }

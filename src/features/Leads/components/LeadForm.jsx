@@ -21,6 +21,27 @@ const leadSchema = yup.object({
   travel_time: yup.string(),
   status: yup.string().required("Status is required"),
   priority: yup.string().required("Priority is required"),
+  customer_name: yup.string().required("Customer name is required"),
+  customer_phone: yup.string().required("Phone number is required"),
+  customer_email: yup
+    .string()
+    .email("Invalid email")
+    .required("Email is required"),
+  destination: yup.string().required("Destination is required"),
+  budget: yup
+    .number()
+    .min(0, "Budget must be positive")
+    .required("Budget is required"),
+  travel_dates: yup
+    .array()
+    .of(yup.date().required())
+    .min(2, "Please select both start and end dates")
+    .required("Travel dates are required"),
+
+  group_size: yup
+    .number()
+    .min(1, "Group size must be at least 1")
+    .required("Group size is required"),
   lead_source: yup.string().required("Lead source is required"),
   days: yup
     .number()
@@ -36,21 +57,11 @@ const leadSchema = yup.object({
     .required("Children is required"),
   children_age: yup.string(),
   departure_city: yup.string().required("Departure city is required"),
-  destination: yup.string().required("Destination is required"),
   estimated_value: yup
     .number()
     .min(0, "Budget must be positive")
     .required("Budget is required"),
-  travel_dates: yup
-    .array()
-    .of(yup.date().required())
-    .min(2, "Please select both start and end dates")
-    .required("Travel dates are required"),
 
-  group_size: yup
-    .number()
-    .min(1, "Group size must be at least 1")
-    .required("Group size is required"),
   travel_preferences: yup.string(),
 
   notes: yup.string(),
@@ -121,13 +132,19 @@ export function LeadForm({
       travel_time: [],
       status: "fresh",
       priority: "medium",
+      customer_name: "",
+      customer_phone: "",
+      customer_email: "",
+      destination: "",
+      budget: "",
+      travel_dates: [], // 👈 must be array
+      group_size: 1,
       lead_source: "",
       days: 1,
       adults: 1,
       children: 0,
       children_age: "",
       departure_city: "",
-      destination: "",
       estimated_value: "",
       expected_close_date: "",
       travel_preferences: [], // 👈 must be array
@@ -147,13 +164,18 @@ export function LeadForm({
         travel_time: lead.travel_time || "",
         status: lead.status || "fresh",
         priority: lead.priority || "medium",
+        customer_name: lead.customer_name || "",
+        customer_phone: lead.customer_phone || "",
+        customer_email: lead.customer_email || "",
+        destination: lead.destination || "",
+        budget: lead.budget || "",
+        group_size: lead.group_size || 1,
         lead_source: lead.lead_source || "",
         days: lead.days || 1,
         adults: lead.adults || 1,
         children: lead.children || 0,
         children_age: lead.children_age || "",
         departure_city: lead.departure_city || "",
-        destination: lead.destination || "",
         estimated_value: lead.estimated_value || "",
         expected_close_date: lead.expected_close_date || "",
         travel_preferences: lead.travel_preferences || [],
@@ -371,6 +393,132 @@ export function LeadForm({
               error={errors.estimated_value?.message}
               className="w-full"
             />
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <Input
+              label="Adults *"
+              placeholder="Number of adults"
+              type="number"
+              min="1"
+              {...register("adults", { valueAsNumber: true })}
+              error={errors.adults?.message}
+              className="w-full"
+            />
+            <Input
+              label="Children *"
+              placeholder="Number of children"
+              type="number"
+              min="0"
+              {...register("children", { valueAsNumber: true })}
+              error={errors.children?.message}
+              className="w-full"
+            />
+            {/* Custom Multi-Select Children Age Field */}
+            <div className="w-full">
+              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Children Ages
+              </label>
+
+              <div className="relative">
+                {/* Trigger Button */}
+                <button
+                  type="button"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  disabled={childrenCount === 0}
+                  className={`w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-left shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 ${childrenCount === 0 ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:border-gray-400"} flex min-h-[42px] items-center justify-between`}
+                >
+                  <span
+                    className={`block truncate ${getDisplayText() === "No children" || getDisplayText() === "Select children ages..." ? "text-gray-500" : "text-gray-900 dark:text-white"}`}
+                  >
+                    {getDisplayText()}
+                  </span>
+                  <ChevronDownIcon
+                    className={`h-5 w-5 text-gray-400 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {/* Dropdown Content */}
+                {isDropdownOpen && childrenCount > 0 && (
+                  <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-300 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800">
+                    <div className="space-y-3 p-3">
+                      {childrenAges.map((child, index) => (
+                        <div
+                          key={child.id}
+                          className="flex items-center justify-between"
+                        >
+                          <label className="min-w-[80px] text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Child {index + 1} age:
+                          </label>
+                          <input
+                            type="number"
+                            min="0"
+                            max="17"
+                            placeholder="Age"
+                            value={child.age}
+                            onChange={(e) =>
+                              updateChildAge(index, e.target.value)
+                            }
+                            className="ml-2 w-20 rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                          />
+                        </div>
+                      ))}
+
+                      <div className="border-t border-gray-200 pt-2 dark:border-gray-600">
+                        <button
+                          type="button"
+                          onClick={() => setIsDropdownOpen(false)}
+                          className="w-full rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        >
+                          Done
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Hidden input for form registration */}
+              <input type="hidden" {...register("children_age")} />
+
+              {errors.children_age && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.children_age.message}
+                </p>
+              )}
+
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                {childrenCount === 0
+                  ? "Enter number of children above to specify ages"
+                  : "e.g. 5, 8, 12"}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <Input
+              label="Departure City *"
+              placeholder="Enter departure city"
+              {...register("departure_city")}
+              error={errors.departure_city?.message}
+              className="w-full"
+            />
+            <Input
+              label="Destination *"
+              placeholder="Enter destination"
+              {...register("destination")}
+              error={errors.destination?.message}
+              className="w-full"
+            />
+            <Input
+              label="Budget *"
+              placeholder="Enter budget"
+              type="number"
+              min="0"
+              step="0.01"
+              {...register("budget")}
+              error={errors.budget?.message}
+            />
 
             {/* Travel Dates with Controller */}
             <div className="md:col-span-1">
@@ -418,142 +566,62 @@ export function LeadForm({
                   Children Ages
                 </label>
 
-                <div className="relative">
-                  {/* Trigger Button */}
-                  <button
-                    type="button"
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    disabled={childrenCount === 0}
-                    className={`w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-left shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 ${childrenCount === 0 ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:border-gray-400"} flex min-h-[42px] items-center justify-between`}
-                  >
-                    <span
-                      className={`block truncate ${getDisplayText() === "No children" || getDisplayText() === "Select children ages..." ? "text-gray-500" : "text-gray-900 dark:text-white"}`}
-                    >
-                      {getDisplayText()}
-                    </span>
-                    <ChevronDownIcon
-                      className={`h-5 w-5 text-gray-400 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
-                    />
-                  </button>
-
-                  {/* Dropdown Content */}
-                  {isDropdownOpen && childrenCount > 0 && (
-                    <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-300 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800">
-                      <div className="space-y-3 p-3">
-                        {childrenAges.map((child, index) => (
-                          <div
-                            key={child.id}
-                            className="flex items-center justify-between"
-                          >
-                            <label className="min-w-[80px] text-sm font-medium text-gray-700 dark:text-gray-300">
-                              Child {index + 1} age:
-                            </label>
-                            <input
-                              type="number"
-                              min="0"
-                              max="17"
-                              placeholder="Age"
-                              value={child.age}
-                              onChange={(e) =>
-                                updateChildAge(index, e.target.value)
-                              }
-                              className="ml-2 w-20 rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            />
-                          </div>
-                        ))}
-
-                        <div className="border-t border-gray-200 pt-2 dark:border-gray-600">
-                          <button
-                            type="button"
-                            onClick={() => setIsDropdownOpen(false)}
-                            className="w-full rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                          >
-                            Done
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Hidden input for form registration */}
-                <input type="hidden" {...register("children_age")} />
-
-                {errors.children_age && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.children_age.message}
-                  </p>
-                )}
-
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  {childrenCount === 0
-                    ? "Enter number of children above to specify ages"
-                    : "e.g. 5, 8, 12"}
-                </p>
+                <Input
+                  label="Group Size *"
+                  placeholder="Number of travelers"
+                  type="number"
+                  min="1"
+                  {...register("group_size")}
+                  error={errors.group_size?.message}
+                />
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <Input
-                label="Departure City *"
-                placeholder="Enter departure city"
-                {...register("departure_city")}
-                error={errors.departure_city?.message}
+
+            {/* Lead Information */}
+            <div className="space-y-6">
+              <div className="border-b border-gray-200 pb-4 dark:border-gray-700">
+                <h3 className="dark:text-dark-50 text-lg font-semibold text-gray-800">
+                  Additional Information
+                </h3>
+                <p className="dark:text-dark-200 mt-1 text-sm text-gray-600">
+                  Travel preferences and additional notes
+                </p>
+              </div>
+
+              <Textarea
+                label="Travel Preferences"
+                placeholder="Enter any specific travel preferences..."
+                rows={4}
+                {...register("travel_preferences")}
+                error={errors.travel_preferences?.message}
                 className="w-full"
+                helpText="Include any specific preferences, budget range, accommodation type, activities, etc."
               />
-              <Input
-                label="Destination *"
-                placeholder="Enter destination"
-                {...register("destination")}
-                error={errors.destination?.message}
+
+              <Textarea
+                label="Notes"
+                placeholder="Enter any additional notes..."
+                rows={3}
+                {...register("notes")}
+                error={errors.notes?.message}
                 className="w-full"
+                helpText="Any other relevant information about this lead"
               />
             </div>
+
+            {/* Submit Button */}
+            <div className="flex justify-end border-t border-gray-200 pt-6 dark:border-gray-700">
+              <Button
+                type="submit"
+                color="primary"
+                isLoading={isLoading}
+                disabled={isLoading}
+                className="min-w-[140px]"
+              >
+                {lead ? "Update Lead" : "Create Lead"}
+              </Button>
+            </div>
           </div>
-        </div>
-
-        {/* Lead Information */}
-        <div className="space-y-6">
-          <div className="border-b border-gray-200 pb-4 dark:border-gray-700">
-            <h3 className="dark:text-dark-50 text-lg font-semibold text-gray-800">
-              Additional Information
-            </h3>
-            <p className="dark:text-dark-200 mt-1 text-sm text-gray-600">
-              Travel preferences and additional notes
-            </p>
-          </div>
-
-          <Textarea
-            label="Travel Preferences"
-            placeholder="Enter any specific travel preferences..."
-            rows={4}
-            {...register("travel_preferences")}
-            error={errors.travel_preferences?.message}
-            className="w-full"
-            helpText="Include any specific preferences, budget range, accommodation type, activities, etc."
-          />
-
-          <Textarea
-            label="Notes"
-            placeholder="Enter any additional notes..."
-            rows={3}
-            {...register("notes")}
-            error={errors.notes?.message}
-            className="w-full"
-            helpText="Any other relevant information about this lead"
-          />
-        </div>
-
-        {/* Submit Button */}
-        <div className="flex justify-end border-t border-gray-200 pt-6 dark:border-gray-700">
-          <Button
-            type="submit"
-            color="primary"
-            isLoading={isLoading}
-            disabled={isLoading}
-            className="min-w-[140px]"
-          >
-            {lead ? "Update Lead" : "Create Lead"}
-          </Button>
         </div>
       </form>
     </Card>

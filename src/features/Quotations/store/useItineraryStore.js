@@ -16,10 +16,17 @@ const useItineraryStore = create(
       // Computed values
       getTotalNetCost: () => {
         const { days } = get();
+        if (!days || !Array.isArray(days)) return 0;
+
         return days.reduce((total, day) => {
+          if (!day || !Array.isArray(day.items)) return total;
+
           return (
             total +
-            day.items.reduce((dayTotal, item) => dayTotal + (item.cost || 0), 0)
+            day.items.reduce((dayTotal, item) => {
+              const itemCost = Number(item?.cost) || 0;
+              return dayTotal + itemCost;
+            }, 0)
           );
         }, 0);
       },
@@ -27,7 +34,8 @@ const useItineraryStore = create(
       getTotalWithMarkup: () => {
         const { getTotalNetCost, markup } = get();
         const netCost = getTotalNetCost();
-        return netCost + (netCost * markup) / 100;
+        const markupValue = Number(markup) || 0;
+        return netCost + (netCost * markupValue) / 100;
       },
 
       // Actions
@@ -72,12 +80,26 @@ const useItineraryStore = create(
 
       addItem: (dayId, item) => {
         const { days } = get();
+        if (!item || typeof item !== "object") return;
+
+        const newItem = {
+          id: Date.now(),
+          type: item.type || "other",
+          title: item.title || "",
+          description: item.description || "",
+          cost: Number(item.cost) || 0,
+          time: item.time || "",
+          location: item.location || "",
+          notes: item.notes || "",
+          ...item,
+        };
+
         set({
           days: days.map((day) =>
             day.id === dayId
               ? {
                   ...day,
-                  items: [...day.items, { id: Date.now(), ...item }],
+                  items: [...(day.items || []), newItem],
                 }
               : day,
           ),
@@ -86,13 +108,22 @@ const useItineraryStore = create(
 
       updateItem: (dayId, itemId, updates) => {
         const { days } = get();
+        if (!updates || typeof updates !== "object") return;
+
+        const sanitizedUpdates = {
+          ...updates,
+          cost: Number(updates.cost) || 0,
+        };
+
         set({
           days: days.map((day) =>
             day.id === dayId
               ? {
                   ...day,
-                  items: day.items.map((item) =>
-                    item.id === itemId ? { ...item, ...updates } : item,
+                  items: (day.items || []).map((item) =>
+                    item.id === itemId
+                      ? { ...item, ...sanitizedUpdates }
+                      : item,
                   ),
                 }
               : day,
@@ -115,12 +146,53 @@ const useItineraryStore = create(
       },
 
       loadItinerary: (itineraryData) => {
-        set({
-          quotation: itineraryData.quotation || null,
-          days: itineraryData.days || [],
-          markup: itineraryData.markup || 20,
-          currency: itineraryData.currency || "USD",
-        });
+        try {
+          if (!itineraryData || typeof itineraryData !== "object") {
+            console.warn("Invalid itinerary data provided to loadItinerary");
+            return;
+          }
+
+          // Safely extract and validate data
+          const quotation = itineraryData.quotation || null;
+          const days = Array.isArray(itineraryData.days)
+            ? itineraryData.days.map((day) => ({
+                id: day.id || Date.now() + Math.random(),
+                dayNumber: day.dayNumber || 1,
+                title: day.title || `Day ${day.dayNumber || 1}`,
+                description: day.description || "",
+                items: Array.isArray(day.items)
+                  ? day.items.map((item) => ({
+                      id: item.id || Date.now() + Math.random(),
+                      type: item.type || "other",
+                      title: item.title || "",
+                      description: item.description || "",
+                      cost: Number(item.cost) || 0,
+                      time: item.time || "",
+                      location: item.location || "",
+                      notes: item.notes || "",
+                    }))
+                  : [],
+              }))
+            : [];
+          const markup = Number(itineraryData.markup) || 20;
+          const currency = itineraryData.currency || "USD";
+
+          set({
+            quotation,
+            days,
+            markup,
+            currency,
+          });
+        } catch (error) {
+          console.error("Error loading itinerary:", error);
+          // Reset to safe defaults on error
+          set({
+            quotation: null,
+            days: [],
+            markup: 20,
+            currency: "USD",
+          });
+        }
       },
 
       clearItinerary: () => {

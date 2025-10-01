@@ -1,24 +1,21 @@
 // Import Dependencies
 import { useState } from "react";
-import {
-  Link,
-  // useNavigate
-} from "react-router";
-import { ArrowLeftIcon, SaveIcon } from "@heroicons/react/24/outline";
+import { Link, useNavigate } from "react-router";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 // Local Imports
 import { Button, Card, Input, Textarea } from "components/ui";
 import { Page } from "components/shared/Page";
 import { Breadcrumbs } from "components/shared/Breadcrumbs";
-// import { ItineraryBuilder } from "features/Quotations/components/ItineraryBuilder";
-// import { useItineraryStore } from "features/Quotations/store/useItineraryStore";
+import { ItineraryBuilder } from "features/Quotations/components/ItineraryBuilder";
+import { useItineraryStore } from "features/Quotations/store/useItineraryStore";
 
 // ----------------------------------------------------------------------
 
 const breadcrumbItems = [
-  { label: "Dashboard", href: "/" },
-  { label: "Quotations", href: "/quotations" },
-  { label: "Create Quotation" },
+  { title: "Dashboard", path: "/" },
+  { title: "Quotations", path: "/quotations" },
+  { title: "Create Quotation" },
 ];
 
 // ----------------------------------------------------------------------
@@ -26,10 +23,8 @@ const breadcrumbItems = [
 console.log("Rendering CreateQuotation component");
 
 export default function CreateQuotation() {
-  // const navigate = useNavigate();
-  // eslint-disable-next-line no-unused-vars
-  const [isLoading, _setIsLoading] = useState(false);
-  // eslint-disable-next-line no-unused-vars
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [quotationData, setQuotationData] = useState({
     title: "",
     description: "",
@@ -38,44 +33,45 @@ export default function CreateQuotation() {
     valid_until: "",
   });
 
-  // const { exportItinerary, clearItinerary } = useItineraryStore();
+  const { exportItinerary, clearItinerary } = useItineraryStore();
 
-  // const handleInputChange = (field, value) => {
-  //   setQuotationData((prev) => ({
-  //     ...prev,
-  //     [field]: value,
-  //   }));
-  // };
+  const handleInputChange = (field, value) => {
+    setQuotationData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
-  // const handleSaveQuotation = async () => {
-  //   setIsLoading(true);
+  // eslint-disable-next-line no-unused-vars
+  const handleSaveQuotation = async () => {
+    setIsLoading(true);
 
-  //   try {
-  //     const itineraryData = exportItinerary();
-  //     const completeQuotation = {
-  //       ...quotationData,
-  //       ...itineraryData,
-  //     };
+    try {
+      const itineraryData = exportItinerary();
+      const completeQuotation = {
+        ...quotationData,
+        ...itineraryData,
+      };
 
-  //     // In a real app with Inertia.js, you would use:
-  //     // router.post('/quotations', completeQuotation)
+      // In a real app with Inertia.js, you would use:
+      // router.post('/quotations', completeQuotation)
 
-  //     console.log("Saving quotation:", completeQuotation);
+      console.log("Saving quotation:", completeQuotation);
 
-  //     // Simulate API call
-  //     await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-  //     // Clear the store after successful save
-  //     clearItinerary();
+      // Clear the store after successful save
+      clearItinerary();
 
-  //     // Redirect to leads list
-  //     navigate("/leads");
-  //   } catch (error) {
-  //     console.error("Error saving quotation:", error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+      // Redirect to leads list
+      navigate("/leads");
+    } catch (error) {
+      console.error("Error saving quotation:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Page title="Create Quotation - Travel CRM">
@@ -110,7 +106,7 @@ export default function CreateQuotation() {
               disabled={isLoading}
               className="shrink-0"
             >
-              <SaveIcon className="mr-2 h-5 w-5" />
+              {/* <SaveIcon className="mr-2 h-5 w-5" /> */}
               Save Quotation
             </Button>
           </div>
@@ -125,32 +121,32 @@ export default function CreateQuotation() {
                 label="Quotation Title"
                 placeholder="e.g., Paris Romantic Getaway"
                 value={quotationData.title}
-                // onChange={(e) => handleInputChange("title", e.target.value)}
+                onChange={(e) => handleInputChange("title", e.target.value)}
               />
               <Input
                 label="Customer Name"
                 placeholder="Enter customer name"
                 value={quotationData.customer_name}
-                // onChange={(e) =>
-                //   handleInputChange("customer_name", e.target.value)
-                // }
+                onChange={(e) =>
+                  handleInputChange("customer_name", e.target.value)
+                }
               />
               <Input
                 label="Customer Email"
                 type="email"
                 placeholder="Enter customer email"
                 value={quotationData.customer_email}
-                // onChange={(e) =>
-                //   handleInputChange("customer_email", e.target.value)
-                // }
+                onChange={(e) =>
+                  handleInputChange("customer_email", e.target.value)
+                }
               />
               <Input
                 label="Valid Until"
                 type="date"
                 value={quotationData.valid_until}
-                // onChange={(e) =>
-                //   handleInputChange("valid_until", e.target.value)
-                // }
+                onChange={(e) =>
+                  handleInputChange("valid_until", e.target.value)
+                }
               />
               <div className="md:col-span-2">
                 <Textarea
@@ -158,16 +154,16 @@ export default function CreateQuotation() {
                   placeholder="Brief description of the travel package"
                   rows={3}
                   value={quotationData.description}
-                  // onChange={(e) =>
-                  //   handleInputChange("description", e.target.value)
-                  // }
+                  onChange={(e) =>
+                    handleInputChange("description", e.target.value)
+                  }
                 />
               </div>
             </div>
           </Card>
 
           {/* Itinerary Builder */}
-          {/* <ItineraryBuilder /> */}
+          <ItineraryBuilder />
         </div>
       </div>
     </Page>

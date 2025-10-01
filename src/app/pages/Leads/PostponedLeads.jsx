@@ -13,14 +13,14 @@ import { Badge, Button, Card } from "components/ui";
 import { Page } from "components/shared/Page";
 import { Breadcrumbs } from "components/shared/Breadcrumbs";
 import { DataTable } from "components/shared/DataTable";
-import { LeadTabs } from "components/shared/LeadTabs";
+import { LeadTabs } from "features/Leads/components/LeadTabs";
 
 // ----------------------------------------------------------------------
 
 const breadcrumbItems = [
-  { label: "Dashboard", href: "/" },
-  { label: "Leads", href: "/leads/all" },
-  { label: "Postponed Leads" },
+  { title: "Dashboard", path: "/" },
+  { title: "Leads", path: "/leads/all" },
+  { title: "Postponed Leads" },
 ];
 
 // Mock data - only postponed leads

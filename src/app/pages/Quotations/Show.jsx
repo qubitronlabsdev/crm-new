@@ -18,9 +18,9 @@ import { Breadcrumbs } from "components/shared/Breadcrumbs";
 // ----------------------------------------------------------------------
 
 const breadcrumbItems = [
-  { label: "Dashboard", href: "/" },
-  { label: "Quotations", href: "/quotations" },
-  { label: "Quotation Details" },
+  { title: "Dashboard", path: "/" },
+  { title: "Quotations", path: "/quotations" },
+  { title: "Quotation Details" },
 ];
 
 const getItemTypeIcon = (type) => {
