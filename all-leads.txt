@@ -1,0 +1,35 @@
+In the all Leads page you have to do the following adjustments 
+  1. Create a single large filter button which when clicked opens up a popup/dialog with multiple filters inside it that filters the leads table
+   -> Filter by Source
+   -> Filter by Agent Assigned
+   -> Filtered by Created At
+   -> Filter by Travel Destination (This will be a react-select dropdown) with the functionality of the user being able to type inside the search box & select a destination based on the result of the search 
+
+  2. Create a single large Sort button which when clicked opens up a popup/dialog with multiple sorting options inside it that sorts the leads table 
+    -> Sort by Date (Created_At date , updated_at date) note:- these two fields will be come from the backend and we have to display it in the table as well 
+
+    => Sort by lead Priority 
+    => Sort by travel date
+
+  3. Remove the Save to draft functionality from Create Lead 
+  4. I want the filter & sort mega dropdown component to be placed right at the end where we have written 
+  All Leads ({leads.meta.total}) use flex w-full & jsutify-between for this 
+
+  Also prepare the silhoutte for api integration to leads table that mocks get leads api 
+
+
+I want the following patches to be done in lead details page 
+  -> show all the details of a particular lead inside it's view details page 
+  -> Option to add a new quotation 
+  -> Fully functional Add Notes feature ( The sales person viewing a lead shall be able to add notes for that particular lead that shall be stored in the database in the future )
+  -> Quotation History Tracking timeline 
+  -> A fully functional Lead Progress tracking timeline that updates based on the Lead_Status with giving the user the freedom to upadate the lead-status in the timeline part also so that the sales person can change the status of the lead in the view leads page as well
+
+  the design should be easy to understand compact but readable & the flow should be easy to follow along 
+
+
+  
+
+
+
+  

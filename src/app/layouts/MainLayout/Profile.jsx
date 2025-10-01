@@ -1,4 +1,5 @@
 // Import Dependencies
+import PropTypes from "prop-types";
 import {
   Popover,
   PopoverButton,
@@ -44,13 +45,11 @@ const links = [
   },
 ];
 
-export function Profile() {
-  return (
-    <Popover className="relative">
-      <PopoverButton
-        as={Avatar}
-        size={12}
-        role="button"
+export function Profile({ compact = false }) {
+  if (compact) {
+    return (
+      <Avatar
+        size={8}
         src="/images/avatar/avatar-12.jpg"
         alt="Profile"
         indicator={
@@ -60,6 +59,24 @@ export function Profile() {
           root: "cursor-pointer",
         }}
       />
+    );
+  }
+
+  return (
+    <Popover className="relative w-full">
+      <PopoverButton className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:hover:bg-gray-800 dark:focus:bg-gray-800">
+        <Avatar
+          size={8}
+          src="/images/avatar/avatar-12.jpg"
+          alt="Profile"
+          // indicator={
+          //   <AvatarDot color="success" className="ltr:right-0 rtl:left-0" />
+          // }
+        />
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Profile
+        </span>
+      </PopoverButton>
       <Transition
         enter="duration-200 ease-out"
         enterFrom="translate-x-2 opacity-0"
@@ -132,3 +149,7 @@ export function Profile() {
     </Popover>
   );
 }
+
+Profile.propTypes = {
+  compact: PropTypes.bool,
+};

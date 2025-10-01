@@ -1,21 +1,21 @@
 // Import Dependencies
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import { ArrowLeftIcon, SaveIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 // Local Imports
 import { Button, Card, Input, Textarea } from "components/ui";
 import { Page } from "components/shared/Page";
 import { Breadcrumbs } from "components/shared/Breadcrumbs";
-import { ItineraryBuilder } from "features/Quotations/components/ItineraryBuilder";
-import { useItineraryStore } from "features/Quotations/store/useItineraryStore";
+// import { ItineraryBuilder } from "features/Quotations/components/ItineraryBuilder";
+// import { useItineraryStore } from "features/Quotations/store/useItineraryStore";
 
 // ----------------------------------------------------------------------
 
 const breadcrumbItems = [
-  { label: "Dashboard", href: "/" },
-  { label: "Quotations", href: "/quotations" },
-  { label: "Edit Quotation" },
+  { title: "Dashboard", path: "/" },
+  { title: "Quotations", path: "/quotations" },
+  { title: "Edit Quotation" },
 ];
 
 // Mock data - in real app this would come from Inertia.js props
@@ -74,28 +74,37 @@ export default function EditQuotation() {
     valid_until: "",
   });
 
-  const { exportItinerary, loadItinerary } = useItineraryStore();
+  // const { exportItinerary, loadItinerary } = useItineraryStore();
 
   useEffect(() => {
-    // In real app, quotation data would come from Inertia.js props
-    const quotation = mockQuotation;
+    try {
+      // In real app, quotation data would come from Inertia.js props
+      const quotation = mockQuotation;
 
-    setQuotationData({
-      title: quotation.title,
-      description: quotation.description,
-      customer_name: quotation.customer_name,
-      customer_email: quotation.customer_email,
-      valid_until: quotation.valid_until,
-    });
+      if (!quotation) {
+        console.error("No quotation data available");
+        return;
+      }
 
-    // Load itinerary data into the store
-    loadItinerary({
-      quotation: quotation,
-      days: quotation.days,
-      markup: quotation.markup,
-      currency: quotation.currency,
-    });
-  }, [id, loadItinerary]);
+      setQuotationData({
+        title: quotation.title || "",
+        description: quotation.description || "",
+        customer_name: quotation.customer_name || "",
+        customer_email: quotation.customer_email || "",
+        valid_until: quotation.valid_until || "",
+      });
+
+      // Load itinerary data into the store
+      // loadItinerary({
+      //   quotation: quotation,
+      //   days: quotation.days || [],
+      //   markup: quotation.markup || 20,
+      //   currency: quotation.currency || "USD",
+      // });
+    } catch (error) {
+      console.error("Error initializing quotation edit page:", error);
+    }
+  }, [id]);
 
   const handleInputChange = (field, value) => {
     setQuotationData((prev) => ({
@@ -108,10 +117,10 @@ export default function EditQuotation() {
     setIsLoading(true);
 
     try {
-      const itineraryData = exportItinerary();
+      // const itineraryData = exportItinerary();
       const completeQuotation = {
         ...quotationData,
-        ...itineraryData,
+        // ...itineraryData,
       };
 
       // In a real app with Inertia.js, you would use:
@@ -163,7 +172,6 @@ export default function EditQuotation() {
             disabled={isLoading}
             className="shrink-0"
           >
-            <SaveIcon className="mr-2 h-5 w-5" />
             Update Quotation
           </Button>
         </div>
@@ -218,7 +226,7 @@ export default function EditQuotation() {
         </Card>
 
         {/* Itinerary Builder */}
-        <ItineraryBuilder />
+        {/* <ItineraryBuilder /> */}
       </div>
     </Page>
   );

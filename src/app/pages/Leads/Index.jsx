@@ -14,7 +14,7 @@ import { getLeadsFromStorage } from "utils/leadsUtils";
 
 // ----------------------------------------------------------------------
 
-const breadcrumbItems = [{ label: "Dashboard", href: "/" }, { label: "Leads" }];
+const breadcrumbItems = [{ title: "Dashboard", path: "/" }, { title: "Leads" }];
 
 const getStatusStyle = (status) => {
   switch (status?.toLowerCase()) {

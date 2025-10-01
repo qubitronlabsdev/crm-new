@@ -13,9 +13,9 @@ import { getLeadById, transformLeadToFormData } from "utils/leadsUtils";
 // ----------------------------------------------------------------------
 
 const breadcrumbItems = [
-  { label: "Dashboard", href: "/" },
-  { label: "Leads", href: "/leads/all" },
-  { label: "Edit Lead" },
+  { title: "Dashboard", path: "/" },
+  { title: "Leads", path: "/leads/all" },
+  { title: "Edit Lead" },
 ];
 
 // ----------------------------------------------------------------------

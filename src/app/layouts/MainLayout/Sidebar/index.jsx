@@ -8,8 +8,7 @@ import { useSidebarContext } from "app/contexts/sidebar/context";
 import { navigation } from "app/navigation";
 import { useDidUpdate } from "hooks";
 import { isRouteActive } from "utils/isRouteActive";
-import { MainPanel } from "./MainPanel";
-import { PrimePanel } from "./PrimePanel";
+import { ExpandableSidebar } from "./ExpandableSidebar";
 
 // ----------------------------------------------------------------------
 
@@ -18,46 +17,55 @@ export function Sidebar() {
   const { name, lgAndDown } = useBreakpointsContext();
   const { isExpanded, close } = useSidebarContext();
 
-  const initialSegment = useMemo(
-    () => navigation.find((item) => isRouteActive(item.path, pathname)),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  const [openDropdowns, setOpenDropdowns] = useState({});
 
-  const [activeSegmentPath, setActiveSegmentPath] = useState(
-    initialSegment?.path,
-  );
-
-  const currentSegment = useMemo(() => {
-    return navigation.find((item) => item.path === activeSegmentPath);
-  }, [activeSegmentPath]);
-
-  useDidUpdate(() => {
-    const activePath = navigation.find((item) =>
-      isRouteActive(item.path, pathname),
-    )?.path;
-
-    if (!isRouteActive(activeSegmentPath, pathname)) {
-      setActiveSegmentPath(activePath);
+  // Find which navigation item should be active based on current path
+  const activeNav = useMemo(() => {
+    for (const navItem of navigation) {
+      if (navItem.path && isRouteActive(navItem.path, pathname)) {
+        return navItem.id;
+      }
+      if (navItem.childs) {
+        for (const child of navItem.childs) {
+          if (isRouteActive(child.path, pathname)) {
+            return {
+              parent: navItem.id,
+              child: child.id,
+            };
+          }
+        }
+      }
     }
+    return null;
   }, [pathname]);
+
+  // Open dropdown for active item on path change
+  useDidUpdate(() => {
+    if (activeNav && typeof activeNav === "object" && activeNav.parent) {
+      setOpenDropdowns((prev) => ({
+        ...prev,
+        [activeNav.parent]: true,
+      }));
+    }
+  }, [activeNav]);
 
   useDidUpdate(() => {
     if (lgAndDown && isExpanded) close();
   }, [name]);
 
+  const toggleDropdown = (navId) => {
+    setOpenDropdowns((prev) => ({
+      ...prev,
+      [navId]: !prev[navId],
+    }));
+  };
+
   return (
-    <>
-      <MainPanel
-        nav={navigation}
-        activeSegment={activeSegmentPath}
-        setActiveSegment={setActiveSegmentPath}
-      />
-      <PrimePanel
-        close={close}
-        currentSegment={currentSegment}
-        pathname={pathname}
-      />
-    </>
+    <ExpandableSidebar
+      navigation={navigation}
+      pathname={pathname}
+      openDropdowns={openDropdowns}
+      toggleDropdown={toggleDropdown}
+    />
   );
 }
