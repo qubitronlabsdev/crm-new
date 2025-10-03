@@ -11,17 +11,12 @@ import {
 // Local Imports
 import { Badge, Button, Card } from "components/ui";
 import { Page } from "components/shared/Page";
-import { Breadcrumbs } from "components/shared/Breadcrumbs";
 import { DataTable } from "components/shared/DataTable";
 import { LeadTabs } from "features/Leads/components/LeadTabs";
 
 // ----------------------------------------------------------------------
 
-const breadcrumbItems = [
-  { title: "Dashboard", path: "/" },
-  { title: "Leads", path: "/leads/all" },
-  { title: "Fresh Leads" },
-];
+
 
 // Mock data - only fresh leads
 const mockFreshLeads = {
@@ -185,7 +180,6 @@ export default function FreshLeads() {
           {/* Header */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <Breadcrumbs items={breadcrumbItems} />
               <h1 className="dark:text-dark-50 mt-2 text-2xl font-bold tracking-wide text-gray-800">
                 Fresh Leads
               </h1>

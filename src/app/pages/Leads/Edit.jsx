@@ -6,18 +6,8 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 // Local Imports
 import { Button } from "components/ui";
 import { Page } from "components/shared/Page";
-import { Breadcrumbs } from "components/shared/Breadcrumbs";
 import { LeadForm } from "features/Leads/components/LeadForm";
 import { getLeadById, transformLeadToFormData } from "utils/leadsUtils";
-
-// ----------------------------------------------------------------------
-
-const breadcrumbItems = [
-  { title: "Dashboard", path: "/" },
-  { title: "Leads", path: "/leads/all" },
-  { title: "Edit Lead" },
-];
-
 // ----------------------------------------------------------------------
 
 export default function EditLead() {
@@ -115,7 +105,6 @@ export default function EditLead() {
               <ArrowLeftIcon className="h-5 w-5" />
             </Button>
             <div className="min-w-0">
-              <Breadcrumbs items={breadcrumbItems} />
               <h1 className="dark:text-dark-50 mt-2 text-2xl font-bold tracking-wide text-gray-800">
                 {lead ? `Edit Lead #${lead.id}` : "Continue Lead Creation"}
               </h1>

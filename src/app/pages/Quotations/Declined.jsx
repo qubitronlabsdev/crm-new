@@ -5,15 +5,6 @@ import { XCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
 // Local Imports
 import { Button, Card } from "components/ui";
 import { Page } from "components/shared/Page";
-import { Breadcrumbs } from "components/shared/Breadcrumbs";
-
-// ----------------------------------------------------------------------
-
-const breadcrumbItems = [
-  { title: "Dashboard", path: "/" },
-  { title: "Quotations", path: "/quotations" },
-  { title: "Declined Quotations" },
-];
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +16,6 @@ export default function DeclinedQuotations() {
           {/* Header */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <Breadcrumbs items={breadcrumbItems} />
               <h1 className="dark:text-dark-50 mt-2 text-2xl font-bold tracking-wide text-gray-800">
                 Declined Quotations
               </h1>

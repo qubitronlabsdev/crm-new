@@ -13,16 +13,10 @@ import {
 // Local Imports
 import { Badge, Button, Card, Select } from "components/ui";
 import { Page } from "components/shared/Page";
-import { Breadcrumbs } from "components/shared/Breadcrumbs";
+
 
 // ----------------------------------------------------------------------
-
-const breadcrumbItems = [
-  { title: "Dashboard", path: "/" },
-  { title: "Quotations", path: "/quotations" },
-  { title: "Quotation Details" },
-];
-
+//TODO: Replace emojis with icons.
 const getItemTypeIcon = (type) => {
   switch (type) {
     case "hotel":
@@ -206,7 +200,6 @@ export default function ShowQuotation() {
               <ArrowLeftIcon className="h-5 w-5" />
             </Button>
             <div>
-              <Breadcrumbs items={breadcrumbItems} />
               <div className="mt-2 flex items-center gap-3">
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                   Quotation #{quotation.id}

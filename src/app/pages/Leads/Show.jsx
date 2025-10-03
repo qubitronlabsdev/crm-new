@@ -19,15 +19,8 @@ import {
 // Local Imports
 import { Badge, Button, Card, Input, Select, Textarea } from "components/ui";
 import { Page } from "components/shared/Page";
-import { Breadcrumbs } from "components/shared/Breadcrumbs";
 
 // ----------------------------------------------------------------------
-
-const breadcrumbItems = [
-  { title: "Dashboard", path: "/" },
-  { title: "Leads", path: "/leads/all" },
-  { title: "Lead Details" },
-];
 
 const statusOptions = [
   { value: "fresh", label: "Fresh" },
@@ -288,7 +281,6 @@ export default function ShowLead() {
                 <ArrowLeftIcon className="h-5 w-5" />
               </Button>
               <div className="min-w-0">
-                <Breadcrumbs items={breadcrumbItems} />
                 <div className="mt-2 flex items-center gap-3">
                   <h1 className="dark:text-dark-50 text-2xl font-bold tracking-wide text-gray-800">
                     Lead #{lead.id}

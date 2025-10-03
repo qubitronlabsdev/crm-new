@@ -8,14 +8,8 @@ import { PlusIcon, EyeIcon, PencilIcon } from "@heroicons/react/24/outline";
 // Local Imports
 import { Button, Card } from "components/ui";
 import { Page } from "components/shared/Page";
-import { Breadcrumbs } from "components/shared/Breadcrumbs";
 import { DataTable } from "components/shared/DataTable";
 import { getLeadsFromStorage } from "utils/leadsUtils";
-
-// ----------------------------------------------------------------------
-
-const breadcrumbItems = [{ title: "Dashboard", path: "/" }, { title: "Leads" }];
-
 
 // ----------------------------------------------------------------------
 
@@ -198,7 +192,6 @@ export default function LeadsIndex() {
           {/* Header */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <Breadcrumbs items={breadcrumbItems} />
               <h1 className="dark:text-dark-50 mt-2 text-2xl font-bold tracking-wide text-gray-800">
                 Leads
               </h1>

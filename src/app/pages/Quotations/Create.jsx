@@ -6,7 +6,6 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 // Local Imports
 import { Button } from "components/ui";
 import { Page } from "components/shared/Page";
-import { Breadcrumbs } from "components/shared/Breadcrumbs";
 import { MultiStepForm } from "components/shared/MultiStepForm";
 
 // Step Components
@@ -20,12 +19,6 @@ import { useQuotationStore } from "features/Quotations/store/useQuotationStore";
 import { useItineraryStore } from "features/Quotations/store/useItineraryStore";
 
 // ----------------------------------------------------------------------
-
-const breadcrumbItems = [
-  { title: "Dashboard", path: "/" },
-  { title: "Quotations", path: "/quotations" },
-  { title: "Create Quotation" },
-];
 
 const quotationSteps = [
   {
@@ -164,7 +157,6 @@ export default function CreateQuotation() {
                 <ArrowLeftIcon className="h-5 w-5" />
               </Button>
               <div className="min-w-0">
-                <Breadcrumbs items={breadcrumbItems} />
                 <h1 className="dark:text-dark-50 mt-2 text-2xl font-bold tracking-wide text-gray-800">
                   Create Quotation
                 </h1>
