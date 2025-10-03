@@ -7,7 +7,11 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { Button } from "components/ui";
 import { Page } from "components/shared/Page";
 import { LeadForm } from "features/Leads/components/LeadForm";
-import { getLeadById, transformLeadToFormData } from "utils/leadsUtils";
+import { ROUTES } from "app/router/routes";
+import {
+  getLeadById,
+  transformLeadToFormData,
+} from "features/Leads/libs/utils/leadsUtils";
 // ----------------------------------------------------------------------
 
 export default function EditLead() {
@@ -65,7 +69,7 @@ export default function EditLead() {
       localStorage.removeItem("leadFormDraft");
 
       // Redirect to leads list after successful update
-      navigate("/leads/all");
+      navigate(ROUTES.LEADS.ALL);
     } catch (error) {
       console.error("Error updating lead:", error);
     } finally {
@@ -96,7 +100,7 @@ export default function EditLead() {
           <div className="flex items-center gap-4">
             <Button
               component={Link}
-              to="/leads/all"
+              to={ROUTES.LEADS.ALL}
               variant="outlined"
               color="neutral"
               className="shrink-0 p-1"

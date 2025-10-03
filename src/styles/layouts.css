@@ -16,9 +16,16 @@
   @apply md:ltr:ml-(--main-panel-width) md:rtl:mr-(--main-panel-width);
 }
 
-[data-layout="main-layout"].is-sidebar-open main.main-content,
+/* original */
+/* [data-layout="main-layout"].is-sidebar-open main.main-content,
 [data-layout="main-layout"].is-sidebar-open .app-header {
   @apply xl:ltr:ml-[calc(var(--main-panel-width)+var(--prime-panel-width))] xl:rtl:mr-[calc(var(--main-panel-width)+var(--prime-panel-width))];
+} */
+
+/* modified */
+[data-layout="main-layout"].is-sidebar-open main.main-content,
+[data-layout="main-layout"].is-sidebar-open .app-header {
+  @apply xl:ltr:ml-[calc(var(--main-panel-width)+180px)] xl:rtl:mr-[calc(var(--main-panel-width)+180px)];
 }
 
 [data-layout="main-layout"] .prime-panel {

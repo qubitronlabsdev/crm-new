@@ -5,6 +5,10 @@ import { Navigate } from "react-router";
 import { AppLayout } from "app/layouts/AppLayout";
 import { DynamicLayout } from "app/layouts/DynamicLayout";
 import AuthGuard from "middleware/AuthGuard";
+import {
+  // ROUTES,
+  DEFAULT_REDIRECTS,
+} from "./routes";
 
 // ----------------------------------------------------------------------
 
@@ -18,14 +22,14 @@ const protectedRoutes = {
       children: [
         {
           index: true,
-          element: <Navigate to="/leads/all" />,
+          element: <Navigate to={DEFAULT_REDIRECTS.ROOT_TO_LEADS} />,
         },
         {
           path: "dashboards",
           children: [
             {
               index: true,
-              element: <Navigate to="/dashboards/home" />,
+              element: <Navigate to={DEFAULT_REDIRECTS.DASHBOARD_TO_HOME} />,
             },
             {
               path: "home",
@@ -40,7 +44,7 @@ const protectedRoutes = {
           children: [
             {
               index: true,
-              element: <Navigate to="/leads/all" />,
+              element: <Navigate to={DEFAULT_REDIRECTS.LEADS_TO_ALL} />,
             },
             {
               path: "all",
@@ -104,20 +108,6 @@ const protectedRoutes = {
               }),
             },
             {
-              path: "pending",
-              lazy: async () => ({
-                Component: (await import("app/pages/Quotations/Pending"))
-                  .default,
-              }),
-            },
-            {
-              path: "approved",
-              lazy: async () => ({
-                Component: (await import("app/pages/Quotations/Approved"))
-                  .default,
-              }),
-            },
-            {
               path: "create",
               lazy: async () => ({
                 Component: (await import("app/pages/Quotations/Create"))
@@ -169,7 +159,7 @@ const protectedRoutes = {
           children: [
             {
               index: true,
-              element: <Navigate to="/settings/general" />,
+              element: <Navigate to={DEFAULT_REDIRECTS.SETTINGS_TO_GENERAL} />,
             },
             {
               path: "general",

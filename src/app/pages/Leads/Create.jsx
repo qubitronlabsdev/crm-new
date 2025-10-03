@@ -7,10 +7,10 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { Button } from "components/ui";
 import { Page } from "components/shared/Page";
 import { LeadForm } from "features/Leads/components/LeadForm";
+import { ROUTES } from "app/router/routes";
 // import { addLeadToStorage, transformFormDataToLead } from "utils/leadsUtils";
 
 // ----------------------------------------------------------------------
-
 
 // ----------------------------------------------------------------------
 
@@ -22,13 +22,12 @@ export default function CreateLead() {
     setIsLoading(true);
 
     try {
-
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       console.log("Creating lead with data:", data);
 
-      navigate("/quotations/create");
+      navigate(ROUTES.QUOTATIONS.CREATE);
     } catch (error) {
       console.error("Error creating lead:", error);
     } finally {
@@ -44,7 +43,7 @@ export default function CreateLead() {
           <div className="flex items-center gap-4">
             <Button
               component={Link}
-              to="/leads"
+              to={ROUTES.LEADS.ROOT}
               variant="outlined"
               isIcon
               className="shrink-0 p-1"
@@ -52,7 +51,6 @@ export default function CreateLead() {
               <ArrowLeftIcon className="h-5 w-5" />
             </Button>
             <div className="min-w-0">
-             
               <h1 className="dark:text-dark-50 mt-2 text-2xl font-bold tracking-wide text-gray-800">
                 Create New Lead
               </h1>

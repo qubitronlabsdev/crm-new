@@ -12,10 +12,11 @@ import { MultiStepForm } from "components/shared/MultiStepForm";
 import { BasicDetailsStep } from "features/Quotations/components/steps/BasicDetailsStep";
 import { ItineraryPlanningStep } from "features/Quotations/components/steps/ItineraryPlanningStep";
 import { PricingTermsStep } from "features/Quotations/components/steps/PricingTermsStep";
-
+import { TravelRequirementsStep } from "features/Quotations/components/steps/TravelRequirementsStep";
 // Stores
 import { useQuotationStore } from "features/Quotations/store/useQuotationStore";
 import { useItineraryStore } from "features/Quotations/store/useItineraryStore";
+import { ROUTES } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +28,12 @@ const quotationSteps = [
     component: BasicDetailsStep,
   },
 
+  {
+    id: "travel-requirements",
+    title: "Travel Requirements",
+    description: "Trip details & preferences",
+    component: TravelRequirementsStep,
+  },
   {
     id: "itinerary-planning",
     title: "Itinerary Planning",
@@ -121,7 +128,7 @@ export default function CreateQuotation() {
       if (leadId) {
         navigate(`/leads/${leadId}`); // Go back to lead details
       } else {
-        navigate("/quotations"); // Go to quotations list
+        navigate(ROUTES.QUOTATIONS.ROOT); // Go to quotations list
       }
     } catch (error) {
       console.error("Error saving quotation:", error);

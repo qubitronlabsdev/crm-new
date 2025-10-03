@@ -13,7 +13,7 @@ import {
 // Local Imports
 import { Badge, Button, Card, Select } from "components/ui";
 import { Page } from "components/shared/Page";
-
+import { ROUTES } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 //TODO: Replace emojis with icons.
@@ -192,7 +192,7 @@ export default function ShowQuotation() {
           <div className="flex items-center gap-4">
             <Button
               component={Link}
-              to="/quotations"
+              to={ROUTES.QUOTATIONS.ROOT}
               variant="soft"
               color="neutral"
               isIcon

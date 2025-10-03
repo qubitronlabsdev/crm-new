@@ -20,6 +20,7 @@ import {
 import { Badge, Button, Card, Input, Select, Textarea } from "components/ui";
 import { Page } from "components/shared/Page";
 import { getStatusColor } from "features/Leads/libs/utils";
+import { ROUTES, generateRoute } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
@@ -259,7 +260,7 @@ export default function ShowLead() {
             <div className="flex items-center gap-4">
               <Button
                 component={Link}
-                to="/leads/all"
+                to={ROUTES.LEADS.ALL}
                 variant="soft"
                 color="neutral"
                 isIcon
@@ -295,7 +296,7 @@ export default function ShowLead() {
               </Button>
               <Button
                 component={Link}
-                to={`/leads/${lead.id}/edit`}
+                to={generateRoute.leadEditAlt(lead.id)}
                 color="primary"
                 className="shrink-0"
               >
@@ -455,7 +456,7 @@ export default function ShowLead() {
                         <div className="flex gap-2">
                           <Button
                             component={Link}
-                            to={`/quotations/${quotation.id}`}
+                            to={generateRoute.quotationShow(quotation.id)}
                             size="sm"
                             variant="soft"
                             color="info"
@@ -464,7 +465,7 @@ export default function ShowLead() {
                           </Button>
                           <Button
                             component={Link}
-                            to={`/quotations/${quotation.id}/edit`}
+                            to={generateRoute.quotationEdit(quotation.id)}
                             size="sm"
                             variant="soft"
                             color="warning"
@@ -481,7 +482,7 @@ export default function ShowLead() {
                     <p>No quotations created yet</p>
                     <Button
                       component={Link}
-                      to={`/quotations/create?leadId=${lead.id}`}
+                      to={generateRoute.quotationCreate(lead.id)}
                       color="primary"
                       className="mt-4"
                     >

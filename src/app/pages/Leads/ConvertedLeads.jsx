@@ -14,6 +14,7 @@ import { Page } from "components/shared/Page";
 import { DataTable } from "components/shared/DataTable";
 import { TableTabs } from "components/ui/Table/TableTabs";
 import tabs from "features/Leads/constants/tabs";
+import { ROUTES, generateRoute } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
@@ -125,7 +126,7 @@ export default function ConvertedLeads() {
         <div className="flex gap-2">
           <Button
             component={Link}
-            to={`/leads/${row.original.id}`}
+            to={generateRoute.leadShow(row.original.id)}
             size="sm"
             variant="soft"
             color="info"
@@ -137,7 +138,7 @@ export default function ConvertedLeads() {
           </Button>
           <Button
             component={Link}
-            to={`/quotations/edit/${row.original.quotation_id}`}
+            to={generateRoute.quotationEdit(row.original.quotation_id)}
             size="sm"
             variant="soft"
             color="warning"
@@ -186,7 +187,7 @@ export default function ConvertedLeads() {
             </div>
             <Button
               component={Link}
-              to="/leads/create"
+              to={ROUTES.LEADS.CREATE}
               color="primary"
               className="shrink-0"
             >

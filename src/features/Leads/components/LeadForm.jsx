@@ -1,6 +1,6 @@
 // Import Dependencies
 import { useEffect, useState, useCallback } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 // Local Imports
@@ -58,7 +58,7 @@ export function LeadForm({
 }) {
   const {
     register,
-    // control,
+    control,
     handleSubmit,
     formState: { errors },
     reset,
@@ -192,6 +192,8 @@ export function LeadForm({
   }, [watchedValues, onChange]);
 
   const handleFormSubmit = (data) => {
+    console.log("Form submitted with data:", data);
+    console.log("Form errors:", errors);
     onSubmit(data);
   };
 
@@ -241,20 +243,6 @@ export function LeadForm({
               error={errors.agent_assignment?.message}
               className="w-full"
             />
-            <div className="lg:col-span-1">
-              <DatePicker
-                label="Travel Date *"
-                placeholder="mm/dd/yyyy"
-                options={{
-                  dateFormat: "m/d/Y",
-                  allowInput: true,
-                }}
-                hasCalenderIcon={true}
-                {...register("travel_date")}
-                error={errors.travel_date?.message}
-                className="w-full"
-              />
-            </div>
             <Input
               label="Travel Time *"
               placeholder="Enter travel time (e.g., 10:30 AM)"
@@ -312,27 +300,51 @@ export function LeadForm({
               error={errors.days?.message}
               className="w-full"
             />
-            <DatePicker
-              label="Expected Close Date *"
-              placeholder="mm/dd/yyyy"
-              options={{
-                dateFormat: "m/d/Y",
-                allowInput: true,
-              }}
-              hasCalenderIcon={true}
-              {...register("expected_close_date")}
-              error={errors.expected_close_date?.message}
-              className="w-full"
-            />
-            <Input
-              label="Estimated Value *"
-              placeholder="Enter estimated value"
-              type="number"
-              min="0"
-              step="0.01"
-              {...register("estimated_value", { valueAsNumber: true })}
-              error={errors.estimated_value?.message}
-              className="w-full"
+            <div className="lg:col-span-1">
+              <Controller
+                name="travel_date"
+                control={control}
+                render={({ field: { onChange, value, ...field } }) => (
+                  <DatePicker
+                    label="Travel Date *"
+                    placeholder="mm/dd/yyyy"
+                    options={{
+                      dateFormat: "m/d/Y",
+                      allowInput: true,
+                      onChange: (selectedDates, dateStr) => {
+                        onChange(dateStr);
+                      },
+                    }}
+                    hasCalenderIcon={true}
+                    value={value}
+                    error={errors.travel_date?.message}
+                    className="w-full"
+                    {...field}
+                  />
+                )}
+              />
+            </div>
+            <Controller
+              name="expected_close_date"
+              control={control}
+              render={({ field: { onChange, value, ...field } }) => (
+                <DatePicker
+                  label="Expected Close Date *"
+                  placeholder="mm/dd/yyyy"
+                  options={{
+                    dateFormat: "m/d/Y",
+                    allowInput: true,
+                    onChange: (selectedDates, dateStr) => {
+                      onChange(dateStr);
+                    },
+                  }}
+                  hasCalenderIcon={true}
+                  value={value}
+                  error={errors.expected_close_date?.message}
+                  className="w-full"
+                  {...field}
+                />
+              )}
             />
           </div>
 
@@ -434,7 +446,19 @@ export function LeadForm({
                   : "e.g. 5, 8, 12"}
               </p>
             </div>
+          </div>
 
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <Input
+              label="Estimated Value *"
+              placeholder="Enter estimated value"
+              type="number"
+              min="0"
+              step="0.01"
+              {...register("estimated_value", { valueAsNumber: true })}
+              error={errors.estimated_value?.message}
+              className="w-full"
+            />
             <Input
               label="Departure City *"
               placeholder="Enter departure city"
@@ -497,51 +521,6 @@ export function LeadForm({
               {lead ? "Update Lead" : "Create Lead"}
             </Button>
           </div>
-        </div>
-
-        {/* Lead Information */}
-        <div className="space-y-6">
-          <div className="border-b border-gray-200 pb-4 dark:border-gray-700">
-            <h3 className="dark:text-dark-50 text-lg font-semibold text-gray-800">
-              Additional Information
-            </h3>
-            <p className="dark:text-dark-200 mt-1 text-sm text-gray-600">
-              Travel preferences and additional notes
-            </p>
-          </div>
-
-          <Textarea
-            label="Travel Preferences"
-            placeholder="Enter any specific travel preferences..."
-            rows={4}
-            {...register("travel_preferences")}
-            error={errors.travel_preferences?.message}
-            className="w-full"
-            helpText="Include any specific preferences, budget range, accommodation type, activities, etc."
-          />
-
-          <Textarea
-            label="Notes"
-            placeholder="Enter any additional notes..."
-            rows={3}
-            {...register("notes")}
-            error={errors.notes?.message}
-            className="w-full"
-            helpText="Any other relevant information about this lead"
-          />
-        </div>
-
-        {/* Submit Button */}
-        <div className="flex justify-end border-t border-gray-200 pt-6 dark:border-gray-700">
-          <Button
-            type="submit"
-            color="primary"
-            isLoading={isLoading}
-            disabled={isLoading}
-            className="min-w-[140px]"
-          >
-            {lead ? "Update Lead" : "Create Lead"}
-          </Button>
         </div>
       </form>
     </Card>

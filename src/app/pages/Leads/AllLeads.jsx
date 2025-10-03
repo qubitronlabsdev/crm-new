@@ -18,7 +18,8 @@ import { DataTable } from "components/shared/DataTable";
 import { TableTabs } from "components/ui/Table/TableTabs";
 import { LeadFilterDialog } from "features/Leads/components/LeadFilterDialog";
 import { LeadSortDialog } from "features/Leads/components/LeadSortDialog";
-import { leadsApi } from "utils/leadsApi";
+import { leadsApi } from "features/Leads/libs/utils/leadsApi";
+import { ROUTES, generateRoute } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
@@ -195,7 +196,7 @@ export default function AllLeads() {
         <div className="flex gap-2">
           <Button
             component={Link}
-            to={`/quotations/create?leadId=${row.original.id}`}
+            to={generateRoute.quotationCreate(row.original.id)}
             size="sm"
             variant="soft"
             color="success"
@@ -207,7 +208,7 @@ export default function AllLeads() {
           </Button>
           <Button
             component={Link}
-            to={`/leads/edit/${row.original.id}`}
+            to={generateRoute.leadEdit(row.original.id)}
             size="sm"
             variant="soft"
             color="warning"
@@ -219,7 +220,7 @@ export default function AllLeads() {
           </Button>
           <Button
             component={Link}
-            to={`/leads/${row.original.id}`}
+            to={generateRoute.leadShow(row.original.id)}
             size="sm"
             variant="soft"
             color="info"
@@ -261,7 +262,7 @@ export default function AllLeads() {
             </div>
             <Button
               component={Link}
-              to="/leads/create"
+              to={ROUTES.LEADS.CREATE}
               color="primary"
               className="shrink-0"
             >

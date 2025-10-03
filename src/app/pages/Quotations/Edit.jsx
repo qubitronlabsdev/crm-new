@@ -16,6 +16,7 @@ import { PricingTermsStep } from "features/Quotations/components/steps/PricingTe
 // Stores
 import { useQuotationStore } from "features/Quotations/store/useQuotationStore";
 import { useItineraryStore } from "features/Quotations/store/useItineraryStore";
+import { ROUTES } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
@@ -323,7 +324,7 @@ export default function EditQuotation() {
       // clearItinerary();
 
       // Redirect to quotations list
-      navigate("/quotations");
+      navigate(ROUTES.QUOTATIONS.ROOT);
     } catch (error) {
       console.error("Error updating quotation:", error);
       return false;
@@ -341,7 +342,7 @@ export default function EditQuotation() {
             <div className="flex items-center gap-4">
               <Button
                 component={Link}
-                to="/quotations"
+                to={ROUTES.QUOTATIONS.ROOT}
                 variant="soft"
                 color="neutral"
                 isIcon
@@ -375,7 +376,7 @@ export default function EditQuotation() {
             <div className="flex items-center gap-4">
               <Button
                 component={Link}
-                to="/quotations"
+                to={ROUTES.QUOTATIONS.ROOT}
                 variant="soft"
                 color="neutral"
                 isIcon

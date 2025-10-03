@@ -6,16 +6,10 @@ const leadFormSchema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
   phone: yup.string().required("Phone number is required"),
   agent_assignment: yup.string().required("Agent assignment is required"),
-  travel_date: yup.string(),
-  travel_time: yup.string(),
+  travel_date: yup.string().required("Travel date is required"),
+  travel_time: yup.string().required("Travel time is required"),
   status: yup.string().required("Status is required"),
   priority: yup.string().required("Priority is required"),
-  customer_name: yup.string().required("Customer name is required"),
-  customer_phone: yup.string().required("Phone number is required"),
-  customer_email: yup
-    .string()
-    .email("Invalid email")
-    .required("Email is required"),
   destination: yup.string().required("Destination is required"),
   lead_source: yup.string().required("Lead source is required"),
   days: yup
@@ -34,8 +28,9 @@ const leadFormSchema = yup.object({
   departure_city: yup.string().required("Departure city is required"),
   estimated_value: yup
     .number()
-    .min(0, "Budget must be positive")
-    .required("Budget is required"),
+    .min(0, "Estimated value must be positive")
+    .required("Estimated value is required"),
+  expected_close_date: yup.string().required("Expected close date is required"),
   travel_preferences: yup.string(),
   notes: yup.string(),
 });

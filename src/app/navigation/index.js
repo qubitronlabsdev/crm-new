@@ -4,19 +4,20 @@ import {
   DocumentTextIcon,
   CalendarDaysIcon,
   EyeIcon,
-  ClockIcon,
   CheckCircleIcon,
+  ClockIcon,
   PauseIcon,
   PlusIcon,
 } from "@heroicons/react/24/outline";
 import { NAV_TYPE_ITEM, NAV_TYPE_COLLAPSE } from "constants/app.constant";
+import { ROUTES } from "app/router/routes";
 
 // New flat navigation structure with expandable dropdowns
 export const navigation = [
   {
     id: "dashboard",
     type: NAV_TYPE_ITEM,
-    path: "/dashboards/home",
+    path: ROUTES.DASHBOARD.HOME,
     title: "Dashboard",
     transKey: "nav.dashboard",
     Icon: HomeIcon,
@@ -30,7 +31,7 @@ export const navigation = [
     childs: [
       {
         id: "leads.all",
-        path: "/leads/all",
+        path: ROUTES.LEADS.ALL,
         type: NAV_TYPE_ITEM,
         title: "All Leads",
         transKey: "nav.leads.all",
@@ -38,7 +39,7 @@ export const navigation = [
       },
       {
         id: "leads.fresh",
-        path: "/leads/fresh",
+        path: ROUTES.LEADS.FRESH,
         type: NAV_TYPE_ITEM,
         title: "Fresh Leads",
         transKey: "nav.leads.fresh",
@@ -46,7 +47,7 @@ export const navigation = [
       },
       {
         id: "leads.converted",
-        path: "/leads/converted",
+        path: ROUTES.LEADS.CONVERTED,
         type: NAV_TYPE_ITEM,
         title: "Converted Leads",
         transKey: "nav.leads.converted",
@@ -54,7 +55,7 @@ export const navigation = [
       },
       {
         id: "leads.postponed",
-        path: "/leads/postponed",
+        path: ROUTES.LEADS.POSTPONED,
         type: NAV_TYPE_ITEM,
         title: "Postponed Leads",
         transKey: "nav.leads.postponed",
@@ -71,28 +72,11 @@ export const navigation = [
     childs: [
       {
         id: "quotations.all",
-        path: "/quotations/all",
+        path: ROUTES.QUOTATIONS.ALL,
         type: NAV_TYPE_ITEM,
         title: "All Quotations",
         transKey: "nav.quotations.all",
         Icon: EyeIcon,
-      },
-
-      {
-        id: "quotations.approved",
-        path: "/quotations/approved",
-        type: NAV_TYPE_ITEM,
-        title: "Approved Quotations",
-        transKey: "nav.quotations.approved",
-        Icon: CheckCircleIcon,
-      },
-      {
-        id: "quotations.pending",
-        path: "/quotations/pending",
-        type: NAV_TYPE_ITEM,
-        title: "Pending Quotations",
-        transKey: "nav.quotations.pending",
-        Icon: ClockIcon,
       },
     ],
   },
@@ -105,7 +89,7 @@ export const navigation = [
     childs: [
       {
         id: "bookings.all",
-        path: "/bookings/all",
+        path: ROUTES.BOOKINGS.ALL,
         type: NAV_TYPE_ITEM,
         title: "All Bookings",
         transKey: "nav.bookings.all",
@@ -113,7 +97,7 @@ export const navigation = [
       },
       {
         id: "bookings.confirmed",
-        path: "/bookings/confirmed",
+        path: ROUTES.BOOKINGS.CONFIRMED,
         type: NAV_TYPE_ITEM,
         title: "Confirmed Bookings",
         transKey: "nav.bookings.confirmed",
@@ -121,7 +105,7 @@ export const navigation = [
       },
       {
         id: "bookings.pending",
-        path: "/bookings/pending",
+        path: ROUTES.BOOKINGS.PENDING,
         type: NAV_TYPE_ITEM,
         title: "Pending Bookings",
         transKey: "nav.bookings.pending",
@@ -129,7 +113,7 @@ export const navigation = [
       },
       {
         id: "bookings.create",
-        path: "/bookings/create",
+        path: ROUTES.BOOKINGS.CREATE,
         type: NAV_TYPE_ITEM,
         title: "Create Booking",
         transKey: "nav.bookings.create",
