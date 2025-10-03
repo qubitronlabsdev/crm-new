@@ -1,71 +1,14 @@
 // Import Dependencies
 import { useEffect, useState, useCallback } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-
 // Local Imports
 import { Button, Card, Input, Select, Textarea } from "components/ui";
 import { DatePicker } from "components/shared/form/Datepicker";
+import leadFormSchema from "../schema/lead-schema";
 
 // ----------------------------------------------------------------------
-
-// Validation Schema
-const leadSchema = yup.object({
-  name: yup.string().required("Name is required"),
-  email: yup.string().email("Invalid email").required("Email is required"),
-  phone: yup.string().required("Phone number is required"),
-  agent_assignment: yup.string().required("Agent assignment is required"),
-  travel_date: yup.string(),
-  travel_time: yup.string(),
-  status: yup.string().required("Status is required"),
-  priority: yup.string().required("Priority is required"),
-  customer_name: yup.string().required("Customer name is required"),
-  customer_phone: yup.string().required("Phone number is required"),
-  customer_email: yup
-    .string()
-    .email("Invalid email")
-    .required("Email is required"),
-  destination: yup.string().required("Destination is required"),
-  budget: yup
-    .number()
-    .min(0, "Budget must be positive")
-    .required("Budget is required"),
-  travel_dates: yup
-    .array()
-    .of(yup.date().required())
-    .min(2, "Please select both start and end dates")
-    .required("Travel dates are required"),
-
-  group_size: yup
-    .number()
-    .min(1, "Group size must be at least 1")
-    .required("Group size is required"),
-  lead_source: yup.string().required("Lead source is required"),
-  days: yup
-    .number()
-    .min(1, "Days must be at least 1")
-    .required("Days is required"),
-  adults: yup
-    .number()
-    .min(1, "Adults must be at least 1")
-    .required("Adults is required"),
-  children: yup
-    .number()
-    .min(0, "Children must be at least 0")
-    .required("Children is required"),
-  children_age: yup.string(),
-  departure_city: yup.string().required("Departure city is required"),
-  estimated_value: yup
-    .number()
-    .min(0, "Budget must be positive")
-    .required("Budget is required"),
-
-  travel_preferences: yup.string(),
-
-  notes: yup.string(),
-});
 
 const leadSources = [
   { value: "website", label: "Website" },
@@ -115,14 +58,14 @@ export function LeadForm({
 }) {
   const {
     register,
-    control,
+    // control,
     handleSubmit,
     formState: { errors },
     reset,
     watch,
     setValue,
   } = useForm({
-    resolver: yupResolver(leadSchema),
+    resolver: yupResolver(leadFormSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -137,8 +80,7 @@ export function LeadForm({
       customer_email: "",
       destination: "",
       budget: "",
-      travel_dates: [], // 👈 must be array
-      group_size: 1,
+      // travel_dates: [], // 👈 must be array
       lead_source: "",
       days: 1,
       adults: 1,
@@ -160,7 +102,8 @@ export function LeadForm({
         email: lead.email || "",
         phone: lead.phone || "",
         agent_assignment: lead.agent_assignment || "",
-        travel_dates: lead.travel_dates || [],
+
+        travel_date: lead.travel_date || "",
         travel_time: lead.travel_time || "",
         status: lead.status || "fresh",
         priority: lead.priority || "medium",
@@ -169,7 +112,6 @@ export function LeadForm({
         customer_email: lead.customer_email || "",
         destination: lead.destination || "",
         budget: lead.budget || "",
-        group_size: lead.group_size || 1,
         lead_source: lead.lead_source || "",
         days: lead.days || 1,
         adults: lead.adults || 1,
@@ -493,9 +435,7 @@ export function LeadForm({
                   : "e.g. 5, 8, 12"}
               </p>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <Input
               label="Departure City *"
               placeholder="Enter departure city"
@@ -510,73 +450,9 @@ export function LeadForm({
               error={errors.destination?.message}
               className="w-full"
             />
-            <Input
-              label="Budget *"
-              placeholder="Enter budget"
-              type="number"
-              min="0"
-              step="0.01"
-              {...register("budget")}
-              error={errors.budget?.message}
-            />
+          </div>
 
-            {/* Travel Dates with Controller */}
-            <div className="md:col-span-1">
-              <Controller
-                name="travel_dates"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    label="Travel Dates *"
-                    placeholder="Select travel dates"
-                    options={{
-                      mode: "range",
-                      dateFormat: "Y-m-d",
-                    }}
-                    hasCalenderIcon={true}
-                    value={field.value}
-                    onChange={(dates) => field.onChange(dates)}
-                    error={errors.travel_dates?.message}
-                  />
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              <Input
-                label="Adults *"
-                placeholder="Number of adults"
-                type="number"
-                min="1"
-                {...register("adults", { valueAsNumber: true })}
-                error={errors.adults?.message}
-                className="w-full"
-              />
-              <Input
-                label="Children *"
-                placeholder="Number of children"
-                type="number"
-                min="0"
-                {...register("children", { valueAsNumber: true })}
-                error={errors.children?.message}
-                className="w-full"
-              />
-              {/* Custom Multi-Select Children Age Field */}
-              <div className="w-full">
-                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Children Ages
-                </label>
-
-                <Input
-                  label="Group Size *"
-                  placeholder="Number of travelers"
-                  type="number"
-                  min="1"
-                  {...register("group_size")}
-                  error={errors.group_size?.message}
-                />
-              </div>
-            </div>
-
+          <div className="grid grid-cols-1 gap-6">
             {/* Lead Information */}
             <div className="space-y-6">
               <div className="border-b border-gray-200 pb-4 dark:border-gray-700">
@@ -610,17 +486,17 @@ export function LeadForm({
             </div>
 
             {/* Submit Button */}
-            <div className="flex justify-end border-t border-gray-200 pt-6 dark:border-gray-700">
-              <Button
-                type="submit"
-                color="primary"
-                isLoading={isLoading}
-                disabled={isLoading}
-                className="min-w-[140px]"
-              >
-                {lead ? "Update Lead" : "Create Lead"}
-              </Button>
-            </div>
+          </div>
+          <div className="flex justify-end border-t border-gray-200 pt-6 dark:border-gray-700">
+            <Button
+              type="submit"
+              color="primary"
+              isLoading={isLoading}
+              disabled={isLoading}
+              className="min-w-[140px]"
+            >
+              {lead ? "Update Lead" : "Create Lead"}
+            </Button>
           </div>
         </div>
       </form>
