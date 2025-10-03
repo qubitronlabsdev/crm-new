@@ -1,100 +1,83 @@
-Flow of the lead Management of Crm 
+Now we have a new flow for that you have to modify the entire application's flow accordingly 
 
-We will be needing a tabs based switching system that will work by synching the url & the sidebar tab's active status, the flow will be like this which i'm giving you below
+In the create Lead form we will only show these fields -> 
+  name: yup.string().required("Name is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  phone: yup.string().required("Phone number is required"),
+  agent_assignment: yup.string().required("Agent assignment is required"),
+  status: yup.string().required("Status is required"),
+  priority: yup.string().required("Priority is required"),
+  lead_source: yup.string().required("Lead source is required"),
 
-In the leads Management Part we will show the following routes in the side bar Under the category of Leads 
+and here we will have the next button when we will click on that it will first hit the create lead api & if the result is successful only then redirect to the create quotations page 
 
-Leads 
--> All Leads (This will be a table that will show data of all the leads, i.e., Fresh Leads, Converted Leads, Postponed Leads)
--> Fresh Leads (This will be a table of only the fresh leads, whenever the user will create a new lead whose Lead Status field is 'fresh' [Note: 'fresh' will be the default value of the Lead Status field] in the Create New lead form that lead will be added to the Fresh Lead Table)
--> Converted Leads (This table will show the data of those leads whose Lead Status will be set to 'converted' & this will only happen when we have given quotation of that particular lead, means after giving quotation to a lead it's lead status will be auto-matically converted into 'converted')
--> Postponed Leads (Those leads whose Lead Status is converted to postponed that will go inside PostPoned Leads table)
+In the create quotations page we will have the following form fields which will be categorized into different steps
+Step 1 Travel Details 
+    form fields -> 
+        travel_date: yup.string().required("Travel date is required"),
+        travel_time: yup.string().required("Travel time is required"),
+        expected_close_date: yup.string().required("Expected close date is required"),
+        departure_city: yup.string().required("Departure city is required"),
+        destination: yup.string().required("Destination is required"),
+        days: yup
+            .number()
+            .min(1, "Days must be at least 1")
+            .required("Days is required"),
+        nights: yup
+            .number()
+        adults: yup
+            .number()
+            .min(1, "Adults must be at least 1")
+            .required("Adults is required"),
+        children: yup
+            .number()
+            .min(0, "Children must be at least 0")
+            .required("Children is required"),
+        children_age: yup.string(),
+        budget: yup
+            .number()
+            .min(0, "Budget must be positive")
+            .required("Estimated value is required"),
+        special_requests: yup.string(),
 
+below this form there will be a short summary box of the above form written neatly
 
-** All leads page **
-Route -> /leads/all
-This page will show all the leads regardless of their status, this page will have the following features listed -> 
+Step 2 Hotels & Transportation =>
+    Form fields ->
+        hotel specific details:
+            hotel_ratings: enum from 1 to 5 stars
+            room_type: enum [standard, deluxe, suite, premium]
+            meal plans: enum [ give options which suites you best]
+        
+        transportation specific fields:    
+            tranportation_mode: enum [train, flight, car, bus]
+            transportation_charges: this field will be a simple input field but it will show in the ui like this
+            if selected_mode = train
+                train charges:     Input field to input the price
+            if selected_mode = BUS
+                BUS charges:     Input field to input the price
+something like that
 
-A. this page will have options to filter data of the table by the following criteria 
-    Filter by 
-    => Lead Source
-    => Agent Assigned 
-    => Created Agent
-    => Destination
-
-B. Also we will have sorting based on following criteria ->
-    Sort by Date ( Created At, Updated At)
-    Sort by Priority (Low, Medium, High, Urgent)
-    Sort by Travel Date 
-
-C. Create New Lead button (already exists)
-D. Cards that will show total leads based on their Lead Status (Fresh, Converted, Postponed)
-E. Action button dropdown options 
-    => Give Quotation
-    => Edit Lead
-    => View Details
-    => Delete Lead    
-
-
-** Fresh Leads page **
-Route -> /leads/fresh
-When the user will create a new lead this will be the route on which the user will be redirected to after clicking the Create Lead Button. This table will show all the leads that will have the Lead Status = 'fresh'
-
-this page will have the following features listed ->
-
-A. The table will show the following fields 
-    -> S.no.
-    -> Name
-    -> Lead Id
-    -> Destination
-    -> Travel Date
-    -> Source 
-    -> Lead_Status
-    -> Actions 
-        -> View Lead
-        -> Edit Lead
-        -> Create Quotation
-
-B. The Actions Column description
-    -> The View Lead button in the Actions column will redirect to leads/view/{lead_id} that will fetch all the details related to that particular lead & will display it on that route
-
-    -> The Create Quotation button will take in the {lead_id} & redirect the user to leads/create/quotation/{lead_id}, when we will be redirected to this page the first work of this page will be to fetch the lead details of that particular lead fetched from the api via the lead_id & store that data in a state & populate the forms of upcoming steps with relevant data.
-
-** Converted Leads Page **
-Route -> /leads/converted
-All those leads whose Lead_status is changed to converted (which will happen when a quotation will be alloted to that specific lead) will be shown in this page inside the table 
-
-A. The table will show the following fields ->
-    -> S.no.
-    -> Name
-    -> Lead Id
-    -> Destination
-    -> Travel Date
-    -> Source 
-    -> Lead_status
-    -> Actions 
-        -> View Lead
-        -> Edit Quotation
-        -> Download Quotation PDF 
-
-B For Specific filters we will see them later 
+summary box at the bottom
 
 
-** Postponed Leads Page **
-Route -> /leads/postponed 
-All those leads whose Lead_status is changed to postponed (which will happen either in two following ways a., if during quotation creation the Lead_status is changed to postponed, or while during the editing fresh lead the Lead_status = 'postponed')
+Step 3 Cost & Pricing =>
+    Form fields -> 
+        base_package_price: number required
+        taxes_&_services_charges: number required in percentages
+        total_pacakge_price: auto calculated & read only 
+        per_person_price: auto calculated & read only 
+        payment_terms: enum [100% advanced payment, (50% advanced, 50% on arrival), (30% advanced, 70% on arrival), (3 equal installments)]
+        pricing_notes: string
 
-this page will have the following features listed ->
 
-A. The table will show the following fields  -> S.no.
-    -> Name
-    -> Lead Id
-    -> Destination
-    -> Travel Date
-    -> Source 
-    -> Lead_status
-    -> Follow_up 
-      -> follow_up_date - follow_up_time
-    -> Actions 
-        -> View Lead
-        -> Edit Lead (this form will have a add a follow-up field as well which will be a date & time option)
+summary box at the bottom will show this ->
+Price Breakdown (heading)
+Base Package Price:₹ 0
+Taxes & Service Charges:₹ 0
+Total Package Price (heading style) :₹ 0
+Per Person:
+
+Step 4 
+
+
