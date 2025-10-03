@@ -104,6 +104,20 @@ const protectedRoutes = {
               }),
             },
             {
+              path: "pending",
+              lazy: async () => ({
+                Component: (await import("app/pages/Quotations/Pending"))
+                  .default,
+              }),
+            },
+            {
+              path: "approved",
+              lazy: async () => ({
+                Component: (await import("app/pages/Quotations/Approved"))
+                  .default,
+              }),
+            },
+            {
               path: "create",
               lazy: async () => ({
                 Component: (await import("app/pages/Quotations/Create"))

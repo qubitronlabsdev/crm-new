@@ -12,7 +12,8 @@ import {
 import { Badge, Button, Card } from "components/ui";
 import { Page } from "components/shared/Page";
 import { DataTable } from "components/shared/DataTable";
-import { LeadTabs } from "features/Leads/components/LeadTabs";
+import { TableTabs } from "components/ui/Table/TableTabs";
+import tabs from "features/Leads/constants/tabs";
 
 
 // Mock data - only postponed leads
@@ -192,7 +193,7 @@ export default function PostponedLeads() {
           </div>
 
           {/* Lead Navigation Tabs */}
-          <LeadTabs />
+          <TableTabs tabs={tabs} />
 
           {/* Quick Follow-up Actions */}
           <Card className="p-6">

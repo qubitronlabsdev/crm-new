@@ -1,10 +1,9 @@
-import { clsx } from "clsx";
 // Import Dependencies
 import { Link, useLocation } from "react-router";
 
-// ----------------------------------------------------------------------
+import { clsx } from "clsx";
 
-export function Tabs({ tabs }) {
+export function TableTabs({ tabs }) {
   const location = useLocation();
   const currentPath = location.pathname;
 

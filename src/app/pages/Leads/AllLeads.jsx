@@ -15,26 +15,15 @@ import {
 import { Badge, Button, Card } from "components/ui";
 import { Page } from "components/shared/Page";
 import { DataTable } from "components/shared/DataTable";
-import { LeadTabs } from "features/Leads/components/LeadTabs";
+import { TableTabs } from "components/ui/Table/TableTabs";
 import { LeadFilterDialog } from "features/Leads/components/LeadFilterDialog";
 import { LeadSortDialog } from "features/Leads/components/LeadSortDialog";
 import { leadsApi } from "utils/leadsApi";
 
 // ----------------------------------------------------------------------
 
-
-const getStatusColor = (status) => {
-  switch (status?.toLowerCase()) {
-    case "fresh":
-      return "info";
-    case "converted":
-      return "success";
-    case "postponed":
-      return "warning";
-    default:
-      return "neutral";
-  }
-};
+import tabs from "features/Leads/constants/tabs";
+import { getStatusColor } from "features/Leads/libs/utils";
 
 // ----------------------------------------------------------------------
 
@@ -282,7 +271,7 @@ export default function AllLeads() {
           </div>
 
           {/* Lead Navigation Tabs */}
-          <LeadTabs />
+          <TableTabs tabs={tabs} />
 
           {/* Leads Table */}
           <Card className="overflow-hidden">

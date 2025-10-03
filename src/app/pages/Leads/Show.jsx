@@ -19,6 +19,7 @@ import {
 // Local Imports
 import { Badge, Button, Card, Input, Select, Textarea } from "components/ui";
 import { Page } from "components/shared/Page";
+import { getStatusColor } from "features/Leads/libs/utils";
 
 // ----------------------------------------------------------------------
 
@@ -28,21 +29,6 @@ const statusOptions = [
   { value: "postponed", label: "Postponed" },
   { value: "lost", label: "Lost" },
 ];
-
-const getStatusColor = (status) => {
-  switch (status?.toLowerCase()) {
-    case "fresh":
-      return "info";
-    case "converted":
-      return "success";
-    case "postponed":
-      return "warning";
-    case "lost":
-      return "error";
-    default:
-      return "neutral";
-  }
-};
 
 // Enhanced Mock data
 const mockLead = {

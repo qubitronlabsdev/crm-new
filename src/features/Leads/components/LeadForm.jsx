@@ -2,55 +2,13 @@
 import { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-
 // Local Imports
 import { Button, Card, Input, Select, Textarea } from "components/ui";
 import { DatePicker } from "components/shared/form/Datepicker";
+import leadFormSchema from "../schema/lead-form-schema";
 
 // ----------------------------------------------------------------------
-
-// Validation Schema
-const leadSchema = yup.object({
-  name: yup.string().required("Name is required"),
-  email: yup.string().email("Invalid email").required("Email is required"),
-  phone: yup.string().required("Phone number is required"),
-  agent_assignment: yup.string().required("Agent assignment is required"),
-  travel_date: yup.string(),
-  travel_time: yup.string(),
-  status: yup.string().required("Status is required"),
-  priority: yup.string().required("Priority is required"),
-  customer_name: yup.string().required("Customer name is required"),
-  customer_phone: yup.string().required("Phone number is required"),
-  customer_email: yup
-    .string()
-    .email("Invalid email")
-    .required("Email is required"),
-  destination: yup.string().required("Destination is required"),
-  lead_source: yup.string().required("Lead source is required"),
-  days: yup
-    .number()
-    .min(1, "Days must be at least 1")
-    .required("Days is required"),
-  adults: yup
-    .number()
-    .min(1, "Adults must be at least 1")
-    .required("Adults is required"),
-  children: yup
-    .number()
-    .min(0, "Children must be at least 0")
-    .required("Children is required"),
-  children_age: yup.string(),
-  departure_city: yup.string().required("Departure city is required"),
-  estimated_value: yup
-    .number()
-    .min(0, "Estimated value must be positive")
-    .required("Estimated value is required"),
-  expected_close_date: yup.string(),
-  travel_preferences: yup.string(),
-  notes: yup.string(),
-});
 
 const leadSources = [
   { value: "website", label: "Website" },
@@ -100,13 +58,14 @@ export function LeadForm({
 }) {
   const {
     register,
+    // control,
     handleSubmit,
     formState: { errors },
     reset,
     watch,
     setValue,
   } = useForm({
-    resolver: yupResolver(leadSchema),
+    resolver: yupResolver(leadFormSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -120,6 +79,8 @@ export function LeadForm({
       customer_phone: "",
       customer_email: "",
       destination: "",
+      budget: "",
+      // travel_dates: [], // 👈 must be array
       lead_source: "",
       days: 1,
       adults: 1,
@@ -149,6 +110,7 @@ export function LeadForm({
         customer_phone: lead.customer_phone || "",
         customer_email: lead.customer_email || "",
         destination: lead.destination || "",
+        budget: lead.budget || "",
         lead_source: lead.lead_source || "",
         days: lead.days || 1,
         adults: lead.adults || 1,
@@ -472,9 +434,7 @@ export function LeadForm({
                   : "e.g. 5, 8, 12"}
               </p>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <Input
               label="Departure City *"
               placeholder="Enter departure city"
@@ -489,6 +449,53 @@ export function LeadForm({
               error={errors.destination?.message}
               className="w-full"
             />
+          </div>
+
+          <div className="grid grid-cols-1 gap-6">
+            {/* Lead Information */}
+            <div className="space-y-6">
+              <div className="border-b border-gray-200 pb-4 dark:border-gray-700">
+                <h3 className="dark:text-dark-50 text-lg font-semibold text-gray-800">
+                  Additional Information
+                </h3>
+                <p className="dark:text-dark-200 mt-1 text-sm text-gray-600">
+                  Travel preferences and additional notes
+                </p>
+              </div>
+
+              <Textarea
+                label="Travel Preferences"
+                placeholder="Enter any specific travel preferences..."
+                rows={4}
+                {...register("travel_preferences")}
+                error={errors.travel_preferences?.message}
+                className="w-full"
+                helpText="Include any specific preferences, budget range, accommodation type, activities, etc."
+              />
+
+              <Textarea
+                label="Notes"
+                placeholder="Enter any additional notes..."
+                rows={3}
+                {...register("notes")}
+                error={errors.notes?.message}
+                className="w-full"
+                helpText="Any other relevant information about this lead"
+              />
+            </div>
+
+            {/* Submit Button */}
+          </div>
+          <div className="flex justify-end border-t border-gray-200 pt-6 dark:border-gray-700">
+            <Button
+              type="submit"
+              color="primary"
+              isLoading={isLoading}
+              disabled={isLoading}
+              className="min-w-[140px]"
+            >
+              {lead ? "Update Lead" : "Create Lead"}
+            </Button>
           </div>
         </div>
 

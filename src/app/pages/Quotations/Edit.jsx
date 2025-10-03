@@ -10,7 +10,6 @@ import { MultiStepForm } from "components/shared/MultiStepForm";
 
 // Step Components
 import { BasicDetailsStep } from "features/Quotations/components/steps/BasicDetailsStep";
-import { TravelRequirementsStep } from "features/Quotations/components/steps/TravelRequirementsStep";
 import { ItineraryPlanningStep } from "features/Quotations/components/steps/ItineraryPlanningStep";
 import { PricingTermsStep } from "features/Quotations/components/steps/PricingTermsStep";
 
@@ -27,12 +26,7 @@ const quotationSteps = [
     description: "Customer info & quote ID",
     component: BasicDetailsStep,
   },
-  {
-    id: "travel-requirements",
-    title: "Travel Requirements",
-    description: "Destination & preferences",
-    component: TravelRequirementsStep,
-  },
+
   {
     id: "itinerary-planning",
     title: "Itinerary Planning",

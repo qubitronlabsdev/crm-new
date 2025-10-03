@@ -3,13 +3,18 @@ import { Link } from "react-router";
 import { ClockIcon, PlusIcon } from "@heroicons/react/24/outline";
 
 // Local Imports
-import { Button, Card } from "components/ui";
+import { Button } from "components/ui";
 import { Page } from "components/shared/Page";
-
+import QuotationsTable from "components/shared/QuotationsTable";
+import { getPendingQuotations } from "features/Quotations/data/mockQuotations";
+import { TableTabs } from "components/ui/Table/TableTabs";
+import tabs from "features/Quotations/consts/tabs";
 
 // ----------------------------------------------------------------------
 
 export default function PendingQuotations() {
+  const pendingQuotations = getPendingQuotations();
+
   return (
     <Page title="Pending Quotations - Travel CRM">
       <div className="transition-content w-full px-(--margin-x) py-5 lg:py-6">
@@ -21,7 +26,8 @@ export default function PendingQuotations() {
                 Pending Quotations
               </h1>
               <p className="dark:text-dark-200 text-gray-600">
-                Quotations awaiting customer response
+                Quotations awaiting customer response - clients taking time to
+                approve
               </p>
             </div>
             <Button
@@ -35,16 +41,18 @@ export default function PendingQuotations() {
             </Button>
           </div>
 
-          {/* Empty State */}
-          <Card className="p-12 text-center">
-            <ClockIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">
-              No pending quotations
-            </h3>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">
-              Quotations sent to customers will appear here
-            </p>
-          </Card>
+          <TableTabs tabs={tabs} />
+
+          {/* Quotations Table */}
+          <QuotationsTable
+            quotations={pendingQuotations}
+            title="Pending Quotations"
+            emptyStateIcon={
+              <ClockIcon className="mx-auto h-12 w-12 text-gray-400" />
+            }
+            emptyStateTitle="No pending quotations"
+            emptyStateDescription="Quotations sent to customers that are awaiting response will appear here"
+          />
         </div>
       </div>
     </Page>
