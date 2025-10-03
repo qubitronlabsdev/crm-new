@@ -6,7 +6,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 // Local Imports
 import { Button, Card, Input, Select, Textarea } from "components/ui";
 import { DatePicker } from "components/shared/form/Datepicker";
-import leadFormSchema from "../schema/lead-schema";
+import leadFormSchema from "../schema/lead-form-schema";
 
 // ----------------------------------------------------------------------
 

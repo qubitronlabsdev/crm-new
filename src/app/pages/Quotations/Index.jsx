@@ -1,45 +1,25 @@
 // Import Dependencies
 import { Link } from "react-router";
-import { PlusIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
-
+import {
+  PlusIcon,
+  DocumentTextIcon,
+  EyeIcon,
+  PencilIcon,
+} from "@heroicons/react/24/outline";
 // Local Imports
-import { Button, Card } from "components/ui";
+import { Button, Card, Badge } from "components/ui";
 import { Page } from "components/shared/Page";
 import { Breadcrumbs } from "components/shared/Breadcrumbs";
+import { TableTabs } from "components/ui/Table/TableTabs";
+import tabs from "features/Quotations/consts/tabs";
+import { mockQuotationsData } from "features/Quotations/data/mockQuotations";
+import { getStatusBadgeColor } from "features/Quotations/lib/utils";
 
 // ----------------------------------------------------------------------
 
 const breadcrumbItems = [
   { title: "Dashboard", path: "/" },
   { title: "Quotations" },
-];
-
-// Mock quotations data
-const mockQuotations = [
-  {
-    id: 1,
-    quoteId: "QT-240001-ABC",
-    title: "Paris Romantic Getaway",
-    customerName: "John Smith",
-    destination: "Paris, France",
-    totalCost: 3500,
-    currency: "USD",
-    status: "draft",
-    createdAt: "2024-10-01",
-    validUntil: "2024-10-31",
-  },
-  {
-    id: 2,
-    quoteId: "QT-240002-DEF",
-    title: "Tokyo Adventure Tour",
-    customerName: "Sarah Johnson",
-    destination: "Tokyo, Japan",
-    totalCost: 4200,
-    currency: "USD",
-    status: "sent",
-    createdAt: "2024-09-28",
-    validUntil: "2024-10-28",
-  },
 ];
 
 // ----------------------------------------------------------------------
@@ -71,75 +51,8 @@ export default function QuotationsIndex() {
             </Button>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-            <Card className="p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <DocumentTextIcon className="h-8 w-8 text-blue-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Total Quotations
-                  </p>
-                  <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                    {mockQuotations.length}
-                  </p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <DocumentTextIcon className="h-8 w-8 text-orange-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Draft
-                  </p>
-                  <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                    {mockQuotations.filter((q) => q.status === "draft").length}
-                  </p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <DocumentTextIcon className="h-8 w-8 text-green-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Sent
-                  </p>
-                  <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                    {mockQuotations.filter((q) => q.status === "sent").length}
-                  </p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <DocumentTextIcon className="h-8 w-8 text-purple-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Total Value
-                  </p>
-                  <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                    $
-                    {mockQuotations
-                      .reduce((sum, q) => sum + q.totalCost, 0)
-                      .toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </div>
+          {/* Lead Navigation Tabs */}
+          <TableTabs tabs={tabs} />
 
           {/* Quotations List */}
           <Card className="overflow-hidden">
@@ -179,7 +92,7 @@ export default function QuotationsIndex() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
-                  {mockQuotations.map((quotation) => (
+                  {mockQuotationsData.map((quotation) => (
                     <tr
                       key={quotation.id}
                       className="hover:bg-gray-50 dark:hover:bg-gray-800"
@@ -201,18 +114,13 @@ export default function QuotationsIndex() {
                         {quotation.totalCost.toLocaleString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
-                            quotation.status === "draft"
-                              ? "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200"
-                              : quotation.status === "sent"
-                                ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                                : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                          }`}
+                        <Badge
+                          color={getStatusBadgeColor(quotation.status)}
+                          variant="soft"
+                          className="capitalize"
                         >
-                          {quotation.status.charAt(0).toUpperCase() +
-                            quotation.status.slice(1)}
-                        </span>
+                          {quotation.status}
+                        </Badge>
                       </td>
                       <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-900 dark:text-white">
                         {new Date(quotation.validUntil).toLocaleDateString()}
@@ -225,8 +133,9 @@ export default function QuotationsIndex() {
                             variant="soft"
                             color="primary"
                             size="sm"
+                            isIcon
                           >
-                            View
+                            <EyeIcon className="h-4 w-4" />
                           </Button>
                           <Button
                             component={Link}
@@ -234,8 +143,9 @@ export default function QuotationsIndex() {
                             variant="soft"
                             color="warning"
                             size="sm"
+                            isIcon
                           >
-                            Edit
+                            <PencilIcon className="h-4 w-4" />
                           </Button>
                         </div>
                       </td>
@@ -247,7 +157,7 @@ export default function QuotationsIndex() {
           </Card>
 
           {/* Empty State */}
-          {mockQuotations.length === 0 && (
+          {mockQuotationsData.length === 0 && (
             <Card className="p-12 text-center">
               <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">

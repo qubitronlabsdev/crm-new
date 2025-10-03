@@ -1,0 +1,31 @@
+
+** Quotation Part **
+
+The add new quotation form will be a series of steps based form whose flow will be something like this 
+
+on the /quotations/create?leadId=${id} this page we will divide the quotation form in a multistep form where on the top of the page we will show the header of that particular step form like 
+
+page header =>  Step 1 Basic Details       Step 2 Travel Details ................ etc etc
+
+on each form we will have a next & previous buttons to navigate back & forth between each form if changes needs to be made
+
+
+these will be the different forms/steps invloved in the quotation creation 
+
+Quote ID & Version Tracking
+Customer Requirements Summary
+Detailed Day-wise Proposed Itinerary
+Hotel Information (Star rating, Room type, Meal plans)
+Transportation Details (Flights, Transfers, Local transport)
+Cost Breakdown (Land package, Flights, Taxes)
+Inclusions & Exclusions
+Payment Terms & Schedule
+Cancellation Policy
+
+now it is upto you that how you want to display these steps. i.e, do you want to merge some steps in one big step or do you want all of them to be separate 
+
+flow should be like this only 
+step 1 (show form) (click next) => step 2 (show form ) (click next) => step 3 (show form)(click next)=> step 4
+                                        step 1 < =(click previous) < =step 2 < = (click previous)
+
+this will be the flow of the form now it's upto you to create the multistep form system for quotation creation 
