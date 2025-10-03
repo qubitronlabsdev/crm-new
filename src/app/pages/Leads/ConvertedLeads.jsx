@@ -177,7 +177,7 @@ export default function ConvertedLeads() {
 
   return (
     <Page title="Converted Leads - Travel CRM">
-      <div className="transition-content w-full px-(--margin-x) pt-5 lg:pt-6">
+      <div className="transition-content w-full px-(--margin-x) py-5 lg:py-6">
         <div className="min-w-0 space-y-6">
           {/* Header */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -204,37 +204,6 @@ export default function ConvertedLeads() {
 
           {/* Lead Navigation Tabs */}
           <LeadTabs />
-
-          {/* Statistics Card */}
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-success-600 dark:text-success-400 text-3xl font-bold">
-                  {leads.meta.total}
-                </div>
-                <div className="dark:text-dark-200 text-sm text-gray-600">
-                  Converted Leads
-                </div>
-              </div>
-              <div className="text-success-500 dark:text-success-400">
-                <svg
-                  className="h-12 w-12"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-            </div>
-            <div className="dark:text-dark-300 mt-4 text-sm text-gray-500">
-              These leads have been converted automatically after quotation
-              assignment.
-            </div>
-          </Card>
 
           {/* Converted Leads Table */}
           <Card className="overflow-hidden">

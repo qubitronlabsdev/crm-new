@@ -176,7 +176,7 @@ export default function PostponedLeads() {
 
   return (
     <Page title="Postponed Leads - Travel CRM">
-      <div className="transition-content w-full px-(--margin-x) pt-5 lg:pt-6">
+      <div className="transition-content w-full px-(--margin-x) py-5 lg:py-6">
         <div className="min-w-0 space-y-6">
           {/* Header */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -202,27 +202,6 @@ export default function PostponedLeads() {
 
           {/* Lead Navigation Tabs */}
           <LeadTabs />
-
-          {/* Statistics Card */}
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-warning-600 dark:text-warning-400 text-3xl font-bold">
-                  {leads.meta.total}
-                </div>
-                <div className="dark:text-dark-200 text-sm text-gray-600">
-                  Postponed Leads
-                </div>
-              </div>
-              <div className="text-warning-500 dark:text-warning-400">
-                <ClockIcon className="h-12 w-12" />
-              </div>
-            </div>
-            <div className="dark:text-dark-300 mt-4 text-sm text-gray-500">
-              These leads have been postponed and require follow-up on scheduled
-              dates.
-            </div>
-          </Card>
 
           {/* Quick Follow-up Actions */}
           <Card className="p-6">
