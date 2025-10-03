@@ -262,7 +262,7 @@ export default function ShowLead() {
   if (!lead) {
     return (
       <Page title="Lead Details - Travel CRM">
-        <div className="transition-content w-full px-(--margin-x) pt-5 lg:pt-6">
+        <div className="transition-content w-full px-(--margin-x) py-5 lg:py-6">
           <div className="flex h-64 items-center justify-center">
             <div className="dark:text-dark-200 text-gray-500">Loading...</div>
           </div>
@@ -273,7 +273,7 @@ export default function ShowLead() {
 
   return (
     <Page title={`Lead #${lead.id} - Travel CRM`}>
-      <div className="transition-content w-full px-(--margin-x) pt-5 lg:pt-6">
+      <div className="transition-content w-full px-(--margin-x) py-5 lg:py-6">
         <div className="min-w-0 space-y-6">
           {/* Header */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

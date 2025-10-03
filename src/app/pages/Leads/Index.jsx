@@ -222,7 +222,7 @@ export default function LeadsIndex() {
 
   return (
     <Page title="Leads - Travel CRM">
-      <div className="transition-content w-full px-(--margin-x) pt-5 lg:pt-6">
+      <div className="transition-content w-full px-(--margin-x) py-5 lg:py-6">
         <div className="min-w-0 space-y-6">
           {/* Header */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
