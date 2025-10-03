@@ -123,7 +123,11 @@ export default function FreshLeads() {
       accessorKey: "lead_status",
       header: "Lead Status",
       cell: ({ row }) => (
-        <Badge color="info" className="capitalize">
+        <Badge
+          color="info"
+          className="rounded-lg py-1.5 capitalize"
+          variant="soft"
+        >
           {row.original.lead_status}
         </Badge>
       ),
@@ -141,6 +145,7 @@ export default function FreshLeads() {
             color="info"
             isIcon
             title="View Lead"
+            className="shrink-0 p-1"
           >
             <EyeIcon className="h-4 w-4" />
           </Button>
@@ -152,6 +157,7 @@ export default function FreshLeads() {
             color="warning"
             isIcon
             title="Edit Lead"
+            className="shrink-0 p-1"
           >
             <PencilIcon className="h-4 w-4" />
           </Button>
@@ -163,6 +169,7 @@ export default function FreshLeads() {
             color="success"
             isIcon
             title="Create Quotation"
+            className="shrink-0 p-1"
           >
             <DocumentTextIcon className="h-4 w-4" />
           </Button>

@@ -115,7 +115,11 @@ export default function ConvertedLeads() {
       accessorKey: "lead_status",
       header: "Lead Status",
       cell: ({ row }) => (
-        <Badge color="success" className="capitalize">
+        <Badge
+          color="success"
+          className="rounded-lg py-1.5 capitalize"
+          variant="soft"
+        >
           {row.original.lead_status}
         </Badge>
       ),
@@ -133,6 +137,7 @@ export default function ConvertedLeads() {
             color="info"
             isIcon
             title="View Lead"
+            className="shrink-0 p-1"
           >
             <EyeIcon className="h-4 w-4" />
           </Button>
@@ -144,6 +149,7 @@ export default function ConvertedLeads() {
             color="warning"
             isIcon
             title="Edit Quotation"
+            className="shrink-0 p-1"
           >
             <PencilIcon className="h-4 w-4" />
           </Button>
@@ -153,6 +159,7 @@ export default function ConvertedLeads() {
             color="success"
             isIcon
             title="Download Quotation PDF"
+            className="shrink-0 p-1"
             onClick={() => {
               // Handle PDF download
               console.log(

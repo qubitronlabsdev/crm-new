@@ -83,17 +83,17 @@ export default function EditLead() {
     }
   };
 
-  if (!lead && !draftData) {
-    return (
-      <Page title="Edit Lead - Travel CRM">
-        <div className="transition-content w-full px-(--margin-x) pt-5 lg:pt-6">
-          <div className="flex h-64 items-center justify-center">
-            <div className="dark:text-dark-200 text-gray-500">Loading...</div>
-          </div>
-        </div>
-      </Page>
-    );
-  }
+  // if (!lead && !draftData) {
+  //   return (
+  //     <Page title="Edit Lead - Travel CRM">
+  //       <div className="transition-content w-full px-(--margin-x) pt-5 lg:pt-6">
+  //         <div className="flex h-64 items-center justify-center">
+  //           <div className="dark:text-dark-200 text-gray-500">Loading...</div>
+  //         </div>
+  //       </div>
+  //     </Page>
+  //   );
+  // }
 
   // Use lead data if available, otherwise use draft data
   const formData = lead || draftData;

@@ -173,7 +173,8 @@ export default function AllLeads() {
       cell: ({ row }) => (
         <Badge
           color={getStatusColor(row.original.lead_status)}
-          className="capitalize"
+          className="rounded-lg py-1.5 capitalize"
+          variant="soft"
         >
           {row.original.lead_status}
         </Badge>
@@ -197,7 +198,8 @@ export default function AllLeads() {
                   ? "info"
                   : "neutral"
           }
-          className="capitalize"
+          className="rounded-lg py-1.5 capitalize"
+          variant="soft"
         >
           {row.original.priority}
         </Badge>
@@ -207,7 +209,7 @@ export default function AllLeads() {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => (
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           <Button
             component={Link}
             to={`/quotations/create?leadId=${row.original.id}`}
@@ -216,6 +218,7 @@ export default function AllLeads() {
             color="success"
             isIcon
             title="Give Quotation"
+            className="shrink-0 p-1"
           >
             <DocumentTextIcon className="h-4 w-4" />
           </Button>
@@ -227,6 +230,7 @@ export default function AllLeads() {
             color="warning"
             isIcon
             title="Edit Lead"
+            className="shrink-0 p-1"
           >
             <PencilIcon className="h-4 w-4" />
           </Button>
@@ -238,6 +242,7 @@ export default function AllLeads() {
             color="info"
             isIcon
             title="View Details"
+            className="shrink-0 p-1"
           >
             <EyeIcon className="h-4 w-4" />
           </Button>
@@ -247,6 +252,7 @@ export default function AllLeads() {
             color="error"
             isIcon
             title="Delete Lead"
+            className="shrink-0 p-1"
             onClick={() => handleDeleteLead(row.original.id)}
           >
             <TrashIcon className="h-4 w-4" />

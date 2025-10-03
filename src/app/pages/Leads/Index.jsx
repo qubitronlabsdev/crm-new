@@ -16,35 +16,6 @@ import { getLeadsFromStorage } from "utils/leadsUtils";
 
 const breadcrumbItems = [{ title: "Dashboard", path: "/" }, { title: "Leads" }];
 
-const getStatusStyle = (status) => {
-  switch (status?.toLowerCase()) {
-    case "fresh":
-      return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300";
-    case "contacted":
-      return "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300";
-    case "qualified":
-      return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300";
-    case "proposal_sent":
-      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300";
-    case "negotiation":
-      return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300";
-    case "closed_won":
-      return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300";
-    case "closed_lost":
-      return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300";
-    // Legacy status mapping
-    case "new":
-      return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300";
-    case "in_progress":
-      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300";
-    case "postponed":
-      return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300";
-    case "lost":
-      return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300";
-    default:
-      return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300";
-  }
-};
 
 // ----------------------------------------------------------------------
 
@@ -144,7 +115,7 @@ export default function LeadsIndex() {
       header: "Status",
       cell: ({ row }) => (
         <span
-          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${getStatusStyle(row.original.status)}`}
+          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize `}
         >
           {row.original.status.replace("_", " ")}
         </span>

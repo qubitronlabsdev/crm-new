@@ -28,7 +28,7 @@ const itemTypes = [
 ];
 
 const itemSchema = yup.object({
-  type: yup.string().required("Item type is required"),
+  type: yup.string().required("Item type is required"),                      
   title: yup.string().required("Title is required"),
   description: yup.string(),
   cost: yup

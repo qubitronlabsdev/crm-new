@@ -1,6 +1,6 @@
 // Import Dependencies
 import { useEffect, useState, useCallback } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
@@ -28,20 +28,6 @@ const leadSchema = yup.object({
     .email("Invalid email")
     .required("Email is required"),
   destination: yup.string().required("Destination is required"),
-  budget: yup
-    .number()
-    .min(0, "Budget must be positive")
-    .required("Budget is required"),
-  travel_dates: yup
-    .array()
-    .of(yup.date().required())
-    .min(2, "Please select both start and end dates")
-    .required("Travel dates are required"),
-
-  group_size: yup
-    .number()
-    .min(1, "Group size must be at least 1")
-    .required("Group size is required"),
   lead_source: yup.string().required("Lead source is required"),
   days: yup
     .number()
@@ -59,11 +45,10 @@ const leadSchema = yup.object({
   departure_city: yup.string().required("Departure city is required"),
   estimated_value: yup
     .number()
-    .min(0, "Budget must be positive")
-    .required("Budget is required"),
-
+    .min(0, "Estimated value must be positive")
+    .required("Estimated value is required"),
+  expected_close_date: yup.string(),
   travel_preferences: yup.string(),
-
   notes: yup.string(),
 });
 
@@ -115,7 +100,6 @@ export function LeadForm({
 }) {
   const {
     register,
-    control,
     handleSubmit,
     formState: { errors },
     reset,
@@ -129,16 +113,13 @@ export function LeadForm({
       phone: "",
       agent_assignment: "",
       travel_date: "",
-      travel_time: [],
+      travel_time: "",
       status: "fresh",
       priority: "medium",
       customer_name: "",
       customer_phone: "",
       customer_email: "",
       destination: "",
-      budget: "",
-      travel_dates: [], // 👈 must be array
-      group_size: 1,
       lead_source: "",
       days: 1,
       adults: 1,
@@ -147,7 +128,7 @@ export function LeadForm({
       departure_city: "",
       estimated_value: "",
       expected_close_date: "",
-      travel_preferences: [], // 👈 must be array
+      travel_preferences: "",
       notes: "",
     },
   });
@@ -160,7 +141,7 @@ export function LeadForm({
         email: lead.email || "",
         phone: lead.phone || "",
         agent_assignment: lead.agent_assignment || "",
-        travel_dates: lead.travel_dates || [],
+        travel_date: lead.travel_date || "",
         travel_time: lead.travel_time || "",
         status: lead.status || "fresh",
         priority: lead.priority || "medium",
@@ -168,8 +149,6 @@ export function LeadForm({
         customer_phone: lead.customer_phone || "",
         customer_email: lead.customer_email || "",
         destination: lead.destination || "",
-        budget: lead.budget || "",
-        group_size: lead.group_size || 1,
         lead_source: lead.lead_source || "",
         days: lead.days || 1,
         adults: lead.adults || 1,
@@ -178,7 +157,7 @@ export function LeadForm({
         departure_city: lead.departure_city || "",
         estimated_value: lead.estimated_value || "",
         expected_close_date: lead.expected_close_date || "",
-        travel_preferences: lead.travel_preferences || [],
+        travel_preferences: lead.travel_preferences || "",
         notes: lead.notes || "",
       });
     }
@@ -510,118 +489,52 @@ export function LeadForm({
               error={errors.destination?.message}
               className="w-full"
             />
-            <Input
-              label="Budget *"
-              placeholder="Enter budget"
-              type="number"
-              min="0"
-              step="0.01"
-              {...register("budget")}
-              error={errors.budget?.message}
-            />
-
-            {/* Travel Dates with Controller */}
-            <div className="md:col-span-1">
-              <Controller
-                name="travel_dates"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    label="Travel Dates *"
-                    placeholder="Select travel dates"
-                    options={{
-                      mode: "range",
-                      dateFormat: "Y-m-d",
-                    }}
-                    hasCalenderIcon={true}
-                    value={field.value}
-                    onChange={(dates) => field.onChange(dates)}
-                    error={errors.travel_dates?.message}
-                  />
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              <Input
-                label="Adults *"
-                placeholder="Number of adults"
-                type="number"
-                min="1"
-                {...register("adults", { valueAsNumber: true })}
-                error={errors.adults?.message}
-                className="w-full"
-              />
-              <Input
-                label="Children *"
-                placeholder="Number of children"
-                type="number"
-                min="0"
-                {...register("children", { valueAsNumber: true })}
-                error={errors.children?.message}
-                className="w-full"
-              />
-              {/* Custom Multi-Select Children Age Field */}
-              <div className="w-full">
-                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Children Ages
-                </label>
-
-                <Input
-                  label="Group Size *"
-                  placeholder="Number of travelers"
-                  type="number"
-                  min="1"
-                  {...register("group_size")}
-                  error={errors.group_size?.message}
-                />
-              </div>
-            </div>
-
-            {/* Lead Information */}
-            <div className="space-y-6">
-              <div className="border-b border-gray-200 pb-4 dark:border-gray-700">
-                <h3 className="dark:text-dark-50 text-lg font-semibold text-gray-800">
-                  Additional Information
-                </h3>
-                <p className="dark:text-dark-200 mt-1 text-sm text-gray-600">
-                  Travel preferences and additional notes
-                </p>
-              </div>
-
-              <Textarea
-                label="Travel Preferences"
-                placeholder="Enter any specific travel preferences..."
-                rows={4}
-                {...register("travel_preferences")}
-                error={errors.travel_preferences?.message}
-                className="w-full"
-                helpText="Include any specific preferences, budget range, accommodation type, activities, etc."
-              />
-
-              <Textarea
-                label="Notes"
-                placeholder="Enter any additional notes..."
-                rows={3}
-                {...register("notes")}
-                error={errors.notes?.message}
-                className="w-full"
-                helpText="Any other relevant information about this lead"
-              />
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex justify-end border-t border-gray-200 pt-6 dark:border-gray-700">
-              <Button
-                type="submit"
-                color="primary"
-                isLoading={isLoading}
-                disabled={isLoading}
-                className="min-w-[140px]"
-              >
-                {lead ? "Update Lead" : "Create Lead"}
-              </Button>
-            </div>
           </div>
+        </div>
+
+        {/* Lead Information */}
+        <div className="space-y-6">
+          <div className="border-b border-gray-200 pb-4 dark:border-gray-700">
+            <h3 className="dark:text-dark-50 text-lg font-semibold text-gray-800">
+              Additional Information
+            </h3>
+            <p className="dark:text-dark-200 mt-1 text-sm text-gray-600">
+              Travel preferences and additional notes
+            </p>
+          </div>
+
+          <Textarea
+            label="Travel Preferences"
+            placeholder="Enter any specific travel preferences..."
+            rows={4}
+            {...register("travel_preferences")}
+            error={errors.travel_preferences?.message}
+            className="w-full"
+            helpText="Include any specific preferences, budget range, accommodation type, activities, etc."
+          />
+
+          <Textarea
+            label="Notes"
+            placeholder="Enter any additional notes..."
+            rows={3}
+            {...register("notes")}
+            error={errors.notes?.message}
+            className="w-full"
+            helpText="Any other relevant information about this lead"
+          />
+        </div>
+
+        {/* Submit Button */}
+        <div className="flex justify-end border-t border-gray-200 pt-6 dark:border-gray-700">
+          <Button
+            type="submit"
+            color="primary"
+            isLoading={isLoading}
+            disabled={isLoading}
+            className="min-w-[140px]"
+          >
+            {lead ? "Update Lead" : "Create Lead"}
+          </Button>
         </div>
       </form>
     </Card>

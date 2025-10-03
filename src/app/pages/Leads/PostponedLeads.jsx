@@ -117,7 +117,11 @@ export default function PostponedLeads() {
       accessorKey: "lead_status",
       header: "Lead Status",
       cell: ({ row }) => (
-        <Badge color="warning" className="capitalize">
+        <Badge
+          color="warning"
+          className="rounded-lg py-1.5 capitalize"
+          variant="soft"
+        >
           {row.original.lead_status}
         </Badge>
       ),
@@ -149,6 +153,7 @@ export default function PostponedLeads() {
             color="info"
             isIcon
             title="View Lead"
+            className="shrink-0 p-1"
           >
             <EyeIcon className="h-4 w-4" />
           </Button>
@@ -160,6 +165,7 @@ export default function PostponedLeads() {
             color="warning"
             isIcon
             title="Edit Lead (with follow-up)"
+            className="shrink-0 p-1"
           >
             <PencilIcon className="h-4 w-4" />
           </Button>
