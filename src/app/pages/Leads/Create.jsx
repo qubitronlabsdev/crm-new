@@ -47,7 +47,7 @@ export default function CreateLead() {
 
   return (
     <Page title="Create Lead - Travel CRM">
-      <div className="transition-content w-full px-(--margin-x) pt-5 lg:pt-6">
+      <div className="transition-content w-full px-(--margin-x) py-5 lg:py-6">
         <div className="min-w-0 space-y-6">
           {/* Header */}
           <div className="flex items-center gap-4">

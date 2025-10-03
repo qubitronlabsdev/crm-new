@@ -173,7 +173,7 @@ export default function FreshLeads() {
 
   return (
     <Page title="Fresh Leads - Travel CRM">
-      <div className="transition-content w-full px-(--margin-x) pt-5 lg:pt-6">
+      <div className="transition-content w-full px-(--margin-x) py-5 lg:py-6">
         <div className="min-w-0 space-y-6">
           {/* Header */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -199,37 +199,6 @@ export default function FreshLeads() {
 
           {/* Lead Navigation Tabs */}
           <LeadTabs />
-
-          {/* Statistics Card */}
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-info-600 dark:text-info-400 text-3xl font-bold">
-                  {leads.meta.total}
-                </div>
-                <div className="dark:text-dark-200 text-sm text-gray-600">
-                  Fresh Leads Available
-                </div>
-              </div>
-              <div className="text-info-500 dark:text-info-400">
-                <svg
-                  className="h-12 w-12"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-            </div>
-            <div className="dark:text-dark-300 mt-4 text-sm text-gray-500">
-              These leads have a default status of &apos;fresh&apos; and are
-              ready for quotation creation.
-            </div>
-          </Card>
 
           {/* Fresh Leads Table */}
           <Card className="overflow-hidden">

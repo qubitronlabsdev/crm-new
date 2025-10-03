@@ -86,7 +86,7 @@ export default function EditLead() {
   if (!lead && !draftData) {
     return (
       <Page title="Edit Lead - Travel CRM">
-        <div className="transition-content w-full px-(--margin-x) pt-5 lg:pt-6">
+        <div className="transition-content w-full px-(--margin-x) py-5 lg:py-6">
           <div className="flex h-64 items-center justify-center">
             <div className="dark:text-dark-200 text-gray-500">Loading...</div>
           </div>
@@ -100,7 +100,7 @@ export default function EditLead() {
 
   return (
     <Page title="Edit Lead - Travel CRM">
-      <div className="transition-content w-full px-(--margin-x) pt-5 lg:pt-6">
+      <div className="transition-content w-full px-(--margin-x) py-5 lg:py-6">
         <div className="min-w-0 space-y-6">
           {/* Header */}
           <div className="flex items-center gap-4">

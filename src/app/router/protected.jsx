@@ -93,17 +93,18 @@ const protectedRoutes = {
           children: [
             {
               index: true,
-              element: <Navigate to="/leads/all" />,
-            },
-            {
-              path: "create",
               lazy: async () => ({
-                Component: (await import("app/pages/Quotations/Create"))
-                  .default,
+                Component: (await import("app/pages/Quotations/Index")).default,
               }),
             },
             {
-              path: "create/:leadId",
+              path: "all",
+              lazy: async () => ({
+                Component: (await import("app/pages/Quotations/Index")).default,
+              }),
+            },
+            {
+              path: "create",
               lazy: async () => ({
                 Component: (await import("app/pages/Quotations/Create"))
                   .default,
