@@ -8,6 +8,16 @@ import {
   PencilIcon,
   ShoppingCartIcon,
   EyeIcon,
+  BuildingOfficeIcon,
+  PaperAirplaneIcon as AirplaneIcon,
+  StarIcon,
+  TruckIcon,
+  ClipboardDocumentListIcon,
+  ClockIcon,
+  MapPinIcon,
+  EnvelopeIcon,
+  CheckCircleIcon,
+  XCircleIcon,
 } from "@heroicons/react/24/outline";
 
 // Local Imports
@@ -16,25 +26,26 @@ import { Page } from "components/shared/Page";
 import { ROUTES } from "app/router/routes";
 
 // ----------------------------------------------------------------------
-//TODO: Replace emojis with icons.
 const getItemTypeIcon = (type) => {
+  const iconClass = "h-6 w-6";
+
   switch (type) {
     case "hotel":
-      return "🏨";
+      return <BuildingOfficeIcon className={iconClass} />;
     case "flight":
-      return "✈️";
+      return <AirplaneIcon className={iconClass} />;
     case "activity":
-      return "🎯";
+      return <StarIcon className={iconClass} />;
     case "transport":
-      return "🚗";
+      return <TruckIcon className={iconClass} />;
     case "meal":
-      return "🍽️";
+      return <ClipboardDocumentListIcon className={iconClass} />;
     default:
-      return "📋";
+      return <ClipboardDocumentListIcon className={iconClass} />;
   }
 };
 
-// Mock data
+// Mock data with all schema fields
 const mockQuotation = {
   id: 1,
   title: "Paris Romantic Getaway",
@@ -46,7 +57,71 @@ const mockQuotation = {
   status: "sent",
   version: 1,
   created_at: "2024-01-15",
-  days: [
+
+  // Travel Details
+  travel_date: "2024-02-14",
+  travel_time: "09:00 AM",
+  expected_close_date: "2024-02-01",
+  departure_city: "New York",
+  destination: "Paris, France",
+  days: 5,
+  nights: 4,
+  adults: 2,
+  children: 0,
+  children_age: null,
+  budget: 3000,
+  special_requests:
+    "Anniversary celebration, prefer quiet rooms, dietary restrictions: vegetarian options",
+
+  // Hotels & Transportation
+  hotel_rating: "5",
+  room_type: "suite",
+  meal_plan: "Bed & Breakfast",
+  transportation_mode: "flight",
+  transportation_charges: [
+    { description: "Round-trip flights", amount: 1200 },
+    { description: "Airport transfers", amount: 120 },
+    { description: "Local transportation", amount: 200 },
+  ],
+
+  // Cost & Pricing
+  base_package_price: 2800,
+  taxes_services_charges: 18,
+  total_package_price: 3304,
+  per_person_price: 1652,
+  payment_terms: "50_50",
+  pricing_notes:
+    "Early bird discount applied. Prices subject to currency fluctuation.",
+
+  // Inclusions & Exclusions
+  inclusions: [
+    "Accommodation as per itinerary",
+    "Daily breakfast at hotel",
+    "Airport transfers",
+    "City tour with professional guide",
+    "Entry tickets to Eiffel Tower",
+    "Seine River cruise",
+    "Travel insurance",
+  ],
+  exclusions: [
+    "International flights (quoted separately)",
+    "Lunch and dinner (except where mentioned)",
+    "Personal expenses and shopping",
+    "Optional activities not mentioned in itinerary",
+    "Visa fees",
+    "Tips and gratuities",
+    "Any services not specifically mentioned in inclusions",
+  ],
+  cancellation_policy:
+    "Free cancellation up to 30 days before travel. 50% refund for cancellations 15-30 days before travel. No refund for cancellations within 15 days of travel.",
+  terms_conditions:
+    "All bookings are subject to availability. Prices are per person based on double occupancy. Single supplement charges apply for solo travelers. The company reserves the right to modify the itinerary due to unforeseen circumstances.",
+
+  // Template
+  template_selection: "template_2",
+
+  // Itinerary Details
+  itinerary_days: [
     {
       id: 1,
       dayNumber: 1,
@@ -134,18 +209,24 @@ const mockQuotation = {
       ],
     },
   ],
-  markup: 20,
-  currency: "USD",
-  totalNetCost: 1750,
-  totalWithMarkup: 2100,
-  payment_terms: "50% deposit required, balance due 30 days before travel",
-  cancellation_policy: "Free cancellation up to 14 days before travel",
 };
 
 const versions = [
   { value: 1, label: "Version 1 (Current)" },
   { value: 2, label: "Version 2 (Draft)" },
 ];
+
+// Helper function to format payment terms
+const formatPaymentTerms = (terms) => {
+  const termLabels = {
+    full_advance: "Full payment required in advance",
+    "50_50": "50% advance payment, 50% balance due before travel",
+    "30_70": "30% advance payment, 70% balance due before travel",
+    installments: "Payment in installments as agreed",
+    on_confirmation: "Payment due on booking confirmation",
+  };
+  return termLabels[terms] || terms;
+};
 
 // ----------------------------------------------------------------------
 
@@ -186,7 +267,7 @@ export default function ShowQuotation() {
 
   return (
     <Page title={`${quotation.title} - Travel CRM`}>
-      <div className="space-y-6">
+      <div className="transition-content w-full space-y-6 px-(--margin-x) py-5 lg:py-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
@@ -236,7 +317,7 @@ export default function ShowQuotation() {
             </Button>
             <Button
               component={Link}
-              to={`/quotations/${quotation.id}/edit`}
+              to={`${ROUTES.QUOTATIONS.ROOT}/${quotation.id}/edit`}
               variant="soft"
               color="warning"
             >
@@ -267,7 +348,7 @@ export default function ShowQuotation() {
               <div className="grid grid-cols-1 gap-4 text-center md:grid-cols-3">
                 <div>
                   <div className="text-primary-600 dark:text-primary-400 text-2xl font-bold">
-                    {quotation.days.length}
+                    {quotation.days}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
                     Days
@@ -275,7 +356,7 @@ export default function ShowQuotation() {
                 </div>
                 <div>
                   <div className="text-success-600 dark:text-success-400 text-2xl font-bold">
-                    {quotation.days.reduce(
+                    {quotation.itinerary_days.reduce(
                       (total, day) => total + day.items.length,
                       0,
                     )}
@@ -286,7 +367,7 @@ export default function ShowQuotation() {
                 </div>
                 <div>
                   <div className="text-warning-600 dark:text-warning-400 text-2xl font-bold">
-                    ${quotation.totalWithMarkup.toLocaleString()}
+                    ${quotation.total_package_price.toLocaleString()}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
                     Total Price
@@ -295,8 +376,179 @@ export default function ShowQuotation() {
               </div>
             </Card>
 
+            {/* Travel Details */}
+            <Card className="p-6">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+                Travel Details
+              </h3>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Travel Date:
+                    </span>
+                    <span className="text-gray-900 dark:text-white">
+                      {new Date(quotation.travel_date).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Travel Time:
+                    </span>
+                    <span className="text-gray-900 dark:text-white">
+                      {quotation.travel_time}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Departure City:
+                    </span>
+                    <span className="text-gray-900 dark:text-white">
+                      {quotation.departure_city}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Destination:
+                    </span>
+                    <span className="text-gray-900 dark:text-white">
+                      {quotation.destination}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Duration:
+                    </span>
+                    <span className="text-gray-900 dark:text-white">
+                      {quotation.days} Days / {quotation.nights} Nights
+                    </span>
+                  </div>
+                </div>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Adults:
+                    </span>
+                    <span className="text-gray-900 dark:text-white">
+                      {quotation.adults}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Children:
+                    </span>
+                    <span className="text-gray-900 dark:text-white">
+                      {quotation.children}
+                      {quotation.children > 0 && quotation.children_age && (
+                        <span className="text-gray-500">
+                          {" "}
+                          (Ages: {quotation.children_age})
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Budget:
+                    </span>
+                    <span className="text-gray-900 dark:text-white">
+                      ${quotation.budget.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Expected Close:
+                    </span>
+                    <span className="text-gray-900 dark:text-white">
+                      {new Date(
+                        quotation.expected_close_date,
+                      ).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {quotation.special_requests && (
+                <div className="mt-4">
+                  <h4 className="mb-2 font-medium text-gray-900 dark:text-white">
+                    Special Requests:
+                  </h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {quotation.special_requests}
+                  </p>
+                </div>
+              )}
+            </Card>
+
+            {/* Hotel & Transportation Details */}
+            <Card className="p-6">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+                Accommodation & Transportation
+              </h3>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Hotel Rating:
+                    </span>
+                    <span className="text-gray-900 dark:text-white">
+                      {quotation.hotel_rating} Star
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Room Type:
+                    </span>
+                    <span className="text-gray-900 capitalize dark:text-white">
+                      {quotation.room_type}
+                    </span>
+                  </div>
+                </div>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Meal Plan:
+                    </span>
+                    <span className="text-gray-900 dark:text-white">
+                      {quotation.meal_plan}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Transportation:
+                    </span>
+                    <span className="text-gray-900 capitalize dark:text-white">
+                      {quotation.transportation_mode}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {quotation.transportation_charges &&
+                quotation.transportation_charges.length > 0 && (
+                  <div className="mt-4">
+                    <h4 className="mb-2 font-medium text-gray-900 dark:text-white">
+                      Transportation Breakdown:
+                    </h4>
+                    <div className="space-y-2">
+                      {quotation.transportation_charges.map((charge, index) => (
+                        <div
+                          key={index}
+                          className="flex justify-between text-sm"
+                        >
+                          <span className="text-gray-600 dark:text-gray-400">
+                            {charge.description}:
+                          </span>
+                          <span className="text-gray-900 dark:text-white">
+                            ${charge.amount.toLocaleString()}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+            </Card>
+
             {/* Itinerary Details */}
-            {quotation.days.map((day) => (
+            {quotation.itinerary_days.map((day) => (
               <Card key={day.id} className="p-6">
                 <div className="mb-4 flex items-center gap-3">
                   <div className="bg-primary-100 dark:bg-primary-900 flex h-10 w-10 items-center justify-center rounded-full">
@@ -335,9 +587,17 @@ export default function ShowQuotation() {
                               {item.description}
                             </p>
                             {item.time && (
-                              <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                                🕐 {item.time}
-                                {item.location && ` • 📍 ${item.location}`}
+                              <div className="mt-2 flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+                                <div className="flex items-center gap-1">
+                                  <ClockIcon className="h-3 w-3" />
+                                  {item.time}
+                                </div>
+                                {item.location && (
+                                  <div className="flex items-center gap-1">
+                                    <MapPinIcon className="h-3 w-3" />
+                                    {item.location}
+                                  </div>
+                                )}
                               </div>
                             )}
                             {item.notes && (
@@ -357,6 +617,46 @@ export default function ShowQuotation() {
               </Card>
             ))}
 
+            {/* Inclusions & Exclusions */}
+            <Card className="p-6">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+                Package Inclusions & Exclusions
+              </h3>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {/* Inclusions */}
+                <div className="rounded-lg bg-green-50 p-4 dark:bg-green-900/20">
+                  <h4 className="mb-3 flex items-center gap-2 text-xl font-medium text-green-800 dark:text-green-300">
+                    <CheckCircleIcon className="h-4 w-4" />
+                    Inclusions ({quotation.inclusions.length} items)
+                  </h4>
+                  <ul className="space-y-1 text-[17px] text-green-700 dark:text-green-200">
+                    {quotation.inclusions.map((item, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="mr-2">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Exclusions */}
+                <div className="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
+                  <h4 className="mb-3 flex items-center gap-2 text-xl font-medium text-red-800 dark:text-red-300">
+                    <XCircleIcon className="h-4 w-4 font-semibold" />
+                    Exclusions ({quotation.exclusions.length} items)
+                  </h4>
+                  <ul className="space-y-1 text-[17px] text-red-700 dark:text-red-200">
+                    {quotation.exclusions.map((item, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="mr-2">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </Card>
+
             {/* Terms and Conditions */}
             <Card className="p-6">
               <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
@@ -367,14 +667,30 @@ export default function ShowQuotation() {
                   <strong className="text-gray-900 dark:text-white">
                     Payment Terms:
                   </strong>
-                  <p>{quotation.payment_terms}</p>
+                  <p className="mt-1">
+                    {formatPaymentTerms(quotation.payment_terms)}
+                  </p>
                 </div>
                 <div>
                   <strong className="text-gray-900 dark:text-white">
                     Cancellation Policy:
                   </strong>
-                  <p>{quotation.cancellation_policy}</p>
+                  <p className="mt-1">{quotation.cancellation_policy}</p>
                 </div>
+                <div>
+                  <strong className="text-gray-900 dark:text-white">
+                    Terms & Conditions:
+                  </strong>
+                  <p className="mt-1">{quotation.terms_conditions}</p>
+                </div>
+                {quotation.pricing_notes && (
+                  <div>
+                    <strong className="text-gray-900 dark:text-white">
+                      Pricing Notes:
+                    </strong>
+                    <p className="mt-1">{quotation.pricing_notes}</p>
+                  </div>
+                )}
               </div>
             </Card>
           </div>
@@ -389,29 +705,41 @@ export default function ShowQuotation() {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">
-                    Net Cost:
+                    Base Package Price:
                   </span>
                   <span className="text-gray-900 dark:text-white">
-                    ${quotation.totalNetCost.toLocaleString()}
+                    ${quotation.base_package_price.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">
-                    Markup ({quotation.markup}%):
+                    Taxes & Service Charges ({quotation.taxes_services_charges}
+                    %):
                   </span>
                   <span className="text-gray-900 dark:text-white">
                     $
                     {(
-                      (quotation.totalNetCost * quotation.markup) /
+                      (quotation.base_package_price *
+                        quotation.taxes_services_charges) /
                       100
                     ).toLocaleString()}
                   </span>
                 </div>
                 <hr className="border-gray-200 dark:border-gray-700" />
                 <div className="flex justify-between text-lg font-semibold">
-                  <span className="text-gray-900 dark:text-white">Total:</span>
+                  <span className="text-gray-900 dark:text-white">
+                    Total Package Price:
+                  </span>
                   <span className="text-primary-600 dark:text-primary-400">
-                    ${quotation.totalWithMarkup.toLocaleString()}
+                    ${quotation.total_package_price.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Per Person Price:
+                  </span>
+                  <span className="text-gray-900 dark:text-white">
+                    ${quotation.per_person_price.toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -445,6 +773,14 @@ export default function ShowQuotation() {
                   </span>
                   <span className="text-gray-900 dark:text-white">
                     {quotation.version}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Template:
+                  </span>
+                  <span className="text-gray-900 dark:text-white">
+                    {quotation.template_selection}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -487,7 +823,8 @@ export default function ShowQuotation() {
                   color="secondary"
                   className="w-full justify-start"
                 >
-                  📋 Duplicate
+                  <ClipboardDocumentListIcon className="mr-2 h-4 w-4" />
+                  Duplicate
                 </Button>
                 <Button
                   onClick={() => console.log("Send reminder")}
@@ -495,7 +832,8 @@ export default function ShowQuotation() {
                   color="warning"
                   className="w-full justify-start"
                 >
-                  📧 Send Reminder
+                  <EnvelopeIcon className="mr-2 h-4 w-4" />
+                  Send Reminder
                 </Button>
               </div>
             </Card>
