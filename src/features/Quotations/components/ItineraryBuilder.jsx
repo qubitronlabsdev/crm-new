@@ -24,10 +24,6 @@ export function ItineraryBuilder() {
     addItem,
     updateItem,
     removeItem,
-    getTotalNetCost,
-    getTotalWithMarkup,
-    markup,
-    setMarkup,
   } = useItineraryStore();
 
   const [isItemFormOpen, setIsItemFormOpen] = useState(false);
@@ -99,7 +95,7 @@ export function ItineraryBuilder() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         {/* Itinerary Days */}
-        <div className="space-y-6 lg:col-span-3">
+        <div className="space-y-6 lg:col-span-4">
           {days.map((day) => (
             <Card key={day.id} className="p-6">
               <div className="mb-4 flex items-center justify-between">
@@ -206,7 +202,7 @@ export function ItineraryBuilder() {
         </div>
 
         {/* Cost Summary Sidebar */}
-        <div className="lg:col-span-1">
+        {/* <div className="lg:col-span-1">
           <Card className="sticky top-6 p-6">
             <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
               Cost Summary
@@ -218,7 +214,7 @@ export function ItineraryBuilder() {
                   Net Cost:
                 </span>
                 <span className="font-medium text-gray-900 dark:text-white">
-                  ${(getTotalNetCost() || 0).toLocaleString()}
+                  {(getTotalNetCost() || 0).toLocaleString()}
                 </span>
               </div>
 
@@ -244,7 +240,7 @@ export function ItineraryBuilder() {
                   Markup Amount:
                 </span>
                 <span className="font-medium text-gray-900 dark:text-white">
-                  $
+                  ₹
                   {(
                     ((getTotalNetCost() || 0) * (markup || 0)) /
                     100
@@ -259,7 +255,7 @@ export function ItineraryBuilder() {
                   Total Price:
                 </span>
                 <span className="text-primary-600 dark:text-primary-400">
-                  ${(getTotalWithMarkup() || 0).toLocaleString()}
+                  ₹{(getTotalWithMarkup() || 0).toLocaleString()}
                 </span>
               </div>
 
@@ -269,7 +265,7 @@ export function ItineraryBuilder() {
               </div>
             </div>
           </Card>
-        </div>
+        </div> */}
       </div>
 
       {/* Item Form Modal */}

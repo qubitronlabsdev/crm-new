@@ -43,7 +43,6 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
       type: "",
       title: "",
       description: "",
-      cost: 0,
       time: "",
       location: "",
       notes: "",
@@ -58,7 +57,6 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
             type: item.type || "",
             title: item.title || "",
             description: item.description || "",
-            cost: item.cost || 0,
             time: item.time || "",
             location: item.location || "",
             notes: item.notes || "",
@@ -67,7 +65,6 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
             type: "",
             title: "",
             description: "",
-            cost: 0,
             time: "",
             location: "",
             notes: "",
@@ -85,7 +82,6 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
         type: data.type || "other",
         title: data.title || "",
         description: data.description || "",
-        cost: Number(data.cost) || 0,
         time: data.time || "",
         location: data.location || "",
         notes: data.notes || "",
@@ -171,15 +167,6 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
                   />
 
                   <div className="grid grid-cols-2 gap-4">
-                    <Input
-                      label="Cost *"
-                      placeholder="0.00"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      {...register("cost")}
-                      error={errors.cost?.message}
-                    />
                     <Input
                       label="Time"
                       placeholder="e.g., 9:00 AM"

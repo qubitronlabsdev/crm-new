@@ -5,7 +5,6 @@ import {
   TrashIcon,
   ClockIcon,
   MapPinIcon,
-  BanknotesIcon,
   Bars3Icon,
 } from "@heroicons/react/24/outline";
 import clsx from "clsx";
@@ -100,12 +99,6 @@ export function ItineraryItemCard({
                   )}
                 </div>
               </div>
-            </div>
-
-            {/* Cost */}
-            <div className="flex items-center gap-1 text-sm font-medium text-gray-900 dark:text-white">
-              <BanknotesIcon className="h-4 w-4 text-gray-400" />$
-              {(item.cost || 0).toLocaleString()}
             </div>
           </div>
 

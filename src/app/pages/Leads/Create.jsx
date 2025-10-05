@@ -6,9 +6,8 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 // Local Imports
 import { Button } from "components/ui";
 import { Page } from "components/shared/Page";
-import { LeadForm } from "features/Leads/components/LeadForm";
+import { SimpleLeadForm } from "features/Leads/components/SimpleLeadForm";
 import { ROUTES } from "app/router/routes";
-// import { addLeadToStorage, transformFormDataToLead } from "utils/leadsUtils";
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +60,7 @@ export default function CreateLead() {
           </div>
 
           {/* Form */}
-          <LeadForm onSubmit={handleSubmit} isLoading={isLoading} />
+          <SimpleLeadForm onSubmit={handleSubmit} isLoading={isLoading} />
         </div>
       </div>
     </Page>

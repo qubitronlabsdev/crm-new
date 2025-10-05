@@ -51,10 +51,10 @@ const transportPreferenceOptions = [
 ];
 
 const budgetRangeOptions = [
-  { value: "budget", label: "Budget ($500 - $1,000)" },
-  { value: "mid_range", label: "Mid-range ($1,000 - $3,000)" },
-  { value: "luxury", label: "Luxury ($3,000 - $10,000)" },
-  { value: "ultra_luxury", label: "Ultra Luxury ($10,000+)" },
+  { value: "budget", label: "Budget (₹500 - ₹1,000)" },
+  { value: "mid_range", label: "Mid-range (₹1,000 - ₹3,000)" },
+  { value: "luxury", label: "Luxury (₹3,000 - ₹10,000)" },
+  { value: "ultra_luxury", label: "Ultra Luxury (₹10,000+)" },
   { value: "custom", label: "Custom Budget" },
 ];
 
