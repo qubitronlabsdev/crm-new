@@ -6,7 +6,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 // Local Imports
 import { Button } from "components/ui";
 import { Page } from "components/shared/Page";
-import { SimpleLeadForm } from "features/Leads/components/SimpleLeadForm";
+import { LeadForm } from "features/Leads/components/LeadForm";
 import { ROUTES } from "app/router/routes";
 import {
   getLeadById,
@@ -121,7 +121,7 @@ export default function EditLead() {
           </div>
 
           {/* Lead Form */}
-          <SimpleLeadForm
+          <LeadForm
             initialData={formData}
             onSubmit={handleSubmit}
             isLoading={isLoading}
