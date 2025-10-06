@@ -1,5 +1,5 @@
 // Import Dependencies
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   PlusIcon,
   TrashIcon,
@@ -15,7 +15,7 @@ import { ItineraryItemForm } from "./ItineraryItemForm";
 
 // ----------------------------------------------------------------------
 
-export function ItineraryBuilder() {
+export function ItineraryBuilder({ numberOfDays }) {
   const {
     days,
     addDay,
@@ -24,6 +24,7 @@ export function ItineraryBuilder() {
     addItem,
     updateItem,
     removeItem,
+    setDaysCount,
   } = useItineraryStore();
 
   const [isItemFormOpen, setIsItemFormOpen] = useState(false);
@@ -31,6 +32,13 @@ export function ItineraryBuilder() {
   const [editingItem, setEditingItem] = useState(null);
   const [editingDayId, setEditingDayId] = useState(null);
   const [dayTitle, setDayTitle] = useState("");
+
+  // Sync days count with numberOfDays prop
+  useEffect(() => {
+    if (numberOfDays && numberOfDays > 0) {
+      setDaysCount(numberOfDays);
+    }
+  }, [numberOfDays]);
 
   const handleAddItem = (dayId) => {
     setSelectedDay(dayId);

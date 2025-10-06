@@ -64,7 +64,7 @@ const mockQuotation = {
 
   // Travel Details
   travel_date: "2024-02-14",
-  travel_time: "09:00 AM",
+  // travel_time: "09:00 AM",
   expected_close_date: "2024-02-01",
   departure_city: "New York",
   destination: "Paris, France",
@@ -74,7 +74,7 @@ const mockQuotation = {
   children: 0,
   children_age: null,
   budget: 3000,
-  special_requests:
+  travel_preferences:
     "Anniversary celebration, prefer quiet rooms, dietary restrictions: vegetarian options",
 
   // Hotels & Transportation
@@ -482,14 +482,14 @@ export default function ShowQuotation() {
                         {new Date(quotation.travel_date).toLocaleDateString()}
                       </span>
                     </div>
-                    <div className="flex justify-between">
+                    {/* <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">
                         Travel Time:
                       </span>
                       <span className="text-gray-900 dark:text-white">
                         {quotation.travel_time}
                       </span>
-                    </div>
+                    </div> */}
                     <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">
                         Departure:
@@ -517,13 +517,13 @@ export default function ShowQuotation() {
                       </span>
                     </div>
                   </div>
-                  {quotation.special_requests && (
+                  {quotation.travel_preferences && (
                     <div className="mt-4 border-t pt-4">
                       <h4 className="mb-2 font-medium text-gray-900 dark:text-white">
-                        Special Requests:
+                        Travel Preferences:
                       </h4>
                       <p className="text-base text-gray-600 dark:text-gray-400">
-                        {quotation.special_requests}
+                        {quotation.travel_preferences}
                       </p>
                     </div>
                   )}

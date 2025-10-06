@@ -3,8 +3,8 @@ import * as yup from "yup";
 // Step 1: Travel Details Schema
 export const travelDetailsSchema = yup.object({
   travel_date: yup.string().required("Travel date is required"),
-  travel_time: yup.string().required("Travel time is required"),
-  expected_close_date: yup.string().required("Expected close date is required"),
+  // travel_time: yup.string().required("Travel time is required"),
+  // expected_close_date: yup.string().required("Expected close date is required"),
   departure_city: yup.string().required("Departure city is required"),
   destination: yup.string().required("Destination is required"),
   days: yup
@@ -14,6 +14,7 @@ export const travelDetailsSchema = yup.object({
   nights: yup
     .number()
     .min(0, "Nights must be at least 0")
+    .max(yup.ref("days"), "Nights cannot be more than days")
     .required("Nights is required"),
   adults: yup
     .number()
@@ -35,7 +36,7 @@ export const travelDetailsSchema = yup.object({
     .number()
     .min(0, "Budget must be positive")
     .required("Budget is required"),
-  special_requests: yup.string(),
+  travel_preferences: yup.string(),
 });
 
 // Step 2: Hotels & Transportation Schema
@@ -56,7 +57,7 @@ export const hotelsTransportationSchema = yup.object({
   transportation_charges: yup.array().of(yup.object()),
 });
 
-// Step 3: Cost & Pricing Schema
+// Step 4: Cost & Pricing Schema
 export const costPricingSchema = yup.object({
   base_package_price: yup
     .number()
@@ -84,7 +85,7 @@ export const costPricingSchema = yup.object({
       "on_confirmation",
     ])
     .required("Payment terms are required"),
-  pricing_notes: yup.string(),
+  // pricing_notes: yup.string(),
 });
 
 // Step 4: Inclusions & Exclusions Schema

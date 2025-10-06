@@ -50,25 +50,36 @@ const mockPdfTemplates = [
 
 // ----------------------------------------------------------------------
 
-export function ReviewStep({ watch, setValue, errors }) {
+export function ReviewStep({ errors, watch, setValue, defaultData = {} }) {
   const [availableTemplates, setAvailableTemplates] = useState([]);
 
   // Inject dark theme styles for ReactSelect
   useEffect(() => {
-    const styleId = 'react-select-dark-theme';
+    const styleId = "react-select-dark-theme";
     let styleElement = document.getElementById(styleId);
-    
+
     if (!styleElement) {
-      styleElement = document.createElement('style');
+      styleElement = document.createElement("style");
       styleElement.id = styleId;
       styleElement.textContent = darkThemeStyles;
       document.head.appendChild(styleElement);
     }
-    
+
     return () => {
       // Cleanup is handled by keeping the styles in head for reuse
     };
   }, []);
+  // Handle defaultData when provided
+  useEffect(() => {
+    if (defaultData && Object.keys(defaultData).length > 0) {
+      // Set form values from defaultData when provided
+      Object.keys(defaultData).forEach((key) => {
+        if (defaultData[key] !== undefined) {
+          setValue(key, defaultData[key], { shouldValidate: false });
+        }
+      });
+    }
+  }, [defaultData, setValue]);
 
   // Fetch available PDF templates
   useEffect(() => {
@@ -119,14 +130,14 @@ export function ReviewStep({ watch, setValue, errors }) {
                   {formatValue(allData.travel_date)}
                 </span>
               </div>
-              <div>
+              {/* <div>
                 <span className="font-medium text-gray-700 dark:text-gray-300">
                   Travel Time:
                 </span>
                 <span className="ml-2 text-gray-900 dark:text-white">
                   {formatValue(allData.travel_time)}
                 </span>
-              </div>
+              </div> */}
               <div>
                 <span className="font-medium text-gray-700 dark:text-gray-300">
                   Departure:
@@ -176,13 +187,13 @@ export function ReviewStep({ watch, setValue, errors }) {
                 </span>
               </div>
             </div>
-            {allData.special_requests && (
+            {allData.travel_preferences && (
               <div className="mt-3 border-t border-gray-300 pt-3 dark:border-gray-600">
                 <span className="font-medium text-gray-700 dark:text-gray-300">
-                  Special Requests:
+                  Travel Preferences:
                 </span>
                 <p className="mt-1 ml-2 text-gray-900 dark:text-white">
-                  {allData.special_requests}
+                  {allData.travel_preferences}
                 </p>
               </div>
             )}
@@ -282,7 +293,7 @@ export function ReviewStep({ watch, setValue, errors }) {
                 </span>
               </div>
             </div>
-            {allData.pricing_notes && (
+            {/* {allData.pricing_notes && (
               <div className="mt-3 border-t border-gray-300 pt-3 dark:border-gray-600">
                 <span className="font-medium text-gray-700 dark:text-gray-300">
                   Pricing Notes:
@@ -291,7 +302,7 @@ export function ReviewStep({ watch, setValue, errors }) {
                   {allData.pricing_notes}
                 </p>
               </div>
-            )}
+            )} */}
           </div>
         </div>
 
@@ -386,62 +397,67 @@ export function ReviewStep({ watch, setValue, errors }) {
               styles={{
                 control: (provided, state) => ({
                   ...provided,
-                  backgroundColor: 'var(--select-bg, #ffffff)',
-                  borderColor: state.isFocused ? "#3B82F6" : 'var(--select-border, #D1D5DB)',
-                  color: 'var(--select-text, #111827)',
+                  backgroundColor: "var(--select-bg, #ffffff)",
+                  borderColor: state.isFocused
+                    ? "#3B82F6"
+                    : "var(--select-border, #D1D5DB)",
+                  color: "var(--select-text, #111827)",
                   "&:hover": {
                     borderColor: "#3B82F6",
                   },
-                  boxShadow: state.isFocused ? '0 0 0 1px #3B82F6' : 'none',
+                  boxShadow: state.isFocused ? "0 0 0 1px #3B82F6" : "none",
                 }),
                 menu: (provided) => ({
                   ...provided,
-                  backgroundColor: 'var(--select-menu-bg, #ffffff)',
-                  border: '1px solid var(--select-border, #D1D5DB)',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                  backgroundColor: "var(--select-menu-bg, #ffffff)",
+                  border: "1px solid var(--select-border, #D1D5DB)",
+                  boxShadow:
+                    "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected 
-                    ? '#3B82F6' 
-                    : state.isFocused 
-                    ? 'var(--select-option-hover, #F3F4F6)' 
-                    : 'transparent',
-                  color: state.isSelected 
-                    ? '#ffffff' 
-                    : 'var(--select-text, #111827)',
+                  backgroundColor: state.isSelected
+                    ? "#3B82F6"
+                    : state.isFocused
+                      ? "var(--select-option-hover, #F3F4F6)"
+                      : "transparent",
+                  color: state.isSelected
+                    ? "#ffffff"
+                    : "var(--select-text, #111827)",
                   "&:hover": {
-                    backgroundColor: state.isSelected ? '#3B82F6' : 'var(--select-option-hover, #F3F4F6)',
+                    backgroundColor: state.isSelected
+                      ? "#3B82F6"
+                      : "var(--select-option-hover, #F3F4F6)",
                   },
                 }),
                 singleValue: (provided) => ({
                   ...provided,
-                  color: 'var(--select-text, #111827)',
+                  color: "var(--select-text, #111827)",
                 }),
                 placeholder: (provided) => ({
                   ...provided,
-                  color: 'var(--select-placeholder, #6B7280)',
+                  color: "var(--select-placeholder, #6B7280)",
                 }),
                 input: (provided) => ({
                   ...provided,
-                  color: 'var(--select-text, #111827)',
+                  color: "var(--select-text, #111827)",
                 }),
                 indicatorSeparator: (provided) => ({
                   ...provided,
-                  backgroundColor: 'var(--select-border, #D1D5DB)',
+                  backgroundColor: "var(--select-border, #D1D5DB)",
                 }),
                 dropdownIndicator: (provided) => ({
                   ...provided,
-                  color: 'var(--select-placeholder, #6B7280)',
+                  color: "var(--select-placeholder, #6B7280)",
                   "&:hover": {
-                    color: 'var(--select-text, #111827)',
+                    color: "var(--select-text, #111827)",
                   },
                 }),
                 clearIndicator: (provided) => ({
                   ...provided,
-                  color: 'var(--select-placeholder, #6B7280)',
+                  color: "var(--select-placeholder, #6B7280)",
                   "&:hover": {
-                    color: 'var(--select-text, #111827)',
+                    color: "var(--select-text, #111827)",
                   },
                 }),
               }}
@@ -449,10 +465,10 @@ export function ReviewStep({ watch, setValue, errors }) {
                 ...theme,
                 colors: {
                   ...theme.colors,
-                  primary: '#3B82F6',
-                  primary75: '#60A5FA',
-                  primary50: '#93C5FD',
-                  primary25: '#DBEAFE',
+                  primary: "#3B82F6",
+                  primary75: "#60A5FA",
+                  primary50: "#93C5FD",
+                  primary25: "#DBEAFE",
                 },
               })}
             />

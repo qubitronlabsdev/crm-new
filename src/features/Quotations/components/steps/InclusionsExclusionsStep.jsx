@@ -1,5 +1,5 @@
 // Import Dependencies
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ClipboardDocumentListIcon,
   CheckCircleIcon,
@@ -11,22 +11,22 @@ import { Card, Input, Textarea, Button } from "components/ui";
 
 // ----------------------------------------------------------------------
 
-const defaultInclusions = [
-  "Accommodation as per itinerary",
-  "Daily breakfast",
-  "Airport transfers",
-  "Sightseeing as mentioned in itinerary",
-  "Professional tour guide",
-];
+// const defaultInclusions = [
+//   "Accommodation as per itinerary",
+//   "Daily breakfast",
+//   "Airport transfers",
+//   "Sightseeing as mentioned in itinerary",
+//   "Professional tour guide",
+// ];
 
-const defaultExclusions = [
-  "Personal expenses",
-  "Meals not mentioned in the itinerary",
-  "Travel insurance",
-  "Visa fees",
-  "Tips and gratuities",
-  "Any item not mentioned in inclusions",
-];
+// const defaultExclusions = [
+//   "Personal expenses",
+//   "Meals not mentioned in the itinerary",
+//   "Travel insurance",
+//   "Visa fees",
+//   "Tips and gratuities",
+//   "Any item not mentioned in inclusions",
+// ];
 
 // ----------------------------------------------------------------------
 
@@ -35,20 +35,59 @@ export function InclusionsExclusionsStep({
   errors,
   watch,
   setValue,
+  defaultData = {},
 }) {
-  const [inclusions, setInclusions] = useState(
-    watch("inclusions") ||
-      defaultInclusions.map((item, index) => ({ id: index + 1, text: item })),
-  );
+  const [inclusions, setInclusions] = useState([{ id: 1, text: "" }]);
+  const [exclusions, setExclusions] = useState([{ id: 1, text: "" }]);
 
-  const [exclusions, setExclusions] = useState(
-    watch("exclusions") ||
-      defaultExclusions.map((item, index) => ({ id: index + 1, text: item })),
-  );
+  useEffect(() => {
+    if (defaultData && Object.keys(defaultData).length > 0) {
+      // Set form values from defaultData when provided
+      Object.keys(defaultData).forEach((key) => {
+        if (
+          defaultData[key] !== undefined &&
+          key !== "inclusions" &&
+          key !== "exclusions"
+        ) {
+          setValue(key, defaultData[key], { shouldValidate: false });
+        }
+      });
+
+      // Set inclusions and exclusions if available
+      if (defaultData.inclusions && Array.isArray(defaultData.inclusions)) {
+        const inclusionsWithIds =
+          defaultData.inclusions.length > 0
+            ? defaultData.inclusions.map((item, index) => ({
+                id: index + 1,
+                text: typeof item === "string" ? item : item.text || "",
+              }))
+            : [{ id: 1, text: "" }];
+        setInclusions(inclusionsWithIds);
+        setValue("inclusions", defaultData.inclusions, {
+          shouldValidate: false,
+        });
+      }
+
+      if (defaultData.exclusions && Array.isArray(defaultData.exclusions)) {
+        const exclusionsWithIds =
+          defaultData.exclusions.length > 0
+            ? defaultData.exclusions.map((item, index) => ({
+                id: index + 1,
+                text: typeof item === "string" ? item : item.text || "",
+              }))
+            : [{ id: 1, text: "" }];
+        setExclusions(exclusionsWithIds);
+        setValue("exclusions", defaultData.exclusions, {
+          shouldValidate: false,
+        });
+      }
+    }
+  }, [defaultData, setValue]);
 
   // Inclusions handlers
   const addInclusion = () => {
-    const newId = Math.max(...inclusions.map((i) => i.id)) + 1;
+    const newId =
+      inclusions.length > 0 ? Math.max(...inclusions.map((i) => i.id)) + 1 : 1;
     const newInclusions = [...inclusions, { id: newId, text: "" }];
     setInclusions(newInclusions);
     setValue(
@@ -87,7 +126,8 @@ export function InclusionsExclusionsStep({
 
   // Exclusions handlers
   const addExclusion = () => {
-    const newId = Math.max(...exclusions.map((e) => e.id)) + 1;
+    const newId =
+      exclusions.length > 0 ? Math.max(...exclusions.map((e) => e.id)) + 1 : 1;
     const newExclusions = [...exclusions, { id: newId, text: "" }];
     setExclusions(newExclusions);
     setValue(
@@ -128,7 +168,7 @@ export function InclusionsExclusionsStep({
     <div className="space-y-6">
       <Card className="p-6">
         <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-          Step 4: Inclusions & Exclusions
+          Step 3: Inclusions & Exclusions
         </h3>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

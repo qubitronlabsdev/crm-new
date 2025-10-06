@@ -3,8 +3,8 @@ import { useState } from "react";
 import {
   PencilIcon,
   TrashIcon,
-  ClockIcon,
-  MapPinIcon,
+  // ClockIcon,
+  // MapPinIcon,
   Bars3Icon,
   BuildingOfficeIcon,
   PaperAirplaneIcon,
@@ -16,26 +16,30 @@ import {
 import clsx from "clsx";
 
 // Local Imports
-import { Button, Card, Badge } from "components/ui";
+import {
+  Button,
+  Card,
+  // Badge
+} from "components/ui";
 
 // ----------------------------------------------------------------------
 
-const getItemTypeColor = (type) => {
-  switch (type) {
-    case "hotel":
-      return "info";
-    case "flight":
-      return "primary";
-    case "activity":
-      return "success";
-    case "transport":
-      return "warning";
-    case "meal":
-      return "secondary";
-    default:
-      return "neutral";
-  }
-};
+// const getItemTypeColor = (type) => {
+//   switch (type) {
+//     case "hotel":
+//       return "info";
+//     case "flight":
+//       return "primary";
+//     case "activity":
+//       return "success";
+//     case "transport":
+//       return "warning";
+//     case "meal":
+//       return "secondary";
+//     default:
+//       return "neutral";
+//   }
+// };
 
 const getItemTypeIcon = (type) => {
   const iconProps = { className: "h-5 w-5" };
@@ -93,7 +97,7 @@ export function ItineraryItemCard({
                 <h4 className="truncate font-medium text-gray-900 dark:text-white">
                   {item.title}
                 </h4>
-                <div className="mt-1 flex items-center gap-2">
+                {/* <div className="mt-1 flex items-center gap-2">
                   <Badge
                     color={getItemTypeColor(item.type)}
                     variant="soft"
@@ -107,7 +111,7 @@ export function ItineraryItemCard({
                       {item.time}
                     </div>
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -120,19 +124,19 @@ export function ItineraryItemCard({
           )}
 
           {/* Location */}
-          {item.location && (
+          {/* {item.location && (
             <div className="mt-2 flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
               <MapPinIcon className="h-3 w-3" />
               {item.location}
             </div>
-          )}
+          )} */}
 
           {/* Notes */}
-          {item.notes && (
+          {/* {item.notes && (
             <div className="mt-2 text-xs text-gray-500 italic dark:text-gray-400">
               {item.notes}
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Actions */}

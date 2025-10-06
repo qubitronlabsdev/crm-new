@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 
 // Local Imports
 import { Card, Button } from "components/ui";
@@ -41,17 +41,17 @@ const steps = [
   },
   {
     id: 3,
-    title: "Cost & Pricing",
-    description: "Package pricing and payment terms",
-    component: CostPricingStep,
-    schema: costPricingSchema,
-  },
-  {
-    id: 4,
     title: "Inclusions & Exclusions",
     description: "What's included and excluded in the package",
     component: InclusionsExclusionsStep,
     schema: inclusionsExclusionsSchema,
+  },
+  {
+    id: 4,
+    title: "Cost & Pricing",
+    description: "Package pricing and payment terms",
+    component: CostPricingStep,
+    schema: costPricingSchema,
   },
   {
     id: 5,
@@ -64,7 +64,12 @@ const steps = [
 
 // ----------------------------------------------------------------------
 
-export function QuotationStepper({ leadId, quotationId, isEditMode = false }) {
+export function QuotationStepper({
+  leadId,
+  quotationId,
+  initialData = null,
+  isEditMode = false,
+}) {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -75,69 +80,24 @@ export function QuotationStepper({ leadId, quotationId, isEditMode = false }) {
     adults: 2,
     children: 0,
     taxes_services_charges: 18,
+    // Merge with initialData if provided
+    ...initialData,
   });
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const urlLeadId = searchParams.get("leadId");
 
-  // Load existing quotation data in edit mode
+  // Update formData when initialData changes
   useEffect(() => {
-    const loadQuotationData = async () => {
-      try {
-        // In a real app, this would be an API call
-        // For now, use mock data
-        const mockQuotationData = {
-          id: quotationId,
-          lead_id: leadId,
-          travel_date: "2024-02-14",
-          travel_time: "09:00 AM",
-          expected_close_date: "2024-02-01",
-          departure_city: "New York",
-          destination: "Paris, France",
-          days: 5,
-          nights: 4,
-          adults: 2,
-          children: 0,
-          children_age: "",
-          budget: 3000,
-          special_requests: "Anniversary celebration, prefer quiet rooms",
-          hotel_rating: "5",
-          room_type: "suite",
-          meal_plan: "Bed & Breakfast",
-          transportation_mode: "flight",
-          transportation_charges: [
-            { description: "Round-trip flights", amount: 1200 },
-            { description: "Airport transfers", amount: 120 },
-          ],
-          base_package_price: 2800,
-          taxes_services_charges: 18,
-          total_package_price: 3304,
-          per_person_price: 1652,
-          payment_terms: "50_50",
-          pricing_notes: "Early bird discount applied",
-          inclusions: [
-            "Accommodation as per itinerary",
-            "Daily breakfast at hotel",
-            "Airport transfers",
-          ],
-          exclusions: [
-            "International flights (quoted separately)",
-            "Personal expenses and shopping",
-            "Visa fees",
-          ],
-          cancellation_policy: "Free cancellation up to 30 days before travel",
-          terms_conditions: "All bookings are subject to availability",
-          template_selection: "template_2",
-        };
-
-        setFormData(mockQuotationData);
-      } catch (error) {
-        console.error("Error loading quotation data:", error);
-      }
-    };
-
-    if (isEditMode && quotationId) {
-      loadQuotationData();
+    if (initialData) {
+      setFormData((prev) => ({
+        ...prev,
+        ...initialData,
+        // Ensure lead_id is properly set
+        lead_id: leadId || initialData.lead_id,
+      }));
     }
-  }, [isEditMode, quotationId, leadId]);
+  }, [initialData, leadId]);
 
   // Get current step configuration
   const currentStepConfig = steps.find((step) => step.id === currentStep);
@@ -251,10 +211,15 @@ export function QuotationStepper({ leadId, quotationId, isEditMode = false }) {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Create New Quotation
+            {isEditMode
+              ? "Edit Quotation"
+              : urlLeadId
+                ? "Create Quotation from Lead"
+                : "Create New Quotation"}
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Lead ID: {leadId} • Step {currentStep} of {steps.length}
+            {(leadId || urlLeadId) && `Lead ID: ${leadId || urlLeadId} • `}
+            Step {currentStep} of {steps.length}
           </p>
         </div>
 
@@ -325,6 +290,7 @@ export function QuotationStepper({ leadId, quotationId, isEditMode = false }) {
               errors={errors}
               watch={watch}
               setValue={setValue}
+              defaultData={formData}
             />
           )}
 

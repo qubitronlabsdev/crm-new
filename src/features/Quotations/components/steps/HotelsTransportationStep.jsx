@@ -1,5 +1,5 @@
 // Import Dependencies
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Local Imports
 import { Card, Input, Select, Button } from "components/ui";
@@ -45,10 +45,30 @@ export function HotelsTransportationStep({
   errors,
   watch,
   setValue,
+  defaultData = {},
 }) {
   const [transportationCharges, setTransportationCharges] = useState([
     { id: 1, description: "", amount: 0 },
   ]);
+
+  useEffect(() => {
+    if (defaultData && Object.keys(defaultData).length > 0) {
+      // Set form values from defaultData when provided
+      Object.keys(defaultData).forEach((key) => {
+        if (defaultData[key] !== undefined) {
+          setValue(key, defaultData[key], { shouldValidate: false });
+        }
+      });
+
+      // Set transportation charges if available
+      if (
+        defaultData.transportation_charges &&
+        Array.isArray(defaultData.transportation_charges)
+      ) {
+        setTransportationCharges(defaultData.transportation_charges);
+      }
+    }
+  }, [defaultData, setValue]);
 
   // Watch values for summary
   const hotelRating = watch("hotel_rating");

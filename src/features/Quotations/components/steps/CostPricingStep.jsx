@@ -2,7 +2,13 @@
 import { useEffect } from "react";
 
 // Local Imports
-import { Card, Input, Select, Textarea } from "components/ui";
+import {
+  Card,
+  Input,
+  Select,
+
+  // Textarea
+} from "components/ui";
 
 // ----------------------------------------------------------------------
 
@@ -16,7 +22,24 @@ const paymentTermsOptions = [
 
 // ----------------------------------------------------------------------
 
-export function CostPricingStep({ register, errors, watch, setValue }) {
+export function CostPricingStep({
+  register,
+  errors,
+  watch,
+  setValue,
+  defaultData = {},
+}) {
+  useEffect(() => {
+    if (defaultData && Object.keys(defaultData).length > 0) {
+      // Set form values from defaultData when provided
+      Object.keys(defaultData).forEach((key) => {
+        if (defaultData[key] !== undefined) {
+          setValue(key, defaultData[key], { shouldValidate: false });
+        }
+      });
+    }
+  }, [defaultData, setValue]);
+
   // Watch values for auto-calculations
   const basePackagePrice = watch("base_package_price") || 0;
   const taxesServicesCharges = watch("taxes_services_charges") || 0;
@@ -54,7 +77,7 @@ export function CostPricingStep({ register, errors, watch, setValue }) {
     <div className="space-y-6">
       <Card className="p-6">
         <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-          Step 3: Cost & Pricing
+          Step 4: Cost & Pricing
         </h3>
 
         {/* Package Pricing */}
@@ -129,7 +152,7 @@ export function CostPricingStep({ register, errors, watch, setValue }) {
         </div>
 
         {/* Pricing Notes */}
-        <div>
+        {/* <div>
           <Textarea
             label="Pricing Notes"
             placeholder="Additional pricing information, discounts, seasonal rates, etc."
@@ -137,7 +160,7 @@ export function CostPricingStep({ register, errors, watch, setValue }) {
             {...register("pricing_notes")}
             error={errors.pricing_notes?.message}
           />
-        </div>
+        </div> */}
       </Card>
 
       {/* Price Breakdown Summary */}

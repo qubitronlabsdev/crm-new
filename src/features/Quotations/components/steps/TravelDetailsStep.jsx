@@ -1,12 +1,13 @@
 // Import Dependencies
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "react-router";
 import { Controller } from "react-hook-form";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 // Local Imports
 import { Card, Input, Textarea } from "components/ui";
 import { DatePicker } from "components/shared/form/Datepicker";
 import { ItineraryBuilder } from "../ItineraryBuilder";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 // ----------------------------------------------------------------------
 
@@ -16,10 +17,25 @@ export function TravelDetailsStep({
   errors,
   watch,
   setValue,
+  defaultData = {},
 }) {
   const [isChildrenAgeDropdownOpen, setIsChildrenAgeDropdownOpen] =
     useState(false);
   const [childrenAges, setChildrenAges] = useState([]);
+  const [searchParams] = useSearchParams();
+  const leadId = searchParams.get("leadId");
+  const isReadOnly = Boolean(leadId);
+
+  useEffect(() => {
+    if (defaultData && Object.keys(defaultData).length > 0) {
+      // Set form values from defaultData when provided
+      Object.keys(defaultData).forEach((key) => {
+        if (defaultData[key] !== undefined) {
+          setValue(key, defaultData[key], { shouldValidate: false });
+        }
+      });
+    }
+  }, [defaultData, setValue]);
 
   const children = watch("children") || 0;
   const adults = watch("adults") || 0;
@@ -78,7 +94,7 @@ export function TravelDetailsStep({
         {/* Travel Dates & Duration */}
         <div className="mb-6">
           <h4 className="text-md mb-3 font-medium text-gray-800 dark:text-gray-200">
-            Travel Dates & Duration
+            Travel Dates & Destinations
           </h4>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <Controller
@@ -90,66 +106,32 @@ export function TravelDetailsStep({
                   placeholder="mm/dd/yyyy"
                   options={{
                     dateFormat: "m/d/Y",
-                    allowInput: true,
+                    allowInput: !isReadOnly,
                     onChange: (selectedDates, dateStr) => {
-                      onChange(dateStr);
+                      if (!isReadOnly) onChange(dateStr);
                     },
                   }}
                   hasCalenderIcon={true}
                   value={value}
                   error={errors.travel_date?.message}
+                  disabled={isReadOnly}
                   {...field}
                 />
               )}
             />
-            <Input
-              label="Travel Time *"
-              type="time"
-              placeholder="Select time"
-              {...register("travel_time")}
-              error={errors.travel_time?.message}
-            />
-            <Controller
-              name="expected_close_date"
-              control={control}
-              render={({ field: { onChange, value, ...field } }) => (
-                <DatePicker
-                  label="Expected Close Date *"
-                  placeholder="mm/dd/yyyy"
-                  options={{
-                    dateFormat: "m/d/Y",
-                    allowInput: true,
-                    onChange: (selectedDates, dateStr) => {
-                      onChange(dateStr);
-                    },
-                  }}
-                  hasCalenderIcon={true}
-                  value={value}
-                  error={errors.expected_close_date?.message}
-                  {...field}
-                />
-              )}
-            />
-          </div>
-        </div>
-
-        {/* Destinations */}
-        <div className="mb-6">
-          <h4 className="text-md mb-3 font-medium text-gray-800 dark:text-gray-200">
-            Destinations
-          </h4>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <Input
               label="Departure City *"
               placeholder="Enter departure city"
               {...register("departure_city")}
               error={errors.departure_city?.message}
+              disabled={isReadOnly}
             />
             <Input
               label="Destination *"
               placeholder="Enter destination"
               {...register("destination")}
               error={errors.destination?.message}
+              disabled={isReadOnly}
             />
           </div>
         </div>
@@ -166,6 +148,7 @@ export function TravelDetailsStep({
               min="1"
               {...register("days", { valueAsNumber: true })}
               error={errors.days?.message}
+              disabled={isReadOnly}
             />
             <Input
               label="Nights *"
@@ -173,6 +156,7 @@ export function TravelDetailsStep({
               min="0"
               {...register("nights", { valueAsNumber: true })}
               error={errors.nights?.message}
+              disabled={isReadOnly}
             />
             <Input
               label="Adults *"
@@ -180,6 +164,7 @@ export function TravelDetailsStep({
               min="1"
               {...register("adults", { valueAsNumber: true })}
               error={errors.adults?.message}
+              disabled={isReadOnly}
             />
             <Input
               label="Children *"
@@ -187,9 +172,9 @@ export function TravelDetailsStep({
               min="0"
               {...register("children", { valueAsNumber: true })}
               error={errors.children?.message}
+              disabled={isReadOnly}
             />
           </div>
-
           {/* Children Ages Selector */}
           {children > 0 && (
             <div className="mt-4">
@@ -282,7 +267,7 @@ export function TravelDetailsStep({
           )}
         </div>
 
-        {/* Budget & Special Requests */}
+        {/* Budget & Travel Preferences */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Input
             label="Budget *"
@@ -292,6 +277,7 @@ export function TravelDetailsStep({
             placeholder="Enter total budget"
             {...register("budget", { valueAsNumber: true })}
             error={errors.budget?.message}
+            disabled={isReadOnly}
           />
           <div>
             <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -305,11 +291,12 @@ export function TravelDetailsStep({
 
         <div className="mt-4">
           <Textarea
-            label="Special Requests"
+            label="Travel Preferences"
             placeholder="Any special dietary requirements, accessibility needs, celebrations, preferences, etc."
             rows={3}
-            {...register("special_requests")}
-            error={errors.special_requests?.message}
+            {...register("travel_preferences")}
+            error={errors.travel_preferences?.message}
+            disabled={isReadOnly}
           />
         </div>
       </Card>
@@ -319,7 +306,7 @@ export function TravelDetailsStep({
         <h4 className="text-md mb-4 font-semibold text-gray-900 dark:text-white">
           Day-wise Itinerary Builder
         </h4>
-        <ItineraryBuilder />
+        <ItineraryBuilder numberOfDays={watch("days")} />
       </Card>
 
       {/* Summary */}

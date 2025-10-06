@@ -9,10 +9,21 @@ import { useItineraryStore } from "../../store/useItineraryStore";
 
 // ----------------------------------------------------------------------
 
-export function ItineraryPlanningStep() {
+export function ItineraryPlanningStep({
+  control,
+  register,
+  errors,
+  watch,
+  setValue,
+  defaultData = {},
+}) {
   const { basicDetails, travelRequirements, setItinerary } =
     useQuotationStore();
   const { days, loadItinerary } = useItineraryStore();
+
+  // Get the number of days from the form data
+  const numberOfDays =
+    watch("days") || defaultData.days || travelRequirements.duration;
 
   // Initialize itinerary with basic travel data
   useEffect(() => {
@@ -118,7 +129,7 @@ export function ItineraryPlanningStep() {
       </Card>
 
       {/* Itinerary Builder */}
-      <ItineraryBuilder />
+      <ItineraryBuilder numberOfDays={numberOfDays} />
 
       {/* Quick Summary */}
       {days.length > 0 && (

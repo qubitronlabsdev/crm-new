@@ -78,6 +78,37 @@ const useItineraryStore = create(
         set({ days: renumberedDays });
       },
 
+      // new logic to add number of days directly to the ItneraryBuilder component
+
+      setDaysCount: (count) => {
+        const { days } = get();
+        const currentCount = days.length;
+        const targetCount = Math.max(0, Number(count) || 0);
+
+        if (targetCount === currentCount) {
+          return; // No change needed
+        }
+
+        if (targetCount > currentCount) {
+          // Add more days
+          const newDays = [];
+          for (let i = currentCount + 1; i <= targetCount; i++) {
+            newDays.push({
+              id: Date.now() + i,
+              dayNumber: i,
+              title: `Day ${i}`,
+              description: "",
+              items: [],
+            });
+          }
+          set({ days: [...days, ...newDays] });
+        } else {
+          // Remove excess days
+          const updatedDays = days.slice(0, targetCount);
+          set({ days: updatedDays });
+        }
+      },
+
       addItem: (dayId, item) => {
         const { days } = get();
         if (!item || typeof item !== "object") return;

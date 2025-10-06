@@ -14,18 +14,23 @@ import { Fragment } from "react";
 import itemSchema from "../schema/itinerary-item-form-schema";
 
 // Local Imports
-import { Button, Input, Select, Textarea } from "components/ui";
+import {
+  Button,
+  Input,
+  //  Select,
+  Textarea,
+} from "components/ui";
 
 // ----------------------------------------------------------------------
 
-const itemTypes = [
-  { value: "hotel", label: "Hotel" },
-  { value: "flight", label: "Flight" },
-  { value: "activity", label: "Activity" },
-  { value: "transport", label: "Transport" },
-  { value: "meal", label: "Meal" },
-  { value: "other", label: "Other" },
-];
+// const itemTypes = [
+//   { value: "hotel", label: "Hotel" },
+//   { value: "flight", label: "Flight" },
+//   { value: "activity", label: "Activity" },
+//   { value: "transport", label: "Transport" },
+//   { value: "meal", label: "Meal" },
+//   { value: "other", label: "Other" },
+// ];
 
 // ----------------------------------------------------------------------
 
@@ -40,12 +45,12 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
   } = useForm({
     resolver: yupResolver(itemSchema),
     defaultValues: {
-      type: "",
+      // type: "",
       title: "",
       description: "",
-      time: "",
-      location: "",
-      notes: "",
+      // time: "",
+      // location: "",
+      // notes: "",
     },
   });
 
@@ -54,20 +59,20 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
     if (isOpen) {
       const formValues = item
         ? {
-            type: item.type || "",
+            // type: item.type || "",
             title: item.title || "",
             description: item.description || "",
-            time: item.time || "",
-            location: item.location || "",
-            notes: item.notes || "",
+            // time: item.time || "",
+            // location: item.location || "",
+            // notes: item.notes || "",
           }
         : {
-            type: "",
+            // type: "",
             title: "",
             description: "",
-            time: "",
-            location: "",
-            notes: "",
+            // time: "",
+            // location: "",
+            // notes: "",
           };
 
       reset(formValues);
@@ -151,13 +156,13 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
                   onSubmit={handleSubmit(handleFormSubmit)}
                   className="space-y-4"
                 >
-                  <Select
+                  {/* <Select
                     label="Item Type *"
                     placeholder="Select item type"
                     data={itemTypes}
                     {...register("type")}
                     error={errors.type?.message}
-                  />
+                  /> */}
 
                   <Input
                     label="Title *"
@@ -166,21 +171,21 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
                     error={errors.title?.message}
                   />
 
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* <div className="grid grid-cols-2 gap-4">
                     <Input
                       label="Time"
                       placeholder="e.g., 9:00 AM"
                       {...register("time")}
                       error={errors.time?.message}
                     />
-                  </div>
-
+                  </div> */}
+                  {/* 
                   <Input
                     label="Location"
                     placeholder="Enter location"
                     {...register("location")}
                     error={errors.location?.message}
-                  />
+                  /> */}
 
                   <Textarea
                     label="Description"
@@ -190,13 +195,13 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
                     error={errors.description?.message}
                   />
 
-                  <Textarea
+                  {/* <Textarea
                     label="Notes"
                     placeholder="Additional notes"
                     rows={2}
                     {...register("notes")}
                     error={errors.notes?.message}
-                  />
+                  /> */}
 
                   <div className="flex justify-end gap-3 pt-4">
                     <Button
