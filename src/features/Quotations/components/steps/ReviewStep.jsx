@@ -1,5 +1,14 @@
 // Import Dependencies
 import { useState, useEffect } from "react";
+import {
+  BuildingOfficeIcon,
+  CurrencyDollarIcon,
+  ClipboardDocumentListIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  PrinterIcon,
+  BriefcaseIcon,
+} from "@heroicons/react/24/outline";
 
 // Local Imports
 import { Card, Button } from "components/ui";
@@ -20,8 +29,7 @@ const mockPdfTemplates = [
 
 // ----------------------------------------------------------------------
 
-export function ReviewStep({ watch, onSubmit, isSubmitting }) {
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
+export function ReviewStep({ watch, setValue, errors }) {
   const [availableTemplates, setAvailableTemplates] = useState([]);
 
   // Fetch available PDF templates
@@ -33,6 +41,7 @@ export function ReviewStep({ watch, onSubmit, isSubmitting }) {
 
   // Get all form data for display
   const allData = watch();
+  const selectedTemplate = watch("template_selection");
 
   // Helper function to format data display
   const formatValue = (value) => {
@@ -44,18 +53,9 @@ export function ReviewStep({ watch, onSubmit, isSubmitting }) {
     return value;
   };
 
-  const handleGenerateQuotation = () => {
-    if (!selectedTemplate) {
-      alert("Please select a PDF template first");
-      return;
-    }
-
-    const finalData = {
-      ...allData,
-      pdf_template: selectedTemplate.value,
-    };
-
-    onSubmit(finalData);
+  // Handle template selection
+  const handleTemplateChange = (selectedOption) => {
+    setValue("template_selection", selectedOption ? selectedOption.value : "");
   };
 
   return (
@@ -67,8 +67,9 @@ export function ReviewStep({ watch, onSubmit, isSubmitting }) {
 
         {/* Travel Details Review */}
         <div className="mb-6">
-          <h4 className="text-md mb-3 font-semibold text-gray-800 dark:text-gray-200">
-            🧳 Travel Details
+          <h4 className="text-md mb-3 flex items-center gap-2 font-semibold text-gray-800 dark:text-gray-200">
+            <BriefcaseIcon className="h-5 w-5" />
+            Travel Details
           </h4>
           <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800">
             <div className="grid grid-cols-1 gap-3 text-sm md:grid-cols-2">
@@ -152,8 +153,9 @@ export function ReviewStep({ watch, onSubmit, isSubmitting }) {
 
         {/* Hotels & Transportation Review */}
         <div className="mb-6">
-          <h4 className="text-md mb-3 font-semibold text-gray-800 dark:text-gray-200">
-            🏨 Hotels & Transportation
+          <h4 className="text-md mb-3 flex items-center gap-2 font-semibold text-gray-800 dark:text-gray-200">
+            <BuildingOfficeIcon className="h-5 w-5" />
+            Hotels & Transportation
           </h4>
           <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800">
             <div className="grid grid-cols-1 gap-3 text-sm md:grid-cols-2">
@@ -195,8 +197,9 @@ export function ReviewStep({ watch, onSubmit, isSubmitting }) {
 
         {/* Cost & Pricing Review */}
         <div className="mb-6">
-          <h4 className="text-md mb-3 font-semibold text-gray-800 dark:text-gray-200">
-            💰 Cost & Pricing
+          <h4 className="text-md mb-3 flex items-center gap-2 font-semibold text-gray-800 dark:text-gray-200">
+            <CurrencyDollarIcon className="h-5 w-5" />
+            Cost & Pricing
           </h4>
           <div className="rounded-lg bg-gradient-to-r from-green-50 to-blue-50 p-4 dark:from-gray-800 dark:to-gray-700">
             <div className="grid grid-cols-1 gap-3 text-sm md:grid-cols-2">
@@ -256,13 +259,15 @@ export function ReviewStep({ watch, onSubmit, isSubmitting }) {
 
         {/* Inclusions & Exclusions Review */}
         <div className="mb-6">
-          <h4 className="text-md mb-3 font-semibold text-gray-800 dark:text-gray-200">
-            📋 Inclusions & Exclusions
+          <h4 className="text-md mb-3 flex items-center gap-2 font-semibold text-gray-800 dark:text-gray-200">
+            <ClipboardDocumentListIcon className="h-5 w-5" />
+            Inclusions & Exclusions
           </h4>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="rounded-lg bg-green-50 p-4 dark:bg-green-900/20">
-              <h5 className="mb-2 font-medium text-green-800 dark:text-green-300">
-                ✅ Inclusions
+              <h5 className="mb-2 flex items-center gap-2 font-medium text-green-800 dark:text-green-300">
+                <CheckCircleIcon className="h-4 w-4" />
+                Inclusions
               </h5>
               <ul className="space-y-1 text-sm text-green-700 dark:text-green-200">
                 {(allData.inclusions || []).map(
@@ -277,8 +282,9 @@ export function ReviewStep({ watch, onSubmit, isSubmitting }) {
               </ul>
             </div>
             <div className="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
-              <h5 className="mb-2 font-medium text-red-800 dark:text-red-300">
-                ❌ Exclusions
+              <h5 className="mb-2 flex items-center gap-2 font-medium text-red-800 dark:text-red-300">
+                <XCircleIcon className="h-4 w-4" />
+                Exclusions
               </h5>
               <ul className="space-y-1 text-sm text-red-700 dark:text-red-200">
                 {(allData.exclusions || []).map(
@@ -296,16 +302,18 @@ export function ReviewStep({ watch, onSubmit, isSubmitting }) {
 
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="rounded-lg bg-yellow-50 p-4 dark:bg-yellow-900/20">
-              <h5 className="mb-2 font-medium text-yellow-800 dark:text-yellow-300">
-                📋 Cancellation Policy
+              <h5 className="mb-2 flex items-center gap-2 font-medium text-yellow-800 dark:text-yellow-300">
+                <ClipboardDocumentListIcon className="h-4 w-4" />
+                Cancellation Policy
               </h5>
               <p className="text-sm text-yellow-700 dark:text-yellow-200">
                 {formatValue(allData.cancellation_policy)}
               </p>
             </div>
             <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
-              <h5 className="mb-2 font-medium text-blue-800 dark:text-blue-300">
-                📄 Terms & Conditions
+              <h5 className="mb-2 flex items-center gap-2 font-medium text-blue-800 dark:text-blue-300">
+                <ClipboardDocumentListIcon className="h-4 w-4" />
+                Terms & Conditions
               </h5>
               <p className="text-sm text-blue-700 dark:text-blue-200">
                 {formatValue(allData.terms_conditions)}
@@ -316,16 +324,21 @@ export function ReviewStep({ watch, onSubmit, isSubmitting }) {
 
         {/* PDF Template Selection */}
         <div className="mb-6">
-          <h4 className="text-md mb-3 font-semibold text-gray-800 dark:text-gray-200">
-            📄 PDF Template Selection
+          <h4 className="text-md mb-3 flex items-center gap-2 font-semibold text-gray-800 dark:text-gray-200">
+            <ClipboardDocumentListIcon className="h-5 w-5" />
+            PDF Template Selection
           </h4>
           <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800">
             <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
               Select PDF Template *
             </label>
             <ReactSelect
-              value={selectedTemplate}
-              onChange={setSelectedTemplate}
+              value={
+                availableTemplates.find(
+                  (option) => option.value === selectedTemplate,
+                ) || null
+              }
+              onChange={handleTemplateChange}
               options={availableTemplates}
               placeholder="Choose a template for your quotation PDF..."
               className="react-select-container"
@@ -342,8 +355,13 @@ export function ReviewStep({ watch, onSubmit, isSubmitting }) {
                 }),
               }}
             />
-            {!selectedTemplate && (
+            {errors.template_selection && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {errors.template_selection.message}
+              </p>
+            )}
+            {!selectedTemplate && (
+              <p className="mt-1 text-sm text-yellow-600 dark:text-yellow-400">
                 Please select a PDF template to generate the quotation
               </p>
             )}
@@ -351,29 +369,15 @@ export function ReviewStep({ watch, onSubmit, isSubmitting }) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-between">
+        <div className="flex justify-center">
           <Button
             type="button"
             variant="outline"
             onClick={() => window.print()}
+            className="flex items-center gap-2"
           >
-            🖨️ Print Preview
-          </Button>
-
-          <Button
-            type="button"
-            onClick={handleGenerateQuotation}
-            disabled={!selectedTemplate || isSubmitting}
-            className="min-w-[200px]"
-          >
-            {isSubmitting ? (
-              <>
-                <span className="mr-2 animate-spin">⏳</span>
-                Generating...
-              </>
-            ) : (
-              <>🚀 Generate Quotation PDF</>
-            )}
+            <PrinterIcon className="h-4 w-4" />
+            Print Preview
           </Button>
         </div>
       </Card>

@@ -8,11 +8,12 @@ import { Badge, Button, Card } from "components/ui";
 import { Page } from "components/shared/Page";
 import { Breadcrumbs } from "components/shared/Breadcrumbs";
 import { DataTable } from "components/shared/DataTable";
+import { ROUTES } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
 const breadcrumbItems = [
-  { label: "Dashboard", href: "/" },
+  { label: "Dashboard", href: ROUTES.DASHBOARD.HOME },
   { label: "Bookings" },
 ];
 
@@ -187,7 +188,7 @@ export default function BookingsIndex() {
         <div className="flex gap-2">
           <Button
             component={Link}
-            to={`/bookings/${row.original.id}`}
+            to={ROUTES.BOOKINGS.SHOW(row.original.id)}
             size="sm"
             variant="soft"
             color="info"
@@ -217,7 +218,7 @@ export default function BookingsIndex() {
             </div>
             <Button
               component={Link}
-              to="/bookings/create"
+              to={ROUTES.BOOKINGS.CREATE}
               color="primary"
               className="shrink-0"
             >

@@ -5,6 +5,7 @@ import { XCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
 // Local Imports
 import { Button, Card } from "components/ui";
 import { Page } from "components/shared/Page";
+import { ROUTES } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +26,7 @@ export default function DeclinedQuotations() {
             </div>
             <Button
               component={Link}
-              to="/quotations/create"
+              to={ROUTES.QUOTATIONS.CREATE}
               color="primary"
               className="shrink-0"
             >

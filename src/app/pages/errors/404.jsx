@@ -7,6 +7,7 @@ import { Page } from "components/shared/Page";
 import { Button } from "components/ui";
 import { useThemeContext } from "app/contexts/theme/context";
 import { useHover } from "hooks";
+import { ROUTES } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
@@ -25,16 +26,16 @@ export default function Error404() {
               "--primary-light": primary[300],
             }}
           />
-          <p className="pt-4 text-xl font-semibold text-gray-800 dark:text-dark-50">
+          <p className="dark:text-dark-50 pt-4 text-xl font-semibold text-gray-800">
             Oops. This Page Not Found.
           </p>
-          <p className="pt-2 text-gray-500 dark:text-dark-200">
+          <p className="dark:text-dark-200 pt-2 text-gray-500">
             This page you are looking not available. Please back to home
           </p>
           <div className="mt-8">
             <Button
               component={Link}
-              to="/"
+              to={ROUTES.ROOT}
               ref={btnRef}
               isGlow={btnHovered}
               color="primary"

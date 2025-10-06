@@ -287,7 +287,7 @@ export default function ShowLead() {
             <div className="flex gap-3">
               <Button
                 component={Link}
-                to={`/quotations/create?leadId=${lead.id}`}
+                to={generateRoute.quotationCreate(lead.id)}
                 color="success"
                 className="shrink-0"
               >

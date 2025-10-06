@@ -28,6 +28,7 @@ import { Avatar, AvatarDot, Badge, Button } from "components/ui";
 import { useThemeContext } from "app/contexts/theme/context";
 import AlarmIcon from "assets/dualicons/alarm.svg?react";
 import GirlEmptyBox from "assets/illustrations/girl-empty-box.svg?react";
+import { ROUTES } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
@@ -96,7 +97,7 @@ export function Notifications() {
         isIcon
         className="relative size-9 rounded-full"
       >
-        <AlarmIcon className="size-6 text-gray-900 dark:text-dark-100" />
+        <AlarmIcon className="dark:text-dark-100 size-6 text-gray-900" />
         {notifications.length > 0 && (
           <AvatarDot
             color="error"
@@ -115,14 +116,14 @@ export function Notifications() {
       >
         <PopoverPanel
           anchor={{ to: "bottom end", gap: 8 }}
-          className="z-70 mx-4 flex h-[min(32rem,calc(100vh-6rem))] w-[calc(100vw-2rem)] flex-col rounded-lg border border-gray-150 bg-white shadow-soft dark:border-dark-800 dark:bg-dark-700 dark:shadow-soft-dark sm:m-0 sm:w-80"
+          className="border-gray-150 shadow-soft dark:border-dark-800 dark:bg-dark-700 dark:shadow-soft-dark z-70 mx-4 flex h-[min(32rem,calc(100vh-6rem))] w-[calc(100vw-2rem)] flex-col rounded-lg border bg-white sm:m-0 sm:w-80"
         >
           {({ close }) => (
             <div className="flex grow flex-col overflow-hidden">
-              <div className="rounded-t-lg bg-gray-100 dark:bg-dark-800">
+              <div className="dark:bg-dark-800 rounded-t-lg bg-gray-100">
                 <div className="flex items-center justify-between px-4 pt-2">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-medium text-gray-800 dark:text-dark-100">
+                    <h3 className="dark:text-dark-100 font-medium text-gray-800">
                       Notifications
                     </h3>
                     {notifications.length > 0 && (
@@ -137,7 +138,7 @@ export function Notifications() {
                   </div>
                   <Button
                     component={Link}
-                    to="/settings/notifications"
+                    to={ROUTES.SETTINGS.NOTIFICATIONS}
                     className="size-7 rounded-full ltr:-mr-1.5 rtl:-ml-1.5"
                     isIcon
                     variant="flat"
@@ -152,7 +153,7 @@ export function Notifications() {
                 selectedIndex={activeTab}
                 onChange={setActiveTab}
               >
-                <TabList className="hide-scrollbar flex shrink-0 overflow-x-auto scroll-smooth bg-gray-100 px-3 dark:bg-dark-800">
+                <TabList className="hide-scrollbar dark:bg-dark-800 flex shrink-0 overflow-x-auto scroll-smooth bg-gray-100 px-3">
                   <Tab
                     onFocus={(e) => {
                       e.target.parentNode.scrollLeft =
@@ -161,10 +162,10 @@ export function Notifications() {
                     }}
                     className={({ selected }) =>
                       clsx(
-                        "shrink-0 scroll-mx-16 whitespace-nowrap border-b-2 px-3 py-2 font-medium",
+                        "shrink-0 scroll-mx-16 border-b-2 px-3 py-2 font-medium whitespace-nowrap",
                         selected
                           ? "border-primary-600 text-primary-600 dark:border-primary-500 dark:text-primary-400"
-                          : "border-transparent hover:text-gray-800 focus:text-gray-800 dark:hover:text-dark-100 dark:focus:text-dark-100",
+                          : "dark:hover:text-dark-100 dark:focus:text-dark-100 border-transparent hover:text-gray-800 focus:text-gray-800",
                       )
                     }
                     as={Button}
@@ -182,10 +183,10 @@ export function Notifications() {
                       key={key}
                       className={({ selected }) =>
                         clsx(
-                          "shrink-0 scroll-mx-16 whitespace-nowrap border-b-2 px-3 py-2 font-medium",
+                          "shrink-0 scroll-mx-16 border-b-2 px-3 py-2 font-medium whitespace-nowrap",
                           selected
                             ? "border-primary-600 text-primary-600 dark:border-primary-500 dark:text-primary-400"
-                            : "border-transparent hover:text-gray-800 focus:text-gray-800 dark:hover:text-dark-100 dark:focus:text-dark-100",
+                            : "dark:hover:text-dark-100 dark:focus:text-dark-100 border-transparent hover:text-gray-800 focus:text-gray-800",
                         )
                       }
                       as={Button}
@@ -198,7 +199,7 @@ export function Notifications() {
                 {(notifications.length > 0 && activeTab === 0) ||
                 filteredNotifications.length > 0 ? (
                   <TabPanels as={Fragment}>
-                    <TabPanel className="custom-scrollbar grow space-y-4 overflow-y-auto overflow-x-hidden p-4 outline-hidden">
+                    <TabPanel className="custom-scrollbar grow space-y-4 overflow-x-hidden overflow-y-auto p-4 outline-hidden">
                       {notifications.map((item) => (
                         <NotificationItem
                           key={item.id}
@@ -210,7 +211,7 @@ export function Notifications() {
                     {typesKey.map((key) => (
                       <TabPanel
                         key={key}
-                        className="custom-scrollbar scrollbar-hide grow space-y-4 overflow-y-auto overflow-x-hidden p-4"
+                        className="custom-scrollbar scrollbar-hide grow space-y-4 overflow-x-hidden overflow-y-auto p-4"
                       >
                         {filteredNotifications.map((item) => (
                           <NotificationItem
@@ -228,7 +229,7 @@ export function Notifications() {
               </TabGroup>
               {((notifications.length > 0 && activeTab === 0) ||
                 filteredNotifications.length > 0) && (
-                <div className="shrink-0 overflow-hidden rounded-b-lg bg-gray-100 dark:bg-dark-800">
+                <div className="dark:bg-dark-800 shrink-0 overflow-hidden rounded-b-lg bg-gray-100">
                   <Button
                     // variant="flat"
                     className="w-full rounded-t-none"
@@ -277,11 +278,11 @@ function NotificationItem({ data, remove }) {
           <Icon className="size-4.5" />
         </Avatar>
         <div className="min-w-0">
-          <p className="-mt-0.5 truncate font-medium text-gray-800 dark:text-dark-100">
+          <p className="dark:text-dark-100 -mt-0.5 truncate font-medium text-gray-800">
             {data.title}
           </p>
           <div className="mt-0.5 truncate text-xs">{data.description}</div>
-          <div className="mt-1 truncate text-xs text-gray-400 dark:text-dark-300">
+          <div className="dark:text-dark-300 mt-1 truncate text-xs text-gray-400">
             {data.time}
           </div>
         </div>

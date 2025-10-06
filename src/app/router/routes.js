@@ -19,10 +19,10 @@ export const ROUTES = {
     LOGIN: "/login",
   },
 
-  // Dashboard
+  // Dashboard (now just root)
   DASHBOARD: {
-    ROOT: "/dashboards",
-    HOME: "/dashboards/home",
+    ROOT: "/",
+    HOME: "/",
   },
 
   // Leads Management
@@ -59,11 +59,50 @@ export const ROUTES = {
     SHOW: (id) => `/bookings/${id}`,
   },
 
-  // Settings
+  // Employee Management
+  EMPLOYEES: {
+    ROOT: "/employees/all",
+    ALL: "/employees/all",
+    CREATE: "/employees/create",
+    EDIT: (id) => `/employees/${id}/edit`,
+    SHOW: (id) => `/employees/${id}`,
+  },
+
+  // Itineraries Management
+  ITINERARIES: {
+    ROOT: "/travel/itineraries",
+    ALL: "/travel/itineraries",
+    CREATE: "/travel/itineraries/create",
+    EDIT: (id) => `/travel/itineraries/${id}/edit`,
+    SHOW: (id) => `/travel/itineraries/${id}`,
+  },
+
+  // Travel Management (Legacy - keeping for backward compatibility)
+  TRAVEL: {
+    ROOT: "/travel",
+    ITINERARIES: "/travel/itineraries",
+    HOTEL_VOUCHERS: "/travel/hotel-vouchers",
+    CUSTOMERS: "/travel/customers",
+    UPCOMING_TRIPS: "/travel/upcoming-trips",
+    ON_TRIPS: "/travel/on-trips",
+    PAYMENT: "/travel/payment",
+  },
+
+  // Reports & Settings
+  REPORTS_SETTINGS: {
+    ROOT: "/reports-settings",
+    REPORTS: "/reports-settings/reports",
+    ANALYTICS: "/reports-settings/analytics",
+    SETTINGS: "/reports-settings/settings",
+  },
+
+  // Settings (Legacy - keeping for backward compatibility)
   SETTINGS: {
     ROOT: "/settings",
     GENERAL: "/settings/general",
     APPEARANCE: "/settings/appearance",
+    BILLING: "/settings/billing",
+    NOTIFICATIONS: "/settings/notifications",
   },
 };
 
@@ -81,6 +120,14 @@ export const generateRoute = {
 
   // Booking routes
   bookingShow: (id) => ROUTES.BOOKINGS.SHOW(id),
+
+  // Employee routes
+  employeeEdit: (id) => ROUTES.EMPLOYEES.EDIT(id),
+  employeeShow: (id) => ROUTES.EMPLOYEES.SHOW(id),
+
+  // Itinerary routes
+  itineraryEdit: (id) => ROUTES.ITINERARIES.EDIT(id),
+  itineraryShow: (id) => ROUTES.ITINERARIES.SHOW(id),
 };
 
 // Route groups for navigation purposes
@@ -99,18 +146,43 @@ export const ROUTE_GROUPS = {
     ROUTES.BOOKINGS.PENDING,
     ROUTES.BOOKINGS.CREATE,
   ],
+  EMPLOYEES: [ROUTES.EMPLOYEES.ALL],
+  ITINERARIES: [ROUTES.ITINERARIES.ALL],
+  TRAVEL: [
+    ROUTES.TRAVEL.ITINERARIES,
+    ROUTES.TRAVEL.HOTEL_VOUCHERS,
+    ROUTES.TRAVEL.CUSTOMERS,
+    ROUTES.TRAVEL.UPCOMING_TRIPS,
+    ROUTES.TRAVEL.ON_TRIPS,
+    ROUTES.TRAVEL.PAYMENT,
+  ],
+  REPORTS_SETTINGS: [
+    ROUTES.REPORTS_SETTINGS.REPORTS,
+    ROUTES.REPORTS_SETTINGS.ANALYTICS,
+    ROUTES.REPORTS_SETTINGS.SETTINGS,
+  ],
   SETTINGS: [ROUTES.SETTINGS.GENERAL, ROUTES.SETTINGS.APPEARANCE],
 };
 
 // Default redirects
 export const DEFAULT_REDIRECTS = {
-  ROOT_TO_LEADS: ROUTES.LEADS.ALL,
-  DASHBOARD_TO_HOME: ROUTES.DASHBOARD.HOME,
+  ROOT_TO_DASHBOARD: ROUTES.DASHBOARD.HOME,
   LEADS_TO_ALL: ROUTES.LEADS.ALL,
   SETTINGS_TO_GENERAL: ROUTES.SETTINGS.GENERAL,
   QUOTATIONS_TO_INDEX: ROUTES.QUOTATIONS.ROOT,
 };
 
 // Export individual route constants for direct import (backwards compatibility)
-export const { ROOT, AUTH, DASHBOARD, LEADS, QUOTATIONS, BOOKINGS, SETTINGS } =
-  ROUTES;
+export const {
+  ROOT,
+  AUTH,
+  DASHBOARD,
+  LEADS,
+  QUOTATIONS,
+  BOOKINGS,
+  EMPLOYEES,
+  ITINERARIES,
+  TRAVEL,
+  REPORTS_SETTINGS,
+  SETTINGS,
+} = ROUTES;

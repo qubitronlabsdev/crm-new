@@ -1,5 +1,10 @@
 // Import Dependencies
 import { useState } from "react";
+import {
+  ClipboardDocumentListIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 
 // Local Imports
 import { Card, Input, Textarea, Button } from "components/ui";
@@ -48,7 +53,9 @@ export function InclusionsExclusionsStep({
     setInclusions(newInclusions);
     setValue(
       "inclusions",
-      newInclusions.map((item) => item.text).filter((text) => text.trim()),
+      newInclusions
+        .map((item) => item.text || "")
+        .filter((text) => text.trim()),
     );
   };
 
@@ -58,7 +65,9 @@ export function InclusionsExclusionsStep({
       setInclusions(newInclusions);
       setValue(
         "inclusions",
-        newInclusions.map((item) => item.text).filter((text) => text.trim()),
+        newInclusions
+          .map((item) => item.text || "")
+          .filter((text) => text.trim()),
       );
     }
   };
@@ -70,7 +79,9 @@ export function InclusionsExclusionsStep({
     setInclusions(newInclusions);
     setValue(
       "inclusions",
-      newInclusions.map((item) => item.text).filter((text) => text.trim()),
+      newInclusions
+        .map((item) => item.text || "")
+        .filter((text) => text.trim()),
     );
   };
 
@@ -81,7 +92,9 @@ export function InclusionsExclusionsStep({
     setExclusions(newExclusions);
     setValue(
       "exclusions",
-      newExclusions.map((item) => item.text).filter((text) => text.trim()),
+      newExclusions
+        .map((item) => item.text || "")
+        .filter((text) => text.trim()),
     );
   };
 
@@ -91,7 +104,9 @@ export function InclusionsExclusionsStep({
       setExclusions(newExclusions);
       setValue(
         "exclusions",
-        newExclusions.map((item) => item.text).filter((text) => text.trim()),
+        newExclusions
+          .map((item) => item.text || "")
+          .filter((text) => text.trim()),
       );
     }
   };
@@ -103,7 +118,9 @@ export function InclusionsExclusionsStep({
     setExclusions(newExclusions);
     setValue(
       "exclusions",
-      newExclusions.map((item) => item.text).filter((text) => text.trim()),
+      newExclusions
+        .map((item) => item.text || "")
+        .filter((text) => text.trim()),
     );
   };
 
@@ -114,102 +131,104 @@ export function InclusionsExclusionsStep({
           Step 4: Inclusions & Exclusions
         </h3>
 
-        {/* Inclusions */}
-        <div className="mb-6">
-          <div className="mb-3 flex items-center justify-between">
-            <h4 className="text-md font-medium text-gray-800 dark:text-gray-200">
-              Package Inclusions *
-            </h4>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={addInclusion}
-            >
-              Add Inclusion
-            </Button>
-          </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* Inclusions */}
+          <div className="mb-6">
+            <div className="mb-3 flex items-center justify-between">
+              <h4 className="text-md font-medium text-gray-800 dark:text-gray-200">
+                Package Inclusions *
+              </h4>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={addInclusion}
+              >
+                Add Inclusion
+              </Button>
+            </div>
 
-          <div className="space-y-3">
-            {inclusions.map((inclusion) => (
-              <div key={inclusion.id} className="flex items-start gap-3">
-                <div className="flex-1">
-                  <Input
-                    placeholder="What's included in this package..."
-                    value={inclusion.text}
-                    onChange={(e) =>
-                      updateInclusion(inclusion.id, e.target.value)
-                    }
-                  />
+            <div className="space-y-3">
+              {inclusions.map((inclusion) => (
+                <div key={inclusion.id} className="flex items-start gap-3">
+                  <div className="flex-1">
+                    <Input
+                      placeholder="What's included in this package..."
+                      value={inclusion.text}
+                      onChange={(e) =>
+                        updateInclusion(inclusion.id, e.target.value)
+                      }
+                    />
+                  </div>
+                  {inclusions.length > 1 && (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      color="error"
+                      onClick={() => removeInclusion(inclusion.id)}
+                    >
+                      Remove
+                    </Button>
+                  )}
                 </div>
-                {inclusions.length > 1 && (
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    color="error"
-                    onClick={() => removeInclusion(inclusion.id)}
-                  >
-                    Remove
-                  </Button>
-                )}
-              </div>
-            ))}
-          </div>
-          {errors.inclusions && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-              {errors.inclusions.message}
-            </p>
-          )}
-        </div>
-
-        {/* Exclusions */}
-        <div className="mb-6">
-          <div className="mb-3 flex items-center justify-between">
-            <h4 className="text-md font-medium text-gray-800 dark:text-gray-200">
-              Package Exclusions *
-            </h4>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={addExclusion}
-            >
-              Add Exclusion
-            </Button>
+              ))}
+            </div>
+            {errors.inclusions && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {errors.inclusions.message}
+              </p>
+            )}
           </div>
 
-          <div className="space-y-3">
-            {exclusions.map((exclusion) => (
-              <div key={exclusion.id} className="flex items-start gap-3">
-                <div className="flex-1">
-                  <Input
-                    placeholder="What's not included in this package..."
-                    value={exclusion.text}
-                    onChange={(e) =>
-                      updateExclusion(exclusion.id, e.target.value)
-                    }
-                  />
+          {/* Exclusions */}
+          <div className="mb-6">
+            <div className="mb-3 flex items-center justify-between">
+              <h4 className="text-md font-medium text-gray-800 dark:text-gray-200">
+                Package Exclusions *
+              </h4>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={addExclusion}
+              >
+                Add Exclusion
+              </Button>
+            </div>
+
+            <div className="space-y-3">
+              {exclusions.map((exclusion) => (
+                <div key={exclusion.id} className="flex items-start gap-3">
+                  <div className="flex-1">
+                    <Input
+                      placeholder="What's not included in this package..."
+                      value={exclusion.text}
+                      onChange={(e) =>
+                        updateExclusion(exclusion.id, e.target.value)
+                      }
+                    />
+                  </div>
+                  {exclusions.length > 1 && (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      color="error"
+                      onClick={() => removeExclusion(exclusion.id)}
+                    >
+                      Remove
+                    </Button>
+                  )}
                 </div>
-                {exclusions.length > 1 && (
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    color="error"
-                    onClick={() => removeExclusion(exclusion.id)}
-                  >
-                    Remove
-                  </Button>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
+            {errors.exclusions && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {errors.exclusions.message}
+              </p>
+            )}
           </div>
-          {errors.exclusions && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-              {errors.exclusions.message}
-            </p>
-          )}
         </div>
 
         {/* Cancellation Policy */}
@@ -243,13 +262,17 @@ export function InclusionsExclusionsStep({
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* Inclusions Summary */}
           <div className="rounded-lg bg-green-50 p-4 dark:bg-green-900/20">
-            <h5 className="mb-2 font-medium text-green-800 dark:text-green-300">
-              ✅ Package Inclusions (
-              {inclusions.filter((i) => i.text.trim()).length} items)
+            <h5 className="mb-2 flex items-center gap-2 font-medium text-green-800 dark:text-green-300">
+              <CheckCircleIcon className="h-4 w-4" />
+              Package Inclusions (
+              {
+                inclusions.filter((i) => i && i.text && i.text.trim()).length
+              }{" "}
+              items)
             </h5>
             <ul className="space-y-1 text-sm text-green-700 dark:text-green-200">
               {inclusions
-                .filter((item) => item.text.trim())
+                .filter((item) => item && item.text && item.text.trim())
                 .map((item) => (
                   <li key={item.id} className="flex items-start">
                     <span className="mr-2">•</span>
@@ -261,13 +284,17 @@ export function InclusionsExclusionsStep({
 
           {/* Exclusions Summary */}
           <div className="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
-            <h5 className="mb-2 font-medium text-red-800 dark:text-red-300">
-              ❌ Package Exclusions (
-              {exclusions.filter((e) => e.text.trim()).length} items)
+            <h5 className="mb-2 flex items-center gap-2 font-medium text-red-800 dark:text-red-300">
+              <XCircleIcon className="h-4 w-4" />
+              Package Exclusions (
+              {
+                exclusions.filter((e) => e && e.text && e.text.trim()).length
+              }{" "}
+              items)
             </h5>
             <ul className="space-y-1 text-sm text-red-700 dark:text-red-200">
               {exclusions
-                .filter((item) => item.text.trim())
+                .filter((item) => item && item.text && item.text.trim())
                 .map((item) => (
                   <li key={item.id} className="flex items-start">
                     <span className="mr-2">•</span>
@@ -281,8 +308,9 @@ export function InclusionsExclusionsStep({
         {/* Policy Summary */}
         <div className="mt-6 space-y-4">
           <div className="rounded-lg bg-yellow-50 p-4 dark:bg-yellow-900/20">
-            <h5 className="mb-2 font-medium text-yellow-800 dark:text-yellow-300">
-              📋 Cancellation Policy
+            <h5 className="mb-2 flex items-center gap-2 font-medium text-yellow-800 dark:text-yellow-300">
+              <ClipboardDocumentListIcon className="h-4 w-4" />
+              Cancellation Policy
             </h5>
             <p className="text-sm text-yellow-700 dark:text-yellow-200">
               {watch("cancellation_policy") || "Not specified"}
@@ -290,8 +318,9 @@ export function InclusionsExclusionsStep({
           </div>
 
           <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
-            <h5 className="mb-2 font-medium text-blue-800 dark:text-blue-300">
-              📄 Terms & Conditions
+            <h5 className="mb-2 flex items-center gap-2 font-medium text-blue-800 dark:text-blue-300">
+              <ClipboardDocumentListIcon className="h-4 w-4" />
+              Terms & Conditions
             </h5>
             <p className="text-sm text-blue-700 dark:text-blue-200">
               {watch("terms_conditions") || "Not specified"}

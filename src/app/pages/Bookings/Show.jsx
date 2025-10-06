@@ -18,12 +18,13 @@ import { Badge, Button, Card, Input } from "components/ui";
 import { Page } from "components/shared/Page";
 import { Breadcrumbs } from "components/shared/Breadcrumbs";
 import { Upload } from "components/ui/Form/Upload";
+import { ROUTES } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
 const breadcrumbItems = [
-  { label: "Dashboard", href: "/" },
-  { label: "Bookings", href: "/bookings" },
+  { label: "Dashboard", href: ROUTES.DASHBOARD.HOME },
+  { label: "Bookings", href: ROUTES.BOOKINGS.ALL },
   { label: "Booking Details" },
 ];
 
@@ -203,7 +204,7 @@ export default function ShowBooking() {
           <div className="flex items-center gap-4">
             <Button
               component={Link}
-              to="/bookings"
+              to={ROUTES.BOOKINGS.ALL}
               variant="soft"
               color="neutral"
               isIcon

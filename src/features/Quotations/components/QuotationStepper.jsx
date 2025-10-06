@@ -20,6 +20,7 @@ import { HotelsTransportationStep } from "./steps/HotelsTransportationStep";
 import { CostPricingStep } from "./steps/CostPricingStep";
 import { InclusionsExclusionsStep } from "./steps/InclusionsExclusionsStep";
 import { ReviewStep } from "./steps/ReviewStep";
+import { ROUTES } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
@@ -63,7 +64,7 @@ const steps = [
 
 // ----------------------------------------------------------------------
 
-export function QuotationStepper({ leadId }) {
+export function QuotationStepper({ leadId, quotationId, isEditMode = false }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -76,6 +77,67 @@ export function QuotationStepper({ leadId }) {
     taxes_services_charges: 18,
   });
   const navigate = useNavigate();
+
+  // Load existing quotation data in edit mode
+  useEffect(() => {
+    const loadQuotationData = async () => {
+      try {
+        // In a real app, this would be an API call
+        // For now, use mock data
+        const mockQuotationData = {
+          id: quotationId,
+          lead_id: leadId,
+          travel_date: "2024-02-14",
+          travel_time: "09:00 AM",
+          expected_close_date: "2024-02-01",
+          departure_city: "New York",
+          destination: "Paris, France",
+          days: 5,
+          nights: 4,
+          adults: 2,
+          children: 0,
+          children_age: "",
+          budget: 3000,
+          special_requests: "Anniversary celebration, prefer quiet rooms",
+          hotel_rating: "5",
+          room_type: "suite",
+          meal_plan: "Bed & Breakfast",
+          transportation_mode: "flight",
+          transportation_charges: [
+            { description: "Round-trip flights", amount: 1200 },
+            { description: "Airport transfers", amount: 120 },
+          ],
+          base_package_price: 2800,
+          taxes_services_charges: 18,
+          total_package_price: 3304,
+          per_person_price: 1652,
+          payment_terms: "50_50",
+          pricing_notes: "Early bird discount applied",
+          inclusions: [
+            "Accommodation as per itinerary",
+            "Daily breakfast at hotel",
+            "Airport transfers",
+          ],
+          exclusions: [
+            "International flights (quoted separately)",
+            "Personal expenses and shopping",
+            "Visa fees",
+          ],
+          cancellation_policy: "Free cancellation up to 30 days before travel",
+          terms_conditions: "All bookings are subject to availability",
+          template_selection: "template_2",
+        };
+
+        setFormData(mockQuotationData);
+      } catch (error) {
+        console.error("Error loading quotation data:", error);
+      }
+    };
+
+    if (isEditMode && quotationId) {
+      loadQuotationData();
+    }
+  }, [isEditMode, quotationId, leadId]);
 
   // Get current step configuration
   const currentStepConfig = steps.find((step) => step.id === currentStep);
@@ -138,22 +200,36 @@ export function QuotationStepper({ leadId }) {
 
   // Form submission for final step
   const onSubmit = async (data) => {
+    console.log("🗃️ Combined form data:", { ...formData, ...data });
     setIsSubmitting(true);
     try {
       // Combine all step data
       const finalData = { ...formData, ...data };
 
-      // In real app, make API call to create quotation
-      console.log("Quotation Data:", finalData);
-
-      // Mock API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      if (isEditMode && quotationId) {
+        // Update existing quotation
+        console.log("Updating quotation:", quotationId, finalData);
+        // Mock API call for update
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        console.log("Quotation updated successfully");
+      } else {
+        // Create new quotation
+        console.log("Creating new quotation:", finalData);
+        // Mock API call for create
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        console.log("Quotation created successfully");
+      }
 
       // Navigate to quotations list or success page
-      navigate("/quotations");
+      navigate(ROUTES.QUOTATIONS.ALL);
     } catch (error) {
-      console.error("Error creating quotation:", error);
-      alert("Error creating quotation. Please try again.");
+      console.error(
+        isEditMode ? "Error updating quotation:" : "Error creating quotation:",
+        error,
+      );
+      alert(
+        `Error ${isEditMode ? "updating" : "creating"} quotation. Please try again.`,
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -236,7 +312,12 @@ export function QuotationStepper({ leadId }) {
         </Card>
 
         {/* Current Step Content */}
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form
+          onSubmit={handleSubmit((data) => {
+            console.log("📋 Form onSubmit handler called!");
+            onSubmit(data);
+          })}
+        >
           {CurrentStepComponent && (
             <CurrentStepComponent
               control={control}
@@ -244,8 +325,6 @@ export function QuotationStepper({ leadId }) {
               errors={errors}
               watch={watch}
               setValue={setValue}
-              onSubmit={onSubmit}
-              isSubmitting={isSubmitting}
             />
           )}
 
@@ -265,7 +344,7 @@ export function QuotationStepper({ leadId }) {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate("/leads")}
+                  onClick={() => navigate(ROUTES.LEADS.ALL)}
                 >
                   Cancel
                 </Button>
@@ -284,13 +363,43 @@ export function QuotationStepper({ leadId }) {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
+                    onClick={() => {
+                      console.log("🖱️ Submit button clicked!");
+                      console.log("✅ Form is valid:", isValid);
+                      console.log("🔍 Current errors:", errors);
+                      console.log("📊 Current form values:", getValues());
+                      console.log(
+                        "🎯 Template selection:",
+                        getValues().template_selection,
+                      );
+                    }}
                     className="min-w-[150px]"
                   >
                     {isSubmitting ? (
                       <>
-                        <span className="mr-2 animate-spin">⏳</span>
-                        Creating...
+                        <svg
+                          className="mr-2 h-4 w-4 animate-spin"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        {isEditMode ? "Updating..." : "Creating..."}
                       </>
+                    ) : isEditMode ? (
+                      "Update Quotation"
                     ) : (
                       "Create Quotation"
                     )}

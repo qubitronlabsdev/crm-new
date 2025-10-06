@@ -12,6 +12,7 @@ import { Profile } from "../../Profile";
 import { ScrollShadow } from "components/ui";
 import { NAV_TYPE_COLLAPSE, NAV_TYPE_ITEM } from "constants/app.constant";
 import { isRouteActive } from "utils/isRouteActive";
+import { ROUTES } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
@@ -70,7 +71,7 @@ export function ExpandableSidebar({
         {/* Header */}
         <div className="flex h-16 items-center justify-between px-4">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center">
+            <Link to={ROUTES.ROOT} className="flex items-center">
               <Logo className="text-primary-600 dark:text-primary-400 size-8" />
               {isExpanded && (
                 <span className="ml-3 text-lg font-semibold text-gray-800 dark:text-white">

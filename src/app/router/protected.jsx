@@ -22,22 +22,9 @@ const protectedRoutes = {
       children: [
         {
           index: true,
-          element: <Navigate to={DEFAULT_REDIRECTS.ROOT_TO_LEADS} />,
-        },
-        {
-          path: "dashboards",
-          children: [
-            {
-              index: true,
-              element: <Navigate to={DEFAULT_REDIRECTS.DASHBOARD_TO_HOME} />,
-            },
-            {
-              path: "home",
-              lazy: async () => ({
-                Component: (await import("app/pages/dashboards/home")).default,
-              }),
-            },
-          ],
+          lazy: async () => ({
+            Component: (await import("app/pages/index")).default,
+          }),
         },
         {
           path: "leads",
@@ -125,6 +112,73 @@ const protectedRoutes = {
               lazy: async () => ({
                 Component: (await import("app/pages/Quotations/Show")).default,
               }),
+            },
+          ],
+        },
+        {
+          path: "employees",
+          children: [
+            {
+              path: "all",
+              lazy: async () => ({
+                Component: (await import("app/pages/Employees/Index")).default,
+              }),
+            },
+            {
+              path: "create",
+              lazy: async () => ({
+                Component: (await import("app/pages/Employees/Create")).default,
+              }),
+            },
+            {
+              path: ":id/edit",
+              lazy: async () => ({
+                Component: (await import("app/pages/Employees/Edit")).default,
+              }),
+            },
+            {
+              path: ":id",
+              lazy: async () => ({
+                Component: (await import("app/pages/Employees/Show")).default,
+              }),
+            },
+          ],
+        },
+        {
+          path: "travel",
+          children: [
+            {
+              path: "itineraries",
+              children: [
+                {
+                  index: true,
+                  lazy: async () => ({
+                    Component: (await import("app/pages/Itineraries/Index"))
+                      .default,
+                  }),
+                },
+                {
+                  path: "create",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/Itineraries/Create"))
+                      .default,
+                  }),
+                },
+                {
+                  path: ":id/edit",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/Itineraries/Edit"))
+                      .default,
+                  }),
+                },
+                {
+                  path: ":id",
+                  lazy: async () => ({
+                    Component: (await import("app/pages/Itineraries/Show"))
+                      .default,
+                  }),
+                },
+              ],
             },
           ],
         },

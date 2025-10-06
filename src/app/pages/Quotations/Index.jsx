@@ -220,7 +220,7 @@ export default function QuotationsIndex() {
             </div>
             <Button
               component={Link}
-              to="/quotations/create"
+              to={ROUTES.QUOTATIONS.CREATE}
               color="primary"
               className="shrink-0"
             >

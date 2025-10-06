@@ -117,18 +117,36 @@ export default function AllLeads() {
       ),
     },
     {
-      accessorKey: "destination",
-      header: "Destination",
-    },
-    {
-      accessorKey: "travel_date",
-      header: "Travel Date",
+      accessorKey: "email",
+      header: "Email",
       cell: ({ row }) => (
-        <span className="text-sm">
-          {new Date(row.original.travel_date).toLocaleDateString()}
+        <span className="text-sm text-gray-600 dark:text-gray-400">
+          {row.original.customer_email || "N/A"}
         </span>
       ),
     },
+    {
+      accessorKey: "phone",
+      header: "Phone",
+      cell: ({ row }) => (
+        <span className="text-sm text-gray-600 dark:text-gray-400">
+          {row.original.customer_phone || "N/A"}
+        </span>
+      ),
+    },
+    // {
+    //   accessorKey: "destination",
+    //   header: "Destination",
+    // },
+    // {
+    //   accessorKey: "travel_date",
+    //   header: "Travel Date",
+    //   cell: ({ row }) => (
+    //     <span className="text-sm">
+    //       {new Date(row.original.travel_date).toLocaleDateString()}
+    //     </span>
+    //   ),
+    // },
     {
       accessorKey: "created_at",
       header: "Created At",

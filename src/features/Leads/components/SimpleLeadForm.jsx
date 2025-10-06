@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Local Imports
 import { Button, Card, Input, Select } from "components/ui";
@@ -51,17 +51,23 @@ const agentOptions = [
 
 // ----------------------------------------------------------------------
 
-export function SimpleLeadForm({ onSubmit, isLoading = false }) {
+export function SimpleLeadForm({
+  onSubmit,
+  isLoading = false,
+  initialData = null,
+  isEditMode = false,
+}) {
   const navigate = useNavigate();
   const [isCreating, setIsCreating] = useState(false);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(simpleLeadSchema),
-    defaultValues: {
+    defaultValues: initialData || {
       name: "",
       email: "",
       phone: "",
@@ -72,19 +78,34 @@ export function SimpleLeadForm({ onSubmit, isLoading = false }) {
     },
   });
 
+  // Reset form when initialData changes
+  useEffect(() => {
+    if (initialData) {
+      reset(initialData);
+    }
+  }, [initialData, reset]);
+
   const handleFormSubmit = async (data) => {
     setIsCreating(true);
     try {
       // Call the parent onSubmit function
       await onSubmit(data);
 
-      // For demo purposes, create a mock lead ID
-      const mockLeadId = Date.now().toString();
+      if (!isEditMode) {
+        // For demo purposes, create a mock lead ID
+        const mockLeadId = Date.now().toString();
 
-      // Navigate to quotations create page with lead ID
-      navigate(`${ROUTES.QUOTATIONS.CREATE}?leadId=${mockLeadId}`);
+        // Navigate to quotations create page with lead ID
+        navigate(`${ROUTES.QUOTATIONS.CREATE}?leadId=${mockLeadId}`);
+      } else {
+        // For edit mode, stay on current page or navigate to leads list
+        navigate(ROUTES.LEADS.ALL);
+      }
     } catch (error) {
-      console.error("Error creating lead:", error);
+      console.error(
+        `Error ${isEditMode ? "updating" : "creating"} lead:`,
+        error,
+      );
       // Handle error (show toast, etc.)
     } finally {
       setIsCreating(false);
@@ -95,11 +116,12 @@ export function SimpleLeadForm({ onSubmit, isLoading = false }) {
     <Card className="p-6">
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-          Create New Lead
+          {isEditMode ? "Edit Lead" : "Create New Lead"}
         </h2>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          Enter basic customer information to create a lead and proceed to
-          quotation
+          {isEditMode
+            ? "Update customer information and lead details"
+            : "Enter basic customer information to create a lead and proceed to quotation"}
         </p>
       </div>
 
@@ -190,7 +212,11 @@ export function SimpleLeadForm({ onSubmit, isLoading = false }) {
               disabled={isCreating || isLoading}
               className="min-w-[160px]"
             >
-              {isCreating ? "Creating Lead..." : "Create Lead & Continue"}
+              {isCreating
+                ? `${isEditMode ? "Updating" : "Creating"} Lead...`
+                : isEditMode
+                  ? "Update Lead"
+                  : "Create Lead & Continue"}
             </Button>
           </div>
         </div>

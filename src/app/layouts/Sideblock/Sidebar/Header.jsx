@@ -7,18 +7,19 @@ import Logo from "assets/appLogo.svg?react";
 import LogoType from "assets/logotype.svg?react";
 import { Button } from "components/ui";
 import { useSidebarContext } from "app/contexts/sidebar/context";
+import { ROUTES } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
 export function Header() {
   const { close } = useSidebarContext();
   return (
-    <header className="relative flex h-[61px] shrink-0 items-center justify-between ltr:pl-6 ltr:pr-3 rtl:pl-3 rtl:pr-6">
+    <header className="relative flex h-[61px] shrink-0 items-center justify-between ltr:pr-3 ltr:pl-6 rtl:pr-6 rtl:pl-3">
       <div className="flex items-center justify-start gap-4 pt-3">
-        <Link to="/">
-          <Logo className="size-10 text-primary-600 dark:text-primary-400" />
+        <Link to={ROUTES.ROOT}>
+          <Logo className="text-primary-600 dark:text-primary-400 size-10" />
         </Link>
-        <LogoType className="h-5 w-auto text-gray-800 dark:text-dark-50" />
+        <LogoType className="dark:text-dark-50 h-5 w-auto text-gray-800" />
       </div>
       <div className="pt-5 xl:hidden">
         <Button
