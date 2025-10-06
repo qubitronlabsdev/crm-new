@@ -278,15 +278,26 @@ export default function AllLeads() {
                 View and manage all leads regardless of their status
               </p>
             </div>
-            <Button
-              component={Link}
-              to={ROUTES.LEADS.CREATE}
-              color="primary"
-              className="shrink-0"
-            >
-              <PlusIcon className="mr-2 h-5 w-5" />
-              Create New Lead
-            </Button>
+            <div className="space-x-3">
+              <Button
+                component={Link}
+                to={ROUTES.LEADS.CREATE_QUICK}
+                color="neutral"
+                className="shrink-0"
+              >
+                <PlusIcon className="mr-2 h-5 w-5" />
+                Create Quick Lead
+              </Button>
+              <Button
+                component={Link}
+                to={ROUTES.LEADS.CREATE}
+                color="primary"
+                className="shrink-0"
+              >
+                <PlusIcon className="mr-2 h-5 w-5" />
+                Create New Lead
+              </Button>
+            </div>
           </div>
 
           {/* Lead Navigation Tabs */}

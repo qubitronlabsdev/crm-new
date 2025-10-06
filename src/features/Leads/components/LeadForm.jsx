@@ -70,9 +70,9 @@ export function LeadForm({
       name: "",
       email: "",
       phone: "",
-      agent_assignment: "",
+      agent_assignment: "unassigned",
       travel_date: "",
-      travel_time: "",
+      // travel_time: "",
       status: "fresh",
       priority: "medium",
       customer_name: "",
@@ -83,14 +83,15 @@ export function LeadForm({
       // travel_dates: [], // 👈 must be array
       lead_source: "",
       days: 1,
+      nights: 1,
       adults: 1,
       children: 0,
       children_age: "",
       departure_city: "",
       estimated_value: "",
-      expected_close_date: "",
+      // expected_close_date: "",
       travel_preferences: "",
-      notes: "",
+      // notes: "",
     },
   });
 
@@ -103,7 +104,7 @@ export function LeadForm({
         phone: lead.phone || "",
         agent_assignment: lead.agent_assignment || "",
         travel_date: lead.travel_date || "",
-        travel_time: lead.travel_time || "",
+        // travel_time: lead.travel_time || "",
         status: lead.status || "fresh",
         priority: lead.priority || "medium",
         customer_name: lead.customer_name || "",
@@ -113,14 +114,15 @@ export function LeadForm({
         budget: lead.budget || "",
         lead_source: lead.lead_source || "",
         days: lead.days || 1,
+        nights: lead.nights || 1,
         adults: lead.adults || 1,
         children: lead.children || 0,
         children_age: lead.children_age || "",
         departure_city: lead.departure_city || "",
         estimated_value: lead.estimated_value || "",
-        expected_close_date: lead.expected_close_date || "",
+        // expected_close_date: lead.expected_close_date || "",
         travel_preferences: lead.travel_preferences || "",
-        notes: lead.notes || "",
+        // notes: lead.notes || "",
       });
     }
   }, [lead, reset]);
@@ -220,7 +222,7 @@ export function LeadForm({
               className="w-full"
             />
             <Input
-              label="Email *"
+              label="Email"
               placeholder="Enter email address"
               type="email"
               {...register("email")}
@@ -243,14 +245,14 @@ export function LeadForm({
               error={errors.agent_assignment?.message}
               className="w-full"
             />
-            <Input
+            {/* <Input
               label="Travel Time *"
               placeholder="Enter travel time (e.g., 10:30 AM)"
               type="time"
               {...register("travel_time")}
               error={errors.travel_time?.message}
               className="w-full"
-            />
+            /> */}
 
             <Select
               label="Status *"
@@ -300,13 +302,22 @@ export function LeadForm({
               error={errors.days?.message}
               className="w-full"
             />
+            <Input
+              label="Nights *"
+              placeholder="Number of Nights"
+              type="number"
+              min="1"
+              {...register("nights", { valueAsNumber: true })}
+              error={errors.nights?.message}
+              className="w-full"
+            />
             <div className="lg:col-span-1">
               <Controller
                 name="travel_date"
                 control={control}
                 render={({ field: { onChange, value, ...field } }) => (
                   <DatePicker
-                    label="Travel Date *"
+                    label="Travel Date"
                     placeholder="mm/dd/yyyy"
                     options={{
                       dateFormat: "m/d/Y",
@@ -324,7 +335,7 @@ export function LeadForm({
                 )}
               />
             </div>
-            <Controller
+            {/* <Controller
               name="expected_close_date"
               control={control}
               render={({ field: { onChange, value, ...field } }) => (
@@ -345,7 +356,7 @@ export function LeadForm({
                   {...field}
                 />
               )}
-            />
+            /> */}
           </div>
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -359,7 +370,7 @@ export function LeadForm({
               className="w-full"
             />
             <Input
-              label="Children *"
+              label="Children"
               placeholder="Number of children"
               type="number"
               min="0"
@@ -450,7 +461,7 @@ export function LeadForm({
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <Input
-              label="Estimated Value *"
+              label="Estimated Value"
               placeholder="Enter estimated value"
               type="number"
               min="0"
@@ -482,9 +493,9 @@ export function LeadForm({
                 <h3 className="dark:text-dark-50 text-lg font-semibold text-gray-800">
                   Additional Information
                 </h3>
-                <p className="dark:text-dark-200 mt-1 text-sm text-gray-600">
+                {/* <p className="dark:text-dark-200 mt-1 text-sm text-gray-600">
                   Travel preferences and additional notes
-                </p>
+                </p> */}
               </div>
 
               <Textarea
@@ -497,7 +508,7 @@ export function LeadForm({
                 helpText="Include any specific preferences, budget range, accommodation type, activities, etc."
               />
 
-              <Textarea
+              {/* <Textarea
                 label="Notes"
                 placeholder="Enter any additional notes..."
                 rows={3}
@@ -505,7 +516,7 @@ export function LeadForm({
                 error={errors.notes?.message}
                 className="w-full"
                 helpText="Any other relevant information about this lead"
-              />
+              /> */}
             </div>
 
             {/* Submit Button */}
@@ -518,7 +529,7 @@ export function LeadForm({
               disabled={isLoading}
               className="min-w-[140px]"
             >
-              {lead ? "Update Lead" : "Create Lead"}
+              {lead ? "Update Lead" : "Create Lead & Continue"}
             </Button>
           </div>
         </div>

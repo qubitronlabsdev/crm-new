@@ -8,7 +8,9 @@ import { Button } from "components/ui";
 import { Page } from "components/shared/Page";
 // import { SimpleLeadForm } from "features/Leads/components/SimpleLeadForm";
 import { ROUTES } from "app/router/routes";
-import { LeadForm } from "features/Leads/components/LeadForm";
+import { SimpleLeadForm } from "features/Leads/components/SimpleLeadForm";
+
+// ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +27,7 @@ export default function CreateLead() {
 
       console.log("Creating lead with data:", data);
 
-      navigate(ROUTES.QUOTATIONS.CREATE_WITH_LEAD_ID("abc"));
+      navigate(ROUTES.QUOTATIONS.CREATE);
     } catch (error) {
       console.error("Error creating lead:", error);
     } finally {
@@ -50,7 +52,7 @@ export default function CreateLead() {
             </Button>
             <div className="min-w-0">
               <h1 className="dark:text-dark-50 mt-2 text-2xl font-bold tracking-wide text-gray-800">
-                Create New Lead
+                Create Quick Lead
               </h1>
               <p className="dark:text-dark-200 text-gray-600">
                 Add a new potential customer inquiry to the system
@@ -59,7 +61,7 @@ export default function CreateLead() {
           </div>
 
           {/* Form */}
-          <LeadForm onSubmit={handleSubmit} isLoading={isLoading} />
+          <SimpleLeadForm onSubmit={handleSubmit} isLoading={isLoading} />
         </div>
       </div>
     </Page>

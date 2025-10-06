@@ -66,6 +66,13 @@ const protectedRoutes = {
               }),
             },
             {
+              path: "create-quick",
+              lazy: async () => ({
+                Component: (await import("app/pages/Leads/CreateQuick"))
+                  .default,
+              }),
+            },
+            {
               path: "edit/:id",
               lazy: async () => ({
                 Component: (await import("app/pages/Leads/Edit")).default,

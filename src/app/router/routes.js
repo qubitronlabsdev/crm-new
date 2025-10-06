@@ -33,6 +33,7 @@ export const ROUTES = {
     CONVERTED: "/leads/converted",
     POSTPONED: "/leads/postponed",
     CREATE: "/leads/create",
+    CREATE_QUICK: "/leads/create-quick",
     EDIT: (id) => `/leads/edit/${id}`,
     SHOW: (id) => `/leads/${id}`,
     // Alternative for when you have the ID as a string
