@@ -11,8 +11,6 @@ import { ROUTES } from "app/router/routes";
 
 // ----------------------------------------------------------------------
 
-// ----------------------------------------------------------------------
-
 export default function CreateLead() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);

@@ -16,6 +16,27 @@ import { Card, Button } from "components/ui";
 // Import React Select for template selection
 import ReactSelect from "react-select";
 
+// Dark theme CSS variables for ReactSelect
+const darkThemeStyles = `
+  :root {
+    --select-bg: #ffffff;
+    --select-border: #D1D5DB;
+    --select-text: #111827;
+    --select-placeholder: #6B7280;
+    --select-menu-bg: #ffffff;
+    --select-option-hover: #F3F4F6;
+  }
+  
+  .dark {
+    --select-bg: #374151;
+    --select-border: #4B5563;
+    --select-text: #F9FAFB;
+    --select-placeholder: #9CA3AF;
+    --select-menu-bg: #374151;
+    --select-option-hover: #4B5563;
+  }
+`;
+
 // ----------------------------------------------------------------------
 
 // Mock PDF templates - in real app, fetch from API
@@ -31,6 +52,23 @@ const mockPdfTemplates = [
 
 export function ReviewStep({ watch, setValue, errors }) {
   const [availableTemplates, setAvailableTemplates] = useState([]);
+
+  // Inject dark theme styles for ReactSelect
+  useEffect(() => {
+    const styleId = 'react-select-dark-theme';
+    let styleElement = document.getElementById(styleId);
+    
+    if (!styleElement) {
+      styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      styleElement.textContent = darkThemeStyles;
+      document.head.appendChild(styleElement);
+    }
+    
+    return () => {
+      // Cleanup is handled by keeping the styles in head for reuse
+    };
+  }, []);
 
   // Fetch available PDF templates
   useEffect(() => {
@@ -348,12 +386,75 @@ export function ReviewStep({ watch, setValue, errors }) {
               styles={{
                 control: (provided, state) => ({
                   ...provided,
-                  borderColor: state.isFocused ? "#3B82F6" : "#D1D5DB",
+                  backgroundColor: 'var(--select-bg, #ffffff)',
+                  borderColor: state.isFocused ? "#3B82F6" : 'var(--select-border, #D1D5DB)',
+                  color: 'var(--select-text, #111827)',
                   "&:hover": {
                     borderColor: "#3B82F6",
                   },
+                  boxShadow: state.isFocused ? '0 0 0 1px #3B82F6' : 'none',
+                }),
+                menu: (provided) => ({
+                  ...provided,
+                  backgroundColor: 'var(--select-menu-bg, #ffffff)',
+                  border: '1px solid var(--select-border, #D1D5DB)',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                }),
+                option: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: state.isSelected 
+                    ? '#3B82F6' 
+                    : state.isFocused 
+                    ? 'var(--select-option-hover, #F3F4F6)' 
+                    : 'transparent',
+                  color: state.isSelected 
+                    ? '#ffffff' 
+                    : 'var(--select-text, #111827)',
+                  "&:hover": {
+                    backgroundColor: state.isSelected ? '#3B82F6' : 'var(--select-option-hover, #F3F4F6)',
+                  },
+                }),
+                singleValue: (provided) => ({
+                  ...provided,
+                  color: 'var(--select-text, #111827)',
+                }),
+                placeholder: (provided) => ({
+                  ...provided,
+                  color: 'var(--select-placeholder, #6B7280)',
+                }),
+                input: (provided) => ({
+                  ...provided,
+                  color: 'var(--select-text, #111827)',
+                }),
+                indicatorSeparator: (provided) => ({
+                  ...provided,
+                  backgroundColor: 'var(--select-border, #D1D5DB)',
+                }),
+                dropdownIndicator: (provided) => ({
+                  ...provided,
+                  color: 'var(--select-placeholder, #6B7280)',
+                  "&:hover": {
+                    color: 'var(--select-text, #111827)',
+                  },
+                }),
+                clearIndicator: (provided) => ({
+                  ...provided,
+                  color: 'var(--select-placeholder, #6B7280)',
+                  "&:hover": {
+                    color: 'var(--select-text, #111827)',
+                  },
                 }),
               }}
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary: '#3B82F6',
+                  primary75: '#60A5FA',
+                  primary50: '#93C5FD',
+                  primary25: '#DBEAFE',
+                },
+              })}
             />
             {errors.template_selection && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">

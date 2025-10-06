@@ -107,29 +107,34 @@ export function EmployeeTable() {
           <Button
             component={Link}
             to={ROUTES.EMPLOYEES.SHOW(row.original.id)}
-            variant="ghost"
+            variant="soft"
+            color="info"
             size="sm"
             isIcon
             title="View Employee"
+            className="p-1"
           >
             <EyeIcon className="h-4 w-4" />
           </Button>
           <Button
             component={Link}
             to={ROUTES.EMPLOYEES.EDIT(row.original.id)}
-            variant="ghost"
+            variant="soft"
+            color="warning"
             size="sm"
             isIcon
             title="Edit Employee"
+            className="p-1"
           >
             <PencilIcon className="h-4 w-4" />
           </Button>
           <Button
-            variant="ghost"
+            variant="soft"
             size="sm"
             isIcon
             color="error"
             title="Delete Employee"
+            className="p-1"
             onClick={() => {
               if (confirm("Are you sure you want to delete this employee?")) {
                 console.log("Delete employee:", row.original.id);

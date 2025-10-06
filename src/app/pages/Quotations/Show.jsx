@@ -286,9 +286,10 @@ export default function ShowQuotation() {
             <Button
               component={Link}
               to={ROUTES.QUOTATIONS.ROOT}
-              variant="soft"
+              variant="outlined"
               color="neutral"
               isIcon
+              className="p-1"
             >
               <ArrowLeftIcon className="h-5 w-5" />
             </Button>

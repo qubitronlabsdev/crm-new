@@ -2,7 +2,17 @@ const getStatusColor = (status) => {
   switch (status?.toLowerCase()) {
     case "fresh":
       return "info";
+    case "quoting":
+      return "primary";
+    case "contacting":
+      return "info";
+    case "customizing":
+      return "warning";
+    case "finalizing":
+      return "primary";
     case "converted":
+      return "success";
+    case "trip_completed":
       return "success";
     case "postponed":
       return "warning";

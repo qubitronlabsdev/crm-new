@@ -355,6 +355,7 @@ export function QuotationStepper({ leadId, quotationId, isEditMode = false }) {
                       type="button"
                       onClick={handleNext}
                       disabled={!isValid}
+                      color={isValid ? "primary" : "neutral"}
                     >
                       Next →
                     </Button>
@@ -362,7 +363,8 @@ export function QuotationStepper({ leadId, quotationId, isEditMode = false }) {
                 ) : (
                   <Button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !isValid}
+                    color={isValid ? "primary" : "neutral"}
                     onClick={() => {
                       console.log("🖱️ Submit button clicked!");
                       console.log("✅ Form is valid:", isValid);
