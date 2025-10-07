@@ -13,30 +13,7 @@ const useItineraryStore = create(
       markup: 20, // percentage
       currency: "USD",
 
-      // Computed values
-      getTotalNetCost: () => {
-        const { days } = get();
-        if (!days || !Array.isArray(days)) return 0;
-
-        return days.reduce((total, day) => {
-          if (!day || !Array.isArray(day.items)) return total;
-
-          return (
-            total +
-            day.items.reduce((dayTotal, item) => {
-              const itemCost = Number(item?.cost) || 0;
-              return dayTotal + itemCost;
-            }, 0)
-          );
-        }, 0);
-      },
-
-      getTotalWithMarkup: () => {
-        const { getTotalNetCost, markup } = get();
-        const netCost = getTotalNetCost();
-        const markupValue = Number(markup) || 0;
-        return netCost + (netCost * markupValue) / 100;
-      },
+      // Computed values - removed cost-related functions since items only have title and description
 
       // Actions
       setQuotation: (quotation) => set({ quotation }),
@@ -49,9 +26,7 @@ const useItineraryStore = create(
         const { days } = get();
         const newDay = {
           id: Date.now(),
-          dayNumber: days.length + 1,
           title: `Day ${days.length + 1}`,
-          description: "",
           items: [],
         };
         set({ days: [...days, newDay] });
@@ -69,10 +44,9 @@ const useItineraryStore = create(
       removeDay: (dayId) => {
         const { days } = get();
         const filteredDays = days.filter((day) => day.id !== dayId);
-        // Renumber days
+        // Update day titles to maintain sequential numbering
         const renumberedDays = filteredDays.map((day, index) => ({
           ...day,
-          dayNumber: index + 1,
           title: day.title.includes("Day ") ? `Day ${index + 1}` : day.title,
         }));
         set({ days: renumberedDays });
@@ -95,9 +69,7 @@ const useItineraryStore = create(
           for (let i = currentCount + 1; i <= targetCount; i++) {
             newDays.push({
               id: Date.now() + i,
-              dayNumber: i,
               title: `Day ${i}`,
-              description: "",
               items: [],
             });
           }
@@ -115,14 +87,8 @@ const useItineraryStore = create(
 
         const newItem = {
           id: Date.now(),
-          type: item.type || "other",
           title: item.title || "",
           description: item.description || "",
-          cost: Number(item.cost) || 0,
-          time: item.time || "",
-          location: item.location || "",
-          notes: item.notes || "",
-          ...item,
         };
 
         set({
@@ -142,8 +108,8 @@ const useItineraryStore = create(
         if (!updates || typeof updates !== "object") return;
 
         const sanitizedUpdates = {
-          ...updates,
-          cost: Number(updates.cost) || 0,
+          title: updates.title || "",
+          description: updates.description || "",
         };
 
         set({
@@ -186,21 +152,14 @@ const useItineraryStore = create(
           // Safely extract and validate data
           const quotation = itineraryData.quotation || null;
           const days = Array.isArray(itineraryData.days)
-            ? itineraryData.days.map((day) => ({
+            ? itineraryData.days.map((day, index) => ({
                 id: day.id || Date.now() + Math.random(),
-                dayNumber: day.dayNumber || 1,
-                title: day.title || `Day ${day.dayNumber || 1}`,
-                description: day.description || "",
+                title: day.title || `Day ${index + 1}`,
                 items: Array.isArray(day.items)
                   ? day.items.map((item) => ({
                       id: item.id || Date.now() + Math.random(),
-                      type: item.type || "other",
                       title: item.title || "",
                       description: item.description || "",
-                      cost: Number(item.cost) || 0,
-                      time: item.time || "",
-                      location: item.location || "",
-                      notes: item.notes || "",
                     }))
                   : [],
               }))
@@ -236,21 +195,12 @@ const useItineraryStore = create(
       },
 
       exportItinerary: () => {
-        const {
-          quotation,
-          days,
-          markup,
-          currency,
-          getTotalNetCost,
-          getTotalWithMarkup,
-        } = get();
+        const { quotation, days, markup, currency } = get();
         return {
           quotation,
           days,
           markup,
           currency,
-          totalNetCost: getTotalNetCost(),
-          totalWithMarkup: getTotalWithMarkup(),
           generatedAt: new Date().toISOString(),
         };
       },

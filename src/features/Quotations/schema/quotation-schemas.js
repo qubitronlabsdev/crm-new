@@ -64,6 +64,18 @@ export const hotelsTransportationSchema = yup.object({
         .min(1, "At least one hotel is required"),
   }),
 
+  // Itinerary data integrated into this step
+  itinerary: yup
+    .array()
+    .of(
+      yup.object({
+        id: yup.number().required(),
+        title: yup.string().required(),
+        items: yup.array().of(itineraryItemSchema).default([]),
+      }),
+    )
+    .default([]),
+
   transportation: yup.object({
     flight: yup.string().when("flightNotIncluded", {
       is: true,
@@ -149,15 +161,7 @@ export const costPricingSchema = yup.object({
   // pricing_notes: yup.string(),
 });
 
-// Step 5: Itinerary Schema
-export const itinerarySchema = yup.object({
-  itinerary: yup
-    .array()
-    .of(itineraryItemSchema)
-    .min(1, "At least one itinerary item is required"),
-});
-
-// Step 6: Review Schema
+// Step 5: Review Schema
 export const reviewSchema = yup.object({
   template_selection: yup.string().required("Template selection is required"),
 });
@@ -166,7 +170,6 @@ export const reviewSchema = yup.object({
 export const combinedQuotationSchema = yup.object({
   ...travelDetailsSchema.fields,
   ...hotelsTransportationSchema.fields,
-  ...itinerarySchema.fields,
   ...inclusionsExclusionsSchema.fields,
   ...costPricingSchema.fields,
   ...reviewSchema.fields,

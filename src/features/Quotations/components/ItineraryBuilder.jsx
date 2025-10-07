@@ -15,7 +15,7 @@ import { ItineraryItemForm } from "./ItineraryItemForm";
 
 // ----------------------------------------------------------------------
 
-export function ItineraryBuilder({ numberOfDays }) {
+export function ItineraryBuilder({ numberOfDays, parentSetValue }) {
   const {
     days,
     addDay,
@@ -38,7 +38,20 @@ export function ItineraryBuilder({ numberOfDays }) {
     if (numberOfDays && numberOfDays > 0) {
       setDaysCount(numberOfDays);
     }
-  }, [numberOfDays]);
+  }, [numberOfDays, setDaysCount]);
+
+  // Sync itinerary data to parent form whenever days change
+  useEffect(() => {
+    if (parentSetValue && days) {
+      const formattedDays = days.map((day) => ({
+        id: day.id,
+        title: day.title,
+        items: day.items || [],
+      }));
+
+      parentSetValue("itinerary", formattedDays);
+    }
+  }, [days, parentSetValue]);
 
   const handleAddItem = (dayId) => {
     setSelectedDay(dayId);
@@ -95,7 +108,15 @@ export function ItineraryBuilder({ numberOfDays }) {
             Create a detailed day-by-day travel plan
           </p>
         </div>
-        <Button onClick={addDay} color="primary">
+        <Button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            addDay();
+          }}
+          color="primary"
+        >
           <PlusIcon className="mr-2 h-5 w-5" />
           Add Day
         </Button>
@@ -118,14 +139,24 @@ export function ItineraryBuilder({ numberOfDays }) {
                         autoFocus
                       />
                       <Button
-                        onClick={() => handleSaveDayTitle(day.id)}
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleSaveDayTitle(day.id);
+                        }}
                         color="success"
                         size="sm"
                       >
                         Save
                       </Button>
                       <Button
-                        onClick={handleCancelEditTitle}
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleCancelEditTitle();
+                        }}
                         color="neutral"
                         variant="soft"
                         size="sm"
@@ -139,7 +170,12 @@ export function ItineraryBuilder({ numberOfDays }) {
                         {day.title}
                       </h3>
                       <Button
-                        onClick={() => handleEditDayTitle(day.id, day.title)}
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleEditDayTitle(day.id, day.title);
+                        }}
                         variant="soft"
                         color="neutral"
                         size="sm"
@@ -152,7 +188,12 @@ export function ItineraryBuilder({ numberOfDays }) {
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
-                    onClick={() => handleAddItem(day.id)}
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleAddItem(day.id);
+                    }}
                     color="success"
                     size="sm"
                   >
@@ -160,7 +201,12 @@ export function ItineraryBuilder({ numberOfDays }) {
                     Add Item
                   </Button>
                   <Button
-                    onClick={() => removeDay(day.id)}
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      removeDay(day.id);
+                    }}
                     color="error"
                     variant="soft"
                     size="sm"
@@ -201,7 +247,15 @@ export function ItineraryBuilder({ numberOfDays }) {
               <p className="mb-4 text-gray-600 dark:text-gray-400">
                 Start building your itinerary by adding your first day
               </p>
-              <Button onClick={addDay} color="primary">
+              <Button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  addDay();
+                }}
+                color="primary"
+              >
                 <PlusIcon className="mr-2 h-5 w-5" />
                 Add First Day
               </Button>

@@ -20,6 +20,7 @@ import {
   Box,
 } from "components/ui";
 import { ItineraryBuilder } from "../ItineraryBuilder";
+import { useItineraryStore } from "../../store/useItineraryStore";
 
 // ----------------------------------------------------------------------
 
@@ -400,6 +401,9 @@ function TransportationDetails({ transportationData, setTransportationData }) {
 
 // Main Component
 export function HotelsTransportationStep({ watch, setValue, errors }) {
+  // Import useItineraryStore here since we'll use it
+  const { days: itineraryDays, loadItinerary } = useItineraryStore();
+
   // Watch form values directly instead of using local state
   const watchedHotels = watch("hotels") || [
     {
@@ -434,6 +438,7 @@ export function HotelsTransportationStep({ watch, setValue, errors }) {
     const hotels = watch("hotels");
     const transportation = watch("transportation");
     const hotelsNotIncluded = watch("hotelsNotIncluded");
+    const itinerary = watch("itinerary");
 
     // Only set values if they don't exist at all
     if (!hotels) {
@@ -465,7 +470,32 @@ export function HotelsTransportationStep({ watch, setValue, errors }) {
     if (hotelsNotIncluded === undefined) {
       setValue("hotelsNotIncluded", false);
     }
-  }, [setValue, watch]);
+
+    // Initialize itinerary values if not present
+    if (!itinerary) {
+      setValue("itinerary", []);
+    }
+
+    // Load itinerary data into the store if available
+    if (itinerary && itinerary.length > 0) {
+      loadItinerary({
+        days: itinerary,
+      });
+    }
+  }, [setValue, watch, loadItinerary]);
+
+  // Sync itinerary store data to form when store changes
+  useEffect(() => {
+    if (itineraryDays && itineraryDays.length > 0) {
+      const formattedDays = itineraryDays.map((day) => ({
+        id: day.id,
+        title: day.title,
+        items: day.items || [],
+      }));
+
+      setValue("itinerary", formattedDays);
+    }
+  }, [itineraryDays, setValue]);
 
   // Helper functions to update form values
   const updateHotels = (newHotels) => {
@@ -569,7 +599,7 @@ export function HotelsTransportationStep({ watch, setValue, errors }) {
         <h4 className="text-md mb-4 font-semibold text-gray-900 dark:text-white">
           Day-wise Itinerary Builder
         </h4>
-        <ItineraryBuilder numberOfDays={watch("days")} />
+        <ItineraryBuilder numberOfDays={days} parentSetValue={setValue} />
       </Card>
 
       {/* Summary */}

@@ -8,6 +8,7 @@ import {
   XCircleIcon,
   PrinterIcon,
   BriefcaseIcon,
+  CalendarDaysIcon,
 } from "@heroicons/react/24/outline";
 
 // Local Imports
@@ -50,8 +51,15 @@ const mockPdfTemplates = [
 
 // ----------------------------------------------------------------------
 
-export function ReviewStep({ errors, watch, setValue, defaultData = {} }) {
+export function ReviewStep({
+  // errors,
+  watch,
+  setValue,
+  defaultData = {},
+}) {
   const [availableTemplates, setAvailableTemplates] = useState([]);
+  // Tab state for itinerary days
+  const [activeDayTab, setActiveDayTab] = useState(0);
 
   // Inject dark theme styles for ReactSelect
   useEffect(() => {
@@ -210,6 +218,77 @@ export function ReviewStep({ errors, watch, setValue, defaultData = {} }) {
                 <p className="mt-1 ml-2 text-gray-900 dark:text-white">
                   {allData.travel_preferences}
                 </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Day-wise Itinerary Review */}
+        <div className="mb-6">
+          <h4 className="text-md mb-3 flex items-center gap-2 font-semibold text-gray-800 dark:text-gray-200">
+            <CalendarDaysIcon className="h-5 w-5" />
+            Day-wise Itinerary
+          </h4>
+          <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800">
+            {allData.itinerary && allData.itinerary.length > 0 ? (
+              <>
+                {/* Tabs */}
+                <div className="mb-4 flex flex-wrap gap-2">
+                  {allData.itinerary.map((day, idx) => (
+                    <button
+                      key={day.id || idx}
+                      type="button"
+                      className={`rounded px-4 py-1 text-sm font-medium transition-colors focus:outline-none ${
+                        activeDayTab === idx
+                          ? "bg-blue-600 text-white shadow dark:bg-blue-500 dark:text-white"
+                          : "bg-gray-200 text-gray-700 hover:bg-blue-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-blue-600"
+                      } `}
+                      onClick={() => setActiveDayTab(idx)}
+                    >
+                      Day {idx + 1}
+                    </button>
+                  ))}
+                </div>
+                {/* Tab Content */}
+                <div>
+                  {allData.itinerary[activeDayTab] ? (
+                    <>
+                      <h5 className="mb-2 text-xl font-semibold text-gray-800 dark:text-gray-200">
+                        {allData.itinerary[activeDayTab].title ||
+                          `Day ${activeDayTab + 1}`}
+                      </h5>
+                      {allData.itinerary[activeDayTab].items &&
+                      allData.itinerary[activeDayTab].items.length > 0 ? (
+                        <div className="ml-4 space-y-2">
+                          {allData.itinerary[activeDayTab].items.map(
+                            (item, itemIndex) => (
+                              <div key={itemIndex}>
+                                {item.title && (
+                                  <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
+                                    {item.title}
+                                  </p>
+                                )}
+                                {item.description && (
+                                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    {item.description}
+                                  </p>
+                                )}
+                              </div>
+                            ),
+                          )}
+                        </div>
+                      ) : (
+                        <p className="ml-4 text-gray-500 italic dark:text-gray-400">
+                          No activities planned for this day
+                        </p>
+                      )}
+                    </>
+                  ) : null}
+                </div>
+              </>
+            ) : (
+              <div className="py-4 text-center text-gray-500 dark:text-gray-400">
+                <p>No itinerary details available</p>
               </div>
             )}
           </div>
@@ -516,7 +595,6 @@ export function ReviewStep({ errors, watch, setValue, defaultData = {} }) {
               </ul>
             </div>
           </div>
-
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="rounded-lg bg-yellow-50 p-4 dark:bg-yellow-900/20">
               <h5 className="mb-2 flex items-center gap-2 font-medium text-yellow-800 dark:text-yellow-300">
@@ -640,11 +718,11 @@ export function ReviewStep({ errors, watch, setValue, defaultData = {} }) {
                 },
               })}
             />
-            {errors.template_selection && (
+            {/* {errors.template_selection && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                 {errors.template_selection.message}
               </p>
-            )}
+            )} */}
             {!selectedTemplate && (
               <p className="mt-1 text-sm text-yellow-600 dark:text-yellow-400">
                 Please select a PDF template to generate the quotation

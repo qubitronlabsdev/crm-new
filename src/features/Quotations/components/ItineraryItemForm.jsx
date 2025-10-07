@@ -84,12 +84,8 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
     try {
       // Validate and sanitize data before submission
       const sanitizedData = {
-        type: data.type || "other",
         title: data.title || "",
         description: data.description || "",
-        time: data.time || "",
-        location: data.location || "",
-        notes: data.notes || "",
       };
 
       await onSubmit(sanitizedData);
@@ -152,40 +148,13 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
                   </Button>
                 </div>
 
-                <form
-                  onSubmit={handleSubmit(handleFormSubmit)}
-                  className="space-y-4"
-                >
-                  {/* <Select
-                    label="Item Type *"
-                    placeholder="Select item type"
-                    data={itemTypes}
-                    {...register("type")}
-                    error={errors.type?.message}
-                  /> */}
-
+                <div className="space-y-4">
                   <Input
                     label="Title *"
                     placeholder="Enter item title"
                     {...register("title")}
                     error={errors.title?.message}
                   />
-
-                  {/* <div className="grid grid-cols-2 gap-4">
-                    <Input
-                      label="Time"
-                      placeholder="e.g., 9:00 AM"
-                      {...register("time")}
-                      error={errors.time?.message}
-                    />
-                  </div> */}
-                  {/* 
-                  <Input
-                    label="Location"
-                    placeholder="Enter location"
-                    {...register("location")}
-                    error={errors.location?.message}
-                  /> */}
 
                   <Textarea
                     label="Description"
@@ -194,14 +163,6 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
                     {...register("description")}
                     error={errors.description?.message}
                   />
-
-                  {/* <Textarea
-                    label="Notes"
-                    placeholder="Additional notes"
-                    rows={2}
-                    {...register("notes")}
-                    error={errors.notes?.message}
-                  /> */}
 
                   <div className="flex justify-end gap-3 pt-4">
                     <Button
@@ -213,7 +174,8 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
                       Cancel
                     </Button>
                     <Button
-                      type="submit"
+                      type="button"
+                      onClick={handleSubmit(handleFormSubmit)}
                       color="primary"
                       isLoading={isLoading}
                       disabled={isLoading}
@@ -221,7 +183,7 @@ export function ItineraryItemForm({ isOpen, onClose, onSubmit, item = null }) {
                       {item ? "Update Item" : "Add Item"}
                     </Button>
                   </div>
-                </form>
+                </div>
               </DialogPanel>
             </TransitionChild>
           </div>

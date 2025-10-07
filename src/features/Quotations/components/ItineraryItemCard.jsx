@@ -1,64 +1,10 @@
 // Import Dependencies
 import { useState } from "react";
-import {
-  PencilIcon,
-  TrashIcon,
-  // ClockIcon,
-  // MapPinIcon,
-  Bars3Icon,
-  BuildingOfficeIcon,
-  PaperAirplaneIcon,
-  TruckIcon,
-  ClipboardDocumentListIcon,
-  SparklesIcon,
-  ChartBarIcon,
-} from "@heroicons/react/24/outline";
+import { PencilIcon, TrashIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 
 // Local Imports
-import {
-  Button,
-  Card,
-  // Badge
-} from "components/ui";
-
-// ----------------------------------------------------------------------
-
-// const getItemTypeColor = (type) => {
-//   switch (type) {
-//     case "hotel":
-//       return "info";
-//     case "flight":
-//       return "primary";
-//     case "activity":
-//       return "success";
-//     case "transport":
-//       return "warning";
-//     case "meal":
-//       return "secondary";
-//     default:
-//       return "neutral";
-//   }
-// };
-
-const getItemTypeIcon = (type) => {
-  const iconProps = { className: "h-5 w-5" };
-
-  switch (type) {
-    case "hotel":
-      return <BuildingOfficeIcon {...iconProps} />;
-    case "flight":
-      return <PaperAirplaneIcon {...iconProps} />;
-    case "activity":
-      return <ChartBarIcon {...iconProps} />;
-    case "transport":
-      return <TruckIcon {...iconProps} />;
-    case "meal":
-      return <SparklesIcon {...iconProps} />;
-    default:
-      return <ClipboardDocumentListIcon {...iconProps} />;
-  }
-};
+import { Button, Card } from "components/ui";
 
 // ----------------------------------------------------------------------
 
@@ -90,28 +36,10 @@ export function ItineraryItemCard({
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3">
             <div className="flex min-w-0 items-center gap-2">
-              <div className="text-gray-600 dark:text-gray-400">
-                {getItemTypeIcon(item.type)}
-              </div>
               <div className="min-w-0">
                 <h4 className="truncate font-medium text-gray-900 dark:text-white">
                   {item.title}
                 </h4>
-                {/* <div className="mt-1 flex items-center gap-2">
-                  <Badge
-                    color={getItemTypeColor(item.type)}
-                    variant="soft"
-                    className="text-xs capitalize"
-                  >
-                    {item.type}
-                  </Badge>
-                  {item.time && (
-                    <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                      <ClockIcon className="h-3 w-3" />
-                      {item.time}
-                    </div>
-                  )}
-                </div> */}
               </div>
             </div>
           </div>
@@ -147,7 +75,12 @@ export function ItineraryItemCard({
           )}
         >
           <Button
-            onClick={() => onEdit(item)}
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onEdit(item);
+            }}
             variant="soft"
             color="warning"
             size="sm"
@@ -156,7 +89,12 @@ export function ItineraryItemCard({
             <PencilIcon className="h-3 w-3" />
           </Button>
           <Button
-            onClick={() => onDelete(item.id)}
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onDelete(item.id);
+            }}
             variant="soft"
             color="error"
             size="sm"
