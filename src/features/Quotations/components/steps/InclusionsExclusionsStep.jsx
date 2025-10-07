@@ -270,27 +270,28 @@ export function InclusionsExclusionsStep({
             )}
           </div>
         </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* Cancellation Policy */}
+          <div className="mb-6">
+            <Textarea
+              label="Cancellation Policy *"
+              placeholder="Enter cancellation terms and conditions..."
+              rows={4}
+              {...register("cancellation_policy")}
+              error={errors.cancellation_policy?.message}
+            />
+          </div>
 
-        {/* Cancellation Policy */}
-        <div className="mb-6">
-          <Textarea
-            label="Cancellation Policy *"
-            placeholder="Enter cancellation terms and conditions..."
-            rows={4}
-            {...register("cancellation_policy")}
-            error={errors.cancellation_policy?.message}
-          />
-        </div>
-
-        {/* Terms & Conditions */}
-        <div>
-          <Textarea
-            label="Terms & Conditions *"
-            placeholder="Enter general terms and conditions..."
-            rows={4}
-            {...register("terms_conditions")}
-            error={errors.terms_conditions?.message}
-          />
+          {/* Terms & Conditions */}
+          <div>
+            <Textarea
+              label="Terms & Conditions *"
+              placeholder="Enter general terms and conditions..."
+              rows={4}
+              {...register("terms_conditions")}
+              error={errors.terms_conditions?.message}
+            />
+          </div>
         </div>
       </Card>
 

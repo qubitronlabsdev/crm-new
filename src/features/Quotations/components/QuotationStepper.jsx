@@ -349,7 +349,7 @@ export function QuotationStepper({
                     <Button
                       type="button"
                       onClick={handleNext}
-                      disabled={!isValid}
+                      // disabled={!isValid}
                       color={isValid ? "primary" : "neutral"}
                     >
                       Next →
@@ -379,7 +379,11 @@ export function QuotationStepper({
                     </button> */}
                     <Button
                       type="submit"
-                      disabled={isSubmitting || !isValid}
+                      disabled={
+                        isSubmitting
+
+                        // || !isValid
+                      }
                       color={isValid ? "primary" : "neutral"}
                       onClick={() => {
                         console.log("🖱️ Submit button clicked!");

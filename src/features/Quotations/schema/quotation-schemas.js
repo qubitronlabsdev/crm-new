@@ -39,6 +39,84 @@ export const travelDetailsSchema = yup.object({
   travel_preferences: yup.string(),
 });
 
+// Step 2: Hotels & Transportation Schema
+export const hotelsTransportationSchema = yup.object({
+  hotelsNotIncluded: yup.boolean().default(false),
+  hotels: yup.array().when("hotelsNotIncluded", {
+    is: true,
+    then: (schema) => schema.nullable(),
+    otherwise: (schema) =>
+      schema
+        .of(
+          yup.object({
+            nights: yup
+              .array()
+              .of(yup.string())
+              .min(1, "At least one night must be selected for each hotel"),
+            hotelName: yup.string().required("Hotel name is required"),
+            city: yup.string().required("City is required"),
+            category: yup.string().required("Hotel category is required"),
+            roomType: yup.string().nullable(),
+            comment: yup.string().nullable(),
+          }),
+        )
+        .min(1, "At least one hotel is required"),
+  }),
+
+  transportation: yup.object({
+    flight: yup.string().when("flightNotIncluded", {
+      is: true,
+      then: (schema) => schema.nullable(),
+      otherwise: (schema) => schema.strip(),
+    }),
+    flightNotIncluded: yup.boolean(),
+    cab: yup.string().when("cabNotIncluded", {
+      is: true,
+      then: (schema) => schema.nullable(),
+      otherwise: (schema) => schema.strip(),
+    }),
+    cabNotIncluded: yup.boolean(),
+    bus: yup.string().when("busNotIncluded", {
+      is: true,
+      then: (schema) => schema.nullable(),
+      otherwise: (schema) => schema.strip(),
+    }),
+    busNotIncluded: yup.boolean(),
+    train: yup.string().when("trainNotIncluded", {
+      is: true,
+      then: (schema) => schema.nullable(),
+      otherwise: (schema) => schema.strip(),
+    }),
+    trainNotIncluded: yup.boolean(),
+  }),
+
+  // so now either this will be final if above one not working
+  // transportation: yup.object({
+  //   flightNotIncluded: yup.boolean().default(false),
+  //   flight: yup.string().nullable(),
+  //   cabNotIncluded: yup.boolean().default(false),
+  //   cab: yup.string().nullable(),
+  //   busNotIncluded: yup.boolean().default(false),
+  //   bus: yup.string().nullable(),
+  //   trainNotIncluded: yup.boolean().default(false),
+  //   train: yup.string().nullable(),
+  // }),
+});
+
+// Step 3: Inclusions & Exclusions Schema
+export const inclusionsExclusionsSchema = yup.object({
+  inclusions: yup
+    .array()
+    .of(yup.string())
+    .min(1, "At least one inclusion is required"),
+  exclusions: yup
+    .array()
+    .of(yup.string())
+    .min(1, "At least one exclusion is required"),
+  cancellation_policy: yup.string().required("Cancellation policy is required"),
+  terms_conditions: yup.string().required("Terms & conditions are required"),
+});
+
 // Step 4: Cost & Pricing Schema
 export const costPricingSchema = yup.object({
   base_package_price: yup
@@ -70,89 +148,9 @@ export const costPricingSchema = yup.object({
   // pricing_notes: yup.string(),
 });
 
-// Step 4: Inclusions & Exclusions Schema
-export const inclusionsExclusionsSchema = yup.object({
-  inclusions: yup
-    .array()
-    .of(yup.string())
-    .min(1, "At least one inclusion is required"),
-  exclusions: yup
-    .array()
-    .of(yup.string())
-    .min(1, "At least one exclusion is required"),
-  cancellation_policy: yup.string().required("Cancellation policy is required"),
-  terms_conditions: yup.string().required("Terms & conditions are required"),
-});
-
 // Step 5: Review Schema
 export const reviewSchema = yup.object({
   template_selection: yup.string().required("Template selection is required"),
-});
-
-// Alias for backward compatibility
-
-// Step 2: Hotels & Transportation Schema
-export const hotelsTransportationSchema = yup.object({
-  hotelsNotIncluded: yup.boolean().default(false),
-  hotels: yup.array().when("hotelsNotIncluded", {
-    is: true,
-    then: (schema) => schema.nullable(),
-    otherwise: (schema) =>
-      schema
-        .of(
-          yup.object({
-            nights: yup
-              .array()
-              .of(yup.string())
-              .min(1, "At least one night must be selected for each hotel"),
-            hotelName: yup.string().required("Hotel name is required"),
-            city: yup.string().required("City is required"),
-            category: yup.string().required("Hotel category is required"),
-            roomType: yup.string().nullable(),
-            comment: yup.string().nullable(),
-          }),
-        )
-        .min(1, "At least one hotel is required"),
-  }),
-
-  // transportation: yup.object({
-  //   flight: yup.string().when("flightNotIncluded", {
-  //     is: false,
-  //     then: (schema) => schema.nullable(),
-  //     otherwise: (schema) => schema.strip(),
-  //   }),
-  //   flightNotIncluded: yup.boolean(),
-  //   cab: yup.string().when("cabNotIncluded", {
-  //     is: false,
-  //     then: (schema) => schema.nullable(),
-  //     otherwise: (schema) => schema.strip(),
-  //   }),
-  //   cabNotIncluded: yup.boolean(),
-  //   bus: yup.string().when("busNotIncluded", {
-  //     is: false,
-  //     then: (schema) => schema.nullable(),
-  //     otherwise: (schema) => schema.strip(),
-  //   }),
-  //   busNotIncluded: yup.boolean(),
-  //   train: yup.string().when("trainNotIncluded", {
-  //     is: false,
-  //     then: (schema) => schema.nullable(),
-  //     otherwise: (schema) => schema.strip(),
-  //   }),
-  //   trainNotIncluded: yup.boolean(),
-  // }),
-
-  // so now either this will be final if above one not working
-  transportation: yup.object({
-    flightNotIncluded: yup.boolean().default(false),
-    flight: yup.string().nullable(),
-    cabNotIncluded: yup.boolean().default(false),
-    cab: yup.string().nullable(),
-    busNotIncluded: yup.boolean().default(false),
-    bus: yup.string().nullable(),
-    trainNotIncluded: yup.boolean().default(false),
-    train: yup.string().nullable(),
-  }),
 });
 
 // Combined Quotation Schema
