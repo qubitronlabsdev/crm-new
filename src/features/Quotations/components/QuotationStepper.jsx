@@ -124,6 +124,10 @@ export function QuotationStepper({
     // First trigger validation to ensure all errors are shown
     const isStepValid = await trigger();
 
+    console.log("🔍 Step validation result:", isStepValid);
+    console.log("🚨 Current errors:", errors);
+    console.log("📊 Current form values:", getValues());
+
     if (isStepValid && currentStep < steps.length) {
       // Save current step data to local state
       const currentStepData = getValues();
@@ -134,6 +138,7 @@ export function QuotationStepper({
     } else if (!isStepValid) {
       // If validation fails, the form will show errors automatically
       console.log("Form validation failed. Please fill all required fields.");
+      console.log("Validation errors:", errors);
     }
   };
 
@@ -197,8 +202,16 @@ export function QuotationStepper({
 
   // Reset form when step changes
   useEffect(() => {
-    reset(formData);
-  }, [currentStep, reset, formData]);
+    // Merge current formData with any existing form values to preserve data
+    const currentFormValues = getValues();
+    const mergedData = { ...formData, ...currentFormValues };
+
+    console.log("🔄 Resetting form with data:", mergedData);
+    console.log("🎯 Current step:", currentStep);
+    console.log("📋 Current schema:", currentStepConfig?.schema);
+
+    reset(mergedData);
+  }, [currentStep, reset, formData, getValues, currentStepConfig]);
 
   // Get current step component
   const CurrentStepComponent = steps.find(
@@ -317,6 +330,22 @@ export function QuotationStepper({
 
                 {currentStep < steps.length ? (
                   <div className="flex flex-col items-end">
+                    {/* Debug button for validation */}
+                    {/* <button
+                      type="button"
+                      onClick={async () => {
+                        console.log("=== MANUAL VALIDATION CHECK ===");
+                        console.log("Current Step:", currentStep);
+                        console.log("Form Values:", getValues());
+                        console.log("Form Errors:", errors);
+                        console.log("Is Valid:", isValid);
+                        const manualValidation = await trigger();
+                        console.log("Manual Trigger Result:", manualValidation);
+                      }}
+                      className="mb-2 rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600"
+                    >
+                      Check Validation
+                    </button> */}
                     <Button
                       type="button"
                       onClick={handleNext}
@@ -327,51 +356,73 @@ export function QuotationStepper({
                     </Button>
                   </div>
                 ) : (
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting || !isValid}
-                    color={isValid ? "primary" : "neutral"}
-                    onClick={() => {
-                      console.log("🖱️ Submit button clicked!");
-                      console.log("✅ Form is valid:", isValid);
-                      console.log("🔍 Current errors:", errors);
-                      console.log("📊 Current form values:", getValues());
-                      console.log(
-                        "🎯 Template selection:",
-                        getValues().template_selection,
-                      );
-                    }}
-                    className="min-w-[150px]"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <svg
-                          className="mr-2 h-4 w-4 animate-spin"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        {isEditMode ? "Updating..." : "Creating..."}
-                      </>
-                    ) : isEditMode ? (
-                      "Update Quotation"
-                    ) : (
-                      "Create Quotation"
-                    )}
-                  </Button>
+                  <div className="flex flex-col items-end gap-2">
+                    {/* Debug button for final validation */}
+                    {/* <button
+                      type="button"
+                      onClick={async () => {
+                        console.log("=== FINAL STEP VALIDATION CHECK ===");
+                        console.log("Current Step:", currentStep);
+                        console.log("Form Values:", getValues());
+                        console.log("Form Errors:", errors);
+                        console.log("Is Valid:", isValid);
+                        const manualValidation = await trigger();
+                        console.log("Manual Trigger Result:", manualValidation);
+                        console.log("All Form Data:", {
+                          ...formData,
+                          ...getValues(),
+                        });
+                      }}
+                      className="rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600"
+                    >
+                      Debug Final Validation
+                    </button> */}
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting || !isValid}
+                      color={isValid ? "primary" : "neutral"}
+                      onClick={() => {
+                        console.log("🖱️ Submit button clicked!");
+                        console.log("✅ Form is valid:", isValid);
+                        console.log("🔍 Current errors:", errors);
+                        console.log("📊 Current form values:", getValues());
+                        console.log(
+                          "🎯 Template selection:",
+                          getValues().template_selection,
+                        );
+                      }}
+                      className="min-w-[150px]"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <svg
+                            className="mr-2 h-4 w-4 animate-spin"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          {isEditMode ? "Updating..." : "Creating..."}
+                        </>
+                      ) : isEditMode ? (
+                        "Update Quotation"
+                      ) : (
+                        "Create Quotation"
+                      )}
+                    </Button>
+                  </div>
                 )}
               </div>
             </div>

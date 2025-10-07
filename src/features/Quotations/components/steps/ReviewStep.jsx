@@ -114,6 +114,21 @@ export function ReviewStep({ errors, watch, setValue, defaultData = {} }) {
           Step 5: Review & Generate Quotation
         </h3>
 
+        {/* Debug Section - Remove in production */}
+        {/* <div className="mb-6 rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
+          <h5 className="text-sm font-medium text-blue-800 dark:text-blue-300">
+            Debug Info - Form Data:
+          </h5>
+          <pre className="mt-2 max-h-32 overflow-y-auto text-xs text-blue-700 dark:text-blue-400">
+            {JSON.stringify(allData, null, 2)}
+          </pre>
+          <div className="mt-2">
+            <p className="text-xs text-blue-700 dark:text-blue-400">
+              Errors: {JSON.stringify(errors, null, 2)}
+            </p>
+          </div>
+        </div> */}
+
         {/* Travel Details Review */}
         <div className="mb-6">
           <h4 className="text-md mb-3 flex items-center gap-2 font-semibold text-gray-800 dark:text-gray-200">
@@ -207,38 +222,191 @@ export function ReviewStep({ errors, watch, setValue, defaultData = {} }) {
             Hotels & Transportation
           </h4>
           <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800">
-            <div className="grid grid-cols-1 gap-3 text-sm md:grid-cols-2">
-              <div>
-                <span className="font-medium text-gray-700 dark:text-gray-300">
-                  Hotel Rating:
-                </span>
-                <span className="ml-2 text-gray-900 dark:text-white">
-                  {formatValue(allData.hotel_rating)} Star
-                </span>
-              </div>
-              <div>
-                <span className="font-medium text-gray-700 dark:text-gray-300">
-                  Room Type:
-                </span>
-                <span className="ml-2 text-gray-900 dark:text-white">
-                  {formatValue(allData.room_type)}
-                </span>
-              </div>
-              <div>
-                <span className="font-medium text-gray-700 dark:text-gray-300">
-                  Meal Plan:
-                </span>
-                <span className="ml-2 text-gray-900 dark:text-white">
-                  {formatValue(allData.meal_plan)}
-                </span>
-              </div>
-              <div>
-                <span className="font-medium text-gray-700 dark:text-gray-300">
-                  Transportation:
-                </span>
-                <span className="ml-2 text-gray-900 dark:text-white">
-                  {formatValue(allData.transportation_mode)}
-                </span>
+            {/* Hotels Section */}
+            <div className="mb-4">
+              <h5 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                🏨 Hotels
+              </h5>
+              {allData.hotelsNotIncluded ? (
+                <p className="text-sm text-gray-600 italic dark:text-gray-400">
+                  Hotels not included in this package
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {(allData.hotels || []).map((hotel, index) => (
+                    <div
+                      key={index}
+                      className="rounded border bg-white p-3 dark:bg-gray-700"
+                    >
+                      <div className="grid grid-cols-1 gap-2 text-sm md:grid-cols-3">
+                        <div>
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            Hotel:
+                          </span>
+                          <span className="ml-2 text-gray-900 dark:text-white">
+                            {hotel.hotelName || "Not specified"}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            City:
+                          </span>
+                          <span className="ml-2 text-gray-900 dark:text-white">
+                            {hotel.city || "Not specified"}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            Category:
+                          </span>
+                          <span className="ml-2 text-gray-900 dark:text-white">
+                            {hotel.category || "Not specified"}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            Nights:
+                          </span>
+                          <span className="ml-2 text-gray-900 dark:text-white">
+                            {(hotel.nights || []).join(", ") || "Not specified"}
+                          </span>
+                        </div>
+                        {hotel.roomType && (
+                          <div>
+                            <span className="font-medium text-gray-700 dark:text-gray-300">
+                              Room Type:
+                            </span>
+                            <span className="ml-2 text-gray-900 dark:text-white">
+                              {hotel.roomType}
+                            </span>
+                          </div>
+                        )}
+                        {hotel.comment && (
+                          <div className="md:col-span-3">
+                            <span className="font-medium text-gray-700 dark:text-gray-300">
+                              Comments:
+                            </span>
+                            <span className="ml-2 text-gray-900 dark:text-white">
+                              {hotel.comment}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Transportation Section */}
+            <div>
+              <h5 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                🚗 Transportation
+              </h5>
+              <div className="grid grid-cols-1 gap-3 text-sm md:grid-cols-2">
+                {/* Flight */}
+                <div className="rounded border bg-white p-3 dark:bg-gray-700">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="font-medium text-gray-700 dark:text-gray-300">
+                      Flight:
+                    </span>
+                    <span
+                      className={`rounded px-2 py-1 text-xs ${
+                        allData.transportation?.flightNotIncluded
+                          ? "bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300"
+                          : "bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300"
+                      }`}
+                    >
+                      {allData.transportation?.flightNotIncluded
+                        ? "Not Included"
+                        : "Included"}
+                    </span>
+                  </div>
+                  {!allData.transportation?.flightNotIncluded &&
+                    allData.transportation?.flight && (
+                      <p className="text-xs text-gray-900 dark:text-white">
+                        {allData.transportation.flight}
+                      </p>
+                    )}
+                </div>
+
+                {/* Cab */}
+                <div className="rounded border bg-white p-3 dark:bg-gray-700">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="font-medium text-gray-700 dark:text-gray-300">
+                      Cab:
+                    </span>
+                    <span
+                      className={`rounded px-2 py-1 text-xs ${
+                        allData.transportation?.cabNotIncluded
+                          ? "bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300"
+                          : "bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300"
+                      }`}
+                    >
+                      {allData.transportation?.cabNotIncluded
+                        ? "Not Included"
+                        : "Included"}
+                    </span>
+                  </div>
+                  {!allData.transportation?.cabNotIncluded &&
+                    allData.transportation?.cab && (
+                      <p className="text-xs text-gray-900 dark:text-white">
+                        {allData.transportation.cab}
+                      </p>
+                    )}
+                </div>
+
+                {/* Bus */}
+                <div className="rounded border bg-white p-3 dark:bg-gray-700">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="font-medium text-gray-700 dark:text-gray-300">
+                      Bus:
+                    </span>
+                    <span
+                      className={`rounded px-2 py-1 text-xs ${
+                        allData.transportation?.busNotIncluded
+                          ? "bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300"
+                          : "bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300"
+                      }`}
+                    >
+                      {allData.transportation?.busNotIncluded
+                        ? "Not Included"
+                        : "Included"}
+                    </span>
+                  </div>
+                  {!allData.transportation?.busNotIncluded &&
+                    allData.transportation?.bus && (
+                      <p className="text-xs text-gray-900 dark:text-white">
+                        {allData.transportation.bus}
+                      </p>
+                    )}
+                </div>
+
+                {/* Train */}
+                <div className="rounded border bg-white p-3 dark:bg-gray-700">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="font-medium text-gray-700 dark:text-gray-300">
+                      Train:
+                    </span>
+                    <span
+                      className={`rounded px-2 py-1 text-xs ${
+                        allData.transportation?.trainNotIncluded
+                          ? "bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300"
+                          : "bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300"
+                      }`}
+                    >
+                      {allData.transportation?.trainNotIncluded
+                        ? "Not Included"
+                        : "Included"}
+                    </span>
+                  </div>
+                  {!allData.transportation?.trainNotIncluded &&
+                    allData.transportation?.train && (
+                      <p className="text-xs text-gray-900 dark:text-white">
+                        {allData.transportation.train}
+                      </p>
+                    )}
+                </div>
               </div>
             </div>
           </div>
