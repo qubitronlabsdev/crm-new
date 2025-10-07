@@ -19,6 +19,7 @@ import {
   Badge,
   Box,
 } from "components/ui";
+import { ItineraryBuilder } from "../ItineraryBuilder";
 
 // ----------------------------------------------------------------------
 
@@ -383,7 +384,7 @@ function TransportationDetails({ transportationData, setTransportationData }) {
                   placeholder={placeholder}
                   value={transportationData[key] || ""}
                   onChange={(e) => {
-                    console.log(`Textarea ${key} changed to:`, e.target.value);
+                    // console.log(`Textarea ${key} changed to:`, e.target.value);
                     updateTransportationField(key, e.target.value);
                   }}
                   rows={3}
@@ -562,6 +563,14 @@ export function HotelsTransportationStep({ watch, setValue, errors }) {
         transportationData={watchedTransportation}
         setTransportationData={updateTransportation}
       />
+
+      {/* Itinerary Builder */}
+      <Card className="p-6">
+        <h4 className="text-md mb-4 font-semibold text-gray-900 dark:text-white">
+          Day-wise Itinerary Builder
+        </h4>
+        <ItineraryBuilder numberOfDays={watch("days")} />
+      </Card>
 
       {/* Summary */}
       <Card className="p-6">

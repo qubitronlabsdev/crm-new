@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import itineraryItemSchema from "./itinerary-item-form-schema";
 
 // Step 1: Travel Details Schema
 export const travelDetailsSchema = yup.object({
@@ -148,7 +149,15 @@ export const costPricingSchema = yup.object({
   // pricing_notes: yup.string(),
 });
 
-// Step 5: Review Schema
+// Step 5: Itinerary Schema
+export const itinerarySchema = yup.object({
+  itinerary: yup
+    .array()
+    .of(itineraryItemSchema)
+    .min(1, "At least one itinerary item is required"),
+});
+
+// Step 6: Review Schema
 export const reviewSchema = yup.object({
   template_selection: yup.string().required("Template selection is required"),
 });
@@ -157,8 +166,9 @@ export const reviewSchema = yup.object({
 export const combinedQuotationSchema = yup.object({
   ...travelDetailsSchema.fields,
   ...hotelsTransportationSchema.fields,
-  ...costPricingSchema.fields,
+  ...itinerarySchema.fields,
   ...inclusionsExclusionsSchema.fields,
+  ...costPricingSchema.fields,
   ...reviewSchema.fields,
 });
 

@@ -6,7 +6,6 @@ import { Controller } from "react-hook-form";
 // Local Imports
 import { Card, Input, Textarea } from "components/ui";
 import { DatePicker } from "components/shared/form/Datepicker";
-import { ItineraryBuilder } from "../ItineraryBuilder";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 // ----------------------------------------------------------------------
@@ -299,14 +298,6 @@ export function TravelDetailsStep({
             disabled={isReadOnly}
           />
         </div>
-      </Card>
-
-      {/* Itinerary Builder */}
-      <Card className="p-6">
-        <h4 className="text-md mb-4 font-semibold text-gray-900 dark:text-white">
-          Day-wise Itinerary Builder
-        </h4>
-        <ItineraryBuilder numberOfDays={watch("days")} />
       </Card>
 
       {/* Summary */}
